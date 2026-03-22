@@ -442,8 +442,8 @@ section {
 .movement-controls {
     pointer-events: auto;
     position: relative;
-    width: 120px;
-    height: 60px;
+    width: 180px;
+    height: 90px;
 }
 
 .dpad-container {
@@ -454,8 +454,8 @@ section {
 
 .dpad-btn {
     position: absolute;
-    width: 55px;
-    height: 55px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     border: 3px solid rgba(74, 222, 128, 0.8);
     background: rgba(74, 222, 128, 0.4);
@@ -490,8 +490,8 @@ section {
 
 .dpad-btn img,
 .arrow-icon {
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
 }
 
 .dpad-left .arrow-icon {
@@ -507,15 +507,15 @@ section {
 }
 
 .dpad-left {
-    top: 50%;
+    bottom: 0;
     left: 0;
-    transform: translateY(-50%);
+    transform: none;
 }
 
 .dpad-right {
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
+    bottom: 0;
+    left: 95px;
+    transform: none;
 }
 
 /* Action Controls */
@@ -636,19 +636,23 @@ section {
     }
     
     .movement-controls {
-        width: 90px;
-        height: 45px;
+        width: 140px;
+        height: 75px;
     }
     
     .dpad-btn {
-        width: 40px;
-        height: 40px;
+        width: 65px;
+        height: 65px;
         font-size: 1rem;
     }
     
     .dpad-btn img {
-        width: 20px;
-        height: 20px;
+        width: 35px;
+        height: 35px;
+    }
+    
+    .dpad-right {
+        left: 75px;
     }
     
     .action-controls {
