@@ -4,119 +4,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Turki Alshaalan - IT Student | Game Developer | Gameplay Programmer from Riyadh, Saudi Arabia">
-    <title>Turki Alshaalan | Game Developer Portfolio</title>
+    <title>Turki Alshaalan | Game Developer & Unity Programmer</title>
+    <meta name="description" content="Portfolio of Turki Alshaalan - IT Student, Game Developer, Unity & C# Programmer">
+    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <!-- Sound Toggle Button (Fixed Bottom Right) -->
+    <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound">
+        <svg class="sound-on-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <svg class="sound-off-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+    </button>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#home" class="nav-logo">TA</a>
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <ul class="nav-menu" id="navMenu">
+            <a href="#home" class="nav-logo"><b>T</b><span class="play-icon-wrapper"><img src="images/Game/Play.png"
+                        alt="Play Game" class="play-icon" id="playGameBtn"></span></a>
+            <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
                 <li><a href="#experience" class="nav-link">Experience</a></li>
-                <li><a href="#certificates" class="nav-link">Certificates</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#education" class="nav-link">Education</a></li>
+                <li><a href="#certifications" class="nav-link">Certifications</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-background">
-            <div class="hero-particles"></div>
-            <div class="hero-grid"></div>
-        </div>
-        <div class="hero-content">
-            <div class="hero-text">
-                <p class="hero-greeting">Hello, I'm</p>
-                <h1 class="hero-name">Turki Alshaalan</h1>
-                <p class="hero-title">IT Student | Game Developer | Gameplay Programmer</p>
-                <p class="hero-tagline">Building immersive player experiences through code, creativity, and passion for
-                    interactive storytelling.</p>
-                <div class="hero-buttons">
-                    <a href="#projects" class="btn btn-primary">View Projects</a>
-                    <a href="#contact" class="btn btn-secondary">Contact</a>
+    <!-- Game Modal -->
+    <div class="game-modal" id="gameModal">
+        <div class="game-overlay" id="gameOverlay"></div>
+        <div class="game-container">
+            <div class="game-header">
+                <span class="game-title">TURKI'S BATTLE GAME</span>
+                <div class="game-header-controls">
+                    <button class="control-toggle" id="controlToggle" title="Toggle Mobile Controls">
+                        <span class="toggle-icon">📱</span>
+                        <span class="toggle-text">Mobile</span>
+                    </button>
+                    <button class="game-close" id="gameClose">&times;</button>
                 </div>
             </div>
-            <div class="hero-visual">
-                <div class="hero-card">
-                    <div class="hero-code">
-                        <span class="code-keyword">public</span> <span class="code-class">Player</span> <span
-                            class="code-name">turki</span> = <span class="code-keyword">new</span> <span
-                            class="code-class">Player</span>();<br>
-                        <span class="code-name">turki</span>.<span class="code-method">SetRole</span>(<span
-                            class="code-string">"Game Developer"</span>);<br>
-                        <span class="code-name">turki</span>.<span class="code-method">SetFocus</span>(<span
-                            class="code-string">"Unity"</span>, <span class="code-string">"C#"</span>);<br>
-                        <span class="code-name">turki</span>.<span class="code-method">SetLocation</span>(<span
-                            class="code-string">"Riyadh"</span>);<br>
-                        <span class="code-name">turki</span>.<span class="code-method">Create</span>();
+            <canvas id="gameCanvas" width="800" height="500"></canvas>
+            <!-- Mobile Touch Controls - Game Boy Style -->
+            <div class="mobile-controls" id="mobileControls">
+                <!-- System Buttons (Exit/Restart) -->
+                <div class="game-btn-row">
+                    <div class="game-system-btns">
+                        <button class="system-btn exit-btn" id="mobileExit">EXIT</button>
+                        <button class="system-btn restart-btn" id="mobileRestart">RESTART</button>
                     </div>
+                </div>
+                <!-- Game Controls Row -->
+                <div class="game-btn-row">
+                    <!-- Movement Controls (Left Side) -->
+                    <div class="movement-controls">
+                        <div class="dpad-container">
+                            <button class="dpad-btn dpad-left" id="mobileLeft">
+                                <img src="images/Game/Mobile/arrow.png" alt="Left" class="arrow-icon">
+                            </button>
+                            <button class="dpad-btn dpad-right" id="mobileRight">
+                                <img src="images/Game/Mobile/arrow.png" alt="Right" class="arrow-icon">
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Action Controls (Right Side) -->
+                    <div class="action-controls">
+                        <button class="action-btn attack-btn" id="mobileAttack">
+                            <img src="images/Game/Mobile/Attack.png" alt="Attack">
+                        </button>
+                        <button class="action-btn shield-btn" id="mobileShield">
+                            <img src="images/Game/Mobile/Shield.png" alt="Shield">
+                        </button>
+                        <button class="action-btn jump-btn" id="mobileJump">
+                            <img src="images/Game/Mobile/arrow.png" alt="Jump" class="arrow-icon">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="game-controls-info">
+                <span>[A/D] Move</span>
+                <span>[W/Space] Jump</span>
+                <span>[J] Attack</span>
+                <span>[K] Block</span>
+                <span>[ESC] Exit</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <div class="hero-image-container">
+                <img src="images/PFP/profile.png" alt="Turki Alshaalan" class="hero-image">
+                <div class="hero-image-frame"></div>
+            </div>
+            <div class="hero-text">
+                <h1 class="hero-name">Turki Alshaalan</h1>
+                <h2 class="hero-title">IT Student | Game Developer | Unity & C# Programmer</h2>
+                <p class="hero-tagline">Building immersive gameplay systems and interactive experiences through code and
+                    design.</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Contact Me</a>
                 </div>
             </div>
         </div>
         <div class="scroll-indicator">
-            <a href="#about" aria-label="Scroll to about section">
-                <span class="scroll-mouse"></span>
-                <span class="scroll-arrow"></span>
-            </a>
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
         </div>
     </section>
 
     <!-- About Section -->
     <section class="about" id="about">
         <div class="container">
-            <div class="section-header">
-                <span class="section-label">About Me</span>
-                <h2 class="section-title">Passionate Game Developer</h2>
-            </div>
+            <h2 class="section-title">About Me</h2>
             <div class="about-content">
-                <div class="about-image">
-                    <div class="about-image-wrapper">
-                        <div class="about-image-placeholder">
-                            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="100" cy="70" r="40" fill="currentColor" opacity="0.3" />
-                                <ellipse cx="100" cy="170" rx="60" ry="30" fill="currentColor" opacity="0.3" />
-                            </svg>
-                        </div>
+                <div class="about-text">
+                    <p>I'm an IT student at <strong>Imam Muhammad ibn Saud Islamic University</strong> with over 1 year
+                        of experience in <strong>Unity</strong> and <strong>C#</strong> programming. My focus lies in
+                        creating engaging 3D gameplay systems, intelligent AI behaviors, and challenging puzzle
+                        mechanics.</p>
+                    <p>I work with <strong>Blender</strong> for 3D modeling and asset creation, allowing me to bring my
+                        game concepts to life from prototype to polished experience. I'm passionate about game feel,
+                        immersion, and creating memorable player experiences.</p>
+                    <p>As a collaborative team member, I've contributed to various game projects, combining technical
+                        skills with creative problem-solving to deliver engaging interactive experiences.</p>
+                </div>
+                <div class="about-highlights">
+                    <div class="highlight-item">
+                        <span class="highlight-number">1+</span>
+                        <span class="highlight-label">Year Experience</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-number">3</span>
+                        <span class="highlight-label">Completed Projects</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-number">5+</span>
+                        <span class="highlight-label">Certifications</span>
                     </div>
                 </div>
-                <div class="about-text">
-                    <p>Turki Alshaalan is an IT student at <strong>Imam Muhammad ibn Saud Islamic University</strong>
-                        and a game developer with hands-on experience using <strong>Unity and C#</strong>.</p>
-                    <p>He focuses on gameplay systems, AI behavior, and interactive puzzle mechanics. He enjoys
-                        designing immersive player experiences and building polished prototypes that challenge and
-                        engage players.</p>
-                    <div class="about-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">2+</span>
-                            <span class="stat-label">Years Experience</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <p class="section-subtitle">Games and interactive experiences I've built</p>
+            <div class="projects-grid">
+                <!-- Project 1: Dungeon Puzzle -->
+                <a href="https://trookish.itch.io/dungeon-puzzle" target="_blank" class="project-card">
+                    <div class="project-image">
+                        <img src="images/Projects/DungeonPuzzle.png" alt="Dungeon Puzzle Gameplay" class="project-img">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Dungeon Puzzle</h3>
+                        <p class="project-description">A puzzle-based gameplay experience where players navigate through
+                            dangerous dungeons, avoiding death traps and overcoming environmental challenges to reach
+                            the exit.</p>
+                        <div class="project-tags">
+                            <span class="tag">Unity</span>
+                            <span class="tag">C#</span>
+                            <span class="tag">Puzzle</span>
+                            <span class="tag">3D</span>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number">4+</span>
-                            <span class="stat-label">Projects Completed</span>
+                    </div>
+                </a>
+
+                <!-- Project 2: The Librarian -->
+                <a href="https://trookish.itch.io/scary-library" target="_blank" class="project-card">
+                    <div class="project-image">
+                        <img src="images/Projects/ScaryLibrary.png" alt="The Librarian Gameplay" class="project-img">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">The Librarian</h3>
+                        <p class="project-description">A horror game developed during a Game Jam featuring an AI enemy
+                            that hunts the player. Solve book-based puzzles using 5 books to escape the haunted library.
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">Unity</span>
+                            <span class="tag">C#</span>
+                            <span class="tag">Horror</span>
+                            <span class="tag">AI</span>
+                            <span class="tag">Game Jam</span>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number">6+</span>
-                            <span class="stat-label">Certifications</span>
+                    </div>
+                </a>
+
+                <!-- Project 3: The Hidden Kanz -->
+                <a href="https://s3-od.itch.io/the-hidden-kanz" target="_blank" class="project-card">
+                    <div class="project-image">
+                        <img src="images/Projects/TheHiddenKanz.jpeg" alt="The Hidden Kanz Gameplay"
+                            class="project-img">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">The Hidden Kanz</h3>
+                        <p class="project-description">A combat-based dungeon crawler where players fight waves of
+                            skeleton AI enemies using sword combat and magic abilities to survive and clear the dungeon.
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">Unity</span>
+                            <span class="tag">C#</span>
+                            <span class="tag">Combat</span>
+                            <span class="tag">AI</span>
+                            <span class="tag">3D</span>
                         </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience" id="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Team Member</h3>
+                        <p class="timeline-organization">Enjaz Club - Game Development Section</p>
+                        <p class="timeline-description">Collaborated with a team of developers on game projects,
+                            focusing on gameplay logic. Contributed to building engaging interactive experiences
+                            through efficient code and creative problem-solving.</p>
+                        <span class="timeline-date">2024 - 2025</span>
                     </div>
                 </div>
             </div>
@@ -126,16 +286,10 @@
     <!-- Skills Section -->
     <section class="skills" id="skills">
         <div class="container">
-            <div class="section-header">
-                <span class="section-label">Skills & Expertise</span>
-                <h2 class="section-title">Technical Abilities</h2>
-            </div>
+            <h2 class="section-title">Skills</h2>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3 class="category-title">
-                        <span class="category-icon">🎮</span>
-                        Game Development
-                    </h3>
+                    <h3 class="skill-category-title">Game Development</h3>
                     <ul class="skill-list">
                         <li class="skill-item">
                             <span class="skill-name">Unity</span>
@@ -150,12 +304,6 @@
                             </div>
                         </li>
                         <li class="skill-item">
-                            <span class="skill-name">Gameplay Programming</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="--progress: 88%"></div>
-                            </div>
-                        </li>
-                        <li class="skill-item">
                             <span class="skill-name">Game Design</span>
                             <div class="skill-bar">
                                 <div class="skill-progress" style="--progress: 80%"></div>
@@ -164,33 +312,30 @@
                         <li class="skill-item">
                             <span class="skill-name">AI Systems</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="--progress: 82%"></div>
+                                <div class="skill-progress" style="--progress: 75%"></div>
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3 class="category-title">
-                        <span class="category-icon">💻</span>
-                        Technical
-                    </h3>
+                    <h3 class="skill-category-title">Technical</h3>
                     <ul class="skill-list">
                         <li class="skill-item">
                             <span class="skill-name">HTML</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="--progress: 85%"></div>
+                                <div class="skill-progress" style="--progress: 70%"></div>
                             </div>
                         </li>
                         <li class="skill-item">
                             <span class="skill-name">CSS</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="--progress: 82%"></div>
+                                <div class="skill-progress" style="--progress: 70%"></div>
                             </div>
                         </li>
                         <li class="skill-item">
                             <span class="skill-name">JavaScript</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="--progress: 78%"></div>
+                                <div class="skill-progress" style="--progress: 65%"></div>
                             </div>
                         </li>
                         <li class="skill-item">
@@ -202,10 +347,7 @@
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3 class="category-title">
-                        <span class="category-icon">🎨</span>
-                        Creative Tools
-                    </h3>
+                    <h3 class="skill-category-title">Creative</h3>
                     <ul class="skill-list">
                         <li class="skill-item">
                             <span class="skill-name">Blender</span>
@@ -216,295 +358,106 @@
                         <li class="skill-item">
                             <span class="skill-name">3D Modeling</span>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="--progress: 68%"></div>
+                                <div class="skill-progress" style="--progress: 70%"></div>
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3 class="category-title">
-                        <span class="category-icon">🤝</span>
-                        Soft Skills
-                    </h3>
-                    <ul class="skill-tags">
-                        <li class="skill-tag">Problem Solving</li>
-                        <li class="skill-tag">Team Collaboration</li>
-                        <li class="skill-tag">Communication</li>
-                        <li class="skill-tag">Time Management</li>
+                    <h3 class="skill-category-title">Soft Skills</h3>
+                    <ul class="skill-list">
+                        <li class="skill-item">
+                            <span class="skill-name">Teamwork</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="--progress: 90%"></div>
+                            </div>
+                        </li>
+                        <li class="skill-item">
+                            <span class="skill-name">Problem-solving</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="--progress: 85%"></div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section class="projects" id="projects">
+    <!-- Education Section -->
+    <section class="education" id="education">
         <div class="container">
-            <div class="section-header">
-                <span class="section-label">My Work</span>
-                <h2 class="section-title">Featured Projects</h2>
-            </div>
-            <div class="projects-grid">
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">
-                            <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="400" height="250" fill="currentColor" opacity="0.1" />
-                                <path d="M200 80L250 150H150L200 80Z" fill="currentColor" opacity="0.3" />
-                                <rect x="170" y="160" width="60" height="40" rx="5" fill="currentColor" opacity="0.3" />
-                                <circle cx="200" cy="200" r="30" fill="currentColor" opacity="0.2" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Dungeon Puzzle</h3>
-                        <p class="project-description">A puzzle exploration game featuring dungeon challenges with
-                            various hazards. Players navigate through intricate levels, solving puzzles while avoiding
-                            deadly traps and obstacles.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">Game Design</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link" target="_blank" rel="noopener">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                </svg>
-                                GitHub
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">
-                            <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="400" height="250" fill="currentColor" opacity="0.1" />
-                                <path d="M100 100L150 180H50L100 100Z" fill="currentColor" opacity="0.3" />
-                                <circle cx="300" cy="100" r="30" fill="currentColor" opacity="0.4" />
-                                <rect x="80" y="200" width="100" height="20" rx="10" fill="currentColor"
-                                    opacity="0.2" />
-                                <rect x="220" y="200" width="100" height="20" rx="10" fill="currentColor"
-                                    opacity="0.2" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">The Librarian</h3>
-                        <p class="project-description">A horror puzzle game where players must avoid an AI librarian
-                            while solving mysterious book riddles. Navigate the endless library and uncover its dark
-                            secrets.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">AI Systems</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link" target="_blank" rel="noopener">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                </svg>
-                                GitHub
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">
-                            <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="400" height="250" fill="currentColor" opacity="0.1" />
-                                <circle cx="100" cy="150" r="40" fill="currentColor" opacity="0.3" />
-                                <circle cx="300" cy="150" r="40" fill="currentColor" opacity="0.3" />
-                                <rect x="150" y="120" width="100" height="60" rx="8" fill="currentColor"
-                                    opacity="0.3" />
-                                <path d="M80 180L120 140L160 180" stroke="currentColor" stroke-width="3" fill="none"
-                                    opacity="0.5" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">The Hidden Kanz</h3>
-                        <p class="project-description">A dungeon combat game featuring intense battles against AI
-                            skeletons. Players use a combination of melee attacks and magic spells to defeat enemies and
-                            progress through challenging levels.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">Combat Systems</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link" target="_blank" rel="noopener">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                </svg>
-                                GitHub
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">
-                            <svg viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="400" height="250" fill="currentColor" opacity="0.1" />
-                                <rect x="50" y="80" width="80" height="50" rx="5" fill="currentColor" opacity="0.3" />
-                                <rect x="150" y="80" width="80" height="50" rx="5" fill="currentColor" opacity="0.3" />
-                                <rect x="250" y="80" width="80" height="50" rx="5" fill="currentColor" opacity="0.3" />
-                                <rect x="50" y="150" width="280" height="30" rx="5" fill="currentColor" opacity="0.2" />
-                                <circle cx="350" cy="165" r="15" fill="currentColor" opacity="0.4" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Gamified Learning Environment</h3>
-                        <p class="project-description">A Unity-based educational system designed to teach programming
-                            concepts through interactive gameplay. Makes learning programming engaging and accessible
-                            for beginners.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">EdTech</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link" target="_blank" rel="noopener">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                </svg>
-                                GitHub
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- Experience Section -->
-    <section class="experience" id="experience">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Career Path</span>
-                <h2 class="section-title">Experience</h2>
-            </div>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">2023 - Present</span>
-                        <h3 class="timeline-title">Unity Developer – Graduation Project</h3>
-                        <span class="timeline-company">Freelance</span>
-                        <p class="timeline-description">Developing a gamified learning environment for programming
-                            education using Unity and C#. Creating interactive educational content that teaches
-                            programming concepts through engaging gameplay mechanics.</p>
-                        <div class="timeline-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">Game Design</span>
-                        </div>
-                    </div>
+            <h2 class="section-title">Education</h2>
+            <div class="education-card">
+                <div class="education-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">2022 - Present</span>
-                        <h3 class="timeline-title">Game Development Section Member</h3>
-                        <span class="timeline-company">Enjaz Club – Imam Muhammad ibn Saud Islamic University</span>
-                        <p class="timeline-description">Collaborating with a student team on game development projects.
-                            Responsible for gameplay logic implementation, development planning, and creating engaging
-                            player experiences. Working on various game prototypes and participating in game jams.</p>
-                        <div class="timeline-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">Team Collaboration</span>
-                        </div>
-                    </div>
+                <div class="education-content">
+                    <h3 class="education-degree">Bachelor's in Information Technology</h3>
+                    <p class="education-university">Imam Muhammad ibn Saud Islamic University</p>
+                    <p class="education-status">Ongoing</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Certificates Section -->
-    <section class="certificates" id="certificates">
+    <!-- Certifications Section -->
+    <section class="certifications" id="certifications">
         <div class="container">
-            <div class="section-header">
-                <span class="section-label">Professional Development</span>
-                <h2 class="section-title">Certificates</h2>
-            </div>
-            <div class="certificates-grid">
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <h2 class="section-title">Certifications</h2>
+            <div class="certifications-grid">
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <circle cx="12" cy="8" r="6" />
-                            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                         </svg>
                     </div>
-                    <h3 class="certificate-title">Unity Essentials</h3>
-                    <p class="certificate-issuer">Unity Technologies</p>
+                    <h3 class="certification-title">Unity Essentials</h3>
                 </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <circle cx="12" cy="8" r="6" />
-                            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                         </svg>
                     </div>
-                    <h3 class="certificate-title">Complete C# Unity Game Developer 3D</h3>
-                    <p class="certificate-issuer">Udemy</p>
+                    <h3 class="certification-title">Complete C# Unity Game Developer 3D</h3>
                 </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <circle cx="12" cy="8" r="6" />
-                            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                         </svg>
                     </div>
-                    <h3 class="certificate-title">Game Design and Development</h3>
-                    <p class="certificate-issuer">Coursera</p>
+                    <h3 class="certification-title">3D Game Developer Bootcamp</h3>
                 </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <circle cx="12" cy="8" r="6" />
-                            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                         </svg>
                     </div>
-                    <h3 class="certificate-title">3D Game Developer Bootcamp</h3>
-                    <p class="certificate-issuer">Udemy</p>
+                    <h3 class="certification-title">Introduction to Blender</h3>
                 </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <circle cx="12" cy="8" r="6" />
-                            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                         </svg>
                     </div>
-                    <h3 class="certificate-title">Introduction to Blender</h3>
-                    <p class="certificate-issuer">Blender Foundation</p>
-                </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <circle cx="12" cy="8" r="6" />
-                            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
-                        </svg>
-                    </div>
-                    <h3 class="certificate-title">Game Design with AI Tools</h3>
-                    <p class="certificate-issuer">Coursera</p>
+                    <h3 class="certification-title">Game Design (Tuwaiq + Digital Attaa)</h3>
                 </div>
             </div>
         </div>
@@ -513,32 +466,43 @@
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="container">
-            <div class="section-header">
-                <span class="section-label">Get In Touch</span>
-                <h2 class="section-title">Contact</h2>
-            </div>
+            <h2 class="section-title">Get In Touch</h2>
             <div class="contact-content">
                 <div class="contact-info">
                     <div class="contact-item">
                         <div class="contact-icon">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                <polyline points="22,6 12,13 2,6" />
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                </path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
                             </svg>
                         </div>
                         <div class="contact-details">
                             <span class="contact-label">Email</span>
-                            <a href="mailto:turki.alshaalan@example.com"
-                                class="contact-value">turki.alshaalan@example.com</a>
+                            <a href="mailto:trookish@gmail.com" class="contact-value">trookish@gmail.com</a>
                         </div>
                     </div>
                     <div class="contact-item">
                         <div class="contact-icon">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <span class="contact-label">Phone</span>
+                            <a href="tel:+966531849801" class="contact-value">+966 53 184 9801</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
                             </svg>
                         </div>
                         <div class="contact-details">
@@ -548,33 +512,22 @@
                     </div>
                     <div class="contact-item">
                         <div class="contact-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path
-                                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
                             </svg>
                         </div>
                         <div class="contact-details">
                             <span class="contact-label">LinkedIn</span>
-                            <a href="https://linkedin.com/in/turki-alshaalan" class="contact-value" target="_blank"
-                                rel="noopener">linkedin.com/in/turki-alshaalan</a>
+                            <a href="https://linkedin.com/in/turki-alshaalan" target="_blank" rel="noopener noreferrer"
+                                class="contact-value">linkedin.com/in/turki-alshaalan</a>
                         </div>
                     </div>
                 </div>
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" id="name" name="name" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea id="message" name="message" class="form-textarea" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
             </div>
         </div>
     </section>
@@ -582,32 +535,13 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-name">Turki Alshaalan</div>
-                <div class="footer-links">
-                    <a href="https://linkedin.com/in/turki-alshaalan" target="_blank" rel="noopener" class="footer-link"
-                        aria-label="LinkedIn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                        </svg>
-                    </a>
-                    <a href="https://github.com/turki-alshaalan" target="_blank" rel="noopener" class="footer-link"
-                        aria-label="GitHub">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                        </svg>
-                    </a>
-                </div>
-                <div class="footer-copyright">
-                    &copy; <span id="year"></span> Turki Alshaalan. All rights reserved.
-                </div>
-            </div>
+            <p class="footer-text">Designed & Built by Turki Alshaalan</p>
+            <p class="footer-copyright">&copy; 2026. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="script.js"></script>
+    <script src="game.js"></script>
 </body>
 
 </html>
