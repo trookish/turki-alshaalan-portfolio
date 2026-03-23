@@ -746,6 +746,188 @@ section {
     display: block;
 }
 
+/* PDF Export Button */
+.pdf-export {
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.pdf-export:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    background: var(--bg-card);
+}
+
+.pdf-export svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Print Styles - For PDF Export */
+@media print {
+    /* Preserve colors and backgrounds */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
+    /* Hide non-essential elements */
+    .sound-toggle,
+    .theme-toggle,
+    .pdf-export,
+    .hamburger,
+    .scroll-indicator,
+    .game-modal {
+        display: none !important;
+    }
+    
+    /* Dark theme print styles */
+    body, html {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    /* Each section starts on a new page */
+    section {
+        page-break-before: always !important;
+        page-break-inside: avoid !important;
+        padding: 40px 0 !important;
+    }
+    
+    /* First section doesn't need page break */
+    section:first-of-type {
+        page-break-before: avoid !important;
+    }
+    
+    /* Hero section - fit on one page */
+    .hero {
+        min-height: auto !important;
+        height: auto !important;
+        padding: 60px 0 !important;
+    }
+    
+    .hero-content {
+        flex-direction: column !important;
+        gap: 30px !important;
+    }
+    
+    .hero-image-container {
+        width: 150px !important;
+        height: 150px !important;
+    }
+    
+    .hero-text {
+        text-align: center !important;
+    }
+    
+    .hero-buttons {
+        justify-content: center !important;
+    }
+    
+    /* Ensure images print correctly */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Preserve link styling */
+    a {
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+    
+    /* Ensure skill bars show progress */
+    .skill-progress {
+        width: var(--progress) !important;
+    }
+    
+    /* Preserve card styling with theme colors */
+    .project-card,
+    .certification-card,
+    .education-card,
+    .timeline-item {
+        border: 1px solid var(--border-color) !important;
+        background: var(--bg-card) !important;
+        page-break-inside: avoid !important;
+    }
+    
+    /* Ensure text is readable */
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--text-primary) !important;
+        page-break-after: avoid !important;
+    }
+    
+    /* Preserve tag styling */
+    .tag {
+        background: var(--bg-tertiary) !important;
+        color: var(--text-secondary) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    /* Ensure navbar is visible but not fixed */
+    .navbar {
+        position: relative !important;
+        background: var(--bg-secondary) !important;
+        border-bottom: 2px solid var(--border-color) !important;
+    }
+    
+    /* Preserve hero section */
+    .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+    }
+    
+    .hero-name, .hero-title, .hero-tagline {
+        color: white !important;
+    }
+    
+    /* Ensure contact links are visible */
+    .contact-value {
+        color: var(--accent-primary) !important;
+    }
+    
+    /* Preserve section titles */
+    .section-title {
+        color: var(--text-primary) !important;
+        border-bottom: 2px solid var(--accent-primary) !important;
+        padding-bottom: 0.5rem !important;
+        margin-bottom: 2rem !important;
+    }
+    
+    /* Preserve about highlights */
+    .highlight-number {
+        color: var(--accent-primary) !important;
+    }
+    
+    /* Preserve timeline styling */
+    .timeline-marker {
+        background: var(--accent-primary) !important;
+    }
+    
+    .timeline-date {
+        color: var(--accent-primary) !important;
+    }
+    
+    /* Preserve education and certification icons */
+    .education-icon svg,
+    .certification-icon svg {
+        stroke: var(--accent-primary) !important;
+    }
+    
+    /* Ensure proper spacing between sections */
+    .container {
+        padding: 0 20px !important;
+    }
+}
+
 /* Sound Toggle - Fixed bottom right, always visible */
 .sound-toggle {
     position: fixed;

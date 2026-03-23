@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initParallax();
     initSkillBars();
+    initPdfExport();
 });
 
 /**
@@ -115,6 +116,20 @@ function initThemeToggle() {
         // Save preference
         localStorage.setItem('theme', newTheme);
     });
+}
+
+/**
+ * PDF Export - Export website to PDF
+ */
+function initPdfExport() {
+    const pdfExportBtn = document.getElementById('pdfExport');
+
+    if (pdfExportBtn) {
+        pdfExportBtn.addEventListener('click', () => {
+            // Trigger browser print dialog which can save as PDF
+            window.print();
+        });
+    }
 }
 
 /**
