@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initParallax();
     initSkillBars();
     initPdfExport();
+    initLinkedInNavigation();
 });
 
 /**
@@ -201,7 +202,9 @@ function initHoverSounds() {
         '.certification-card',
         '.contact-item',
         '.theme-toggle', '.sound-toggle', '.hamburger',
-        '.social-link'
+        '.social-link',
+        '.hero-image',
+        '.highlight-item'
     ];
 
     // Apply to all selectors
@@ -246,7 +249,9 @@ function initClickSounds() {
         '.certification-card',
         '.contact-item',
         '.theme-toggle', '.sound-toggle', '.hamburger',
-        '.social-link'
+        '.social-link',
+        '.hero-image',
+        '.highlight-item'
     ];
 
     // Apply to all selectors
@@ -395,4 +400,47 @@ if ('IntersectionObserver' in window) {
     document.querySelectorAll('.project-card, .timeline-item, .skill-category, .certification-card, .contact-item').forEach(el => {
         observer.observe(el);
     });
+}
+
+/**
+ * LinkedIn Navigation - Make sections clickable to LinkedIn
+ */
+function initLinkedInNavigation() {
+    const linkedInBaseUrl = 'https://www.linkedin.com/in/turki-alshaalan/details/';
+
+    // Certifications section
+    const certificationsSection = document.getElementById('certifications');
+    if (certificationsSection) {
+        certificationsSection.style.cursor = 'pointer';
+        certificationsSection.addEventListener('click', () => {
+            window.open(linkedInBaseUrl + 'certifications/', '_blank');
+        });
+    }
+
+    // Skills section
+    const skillsSection = document.getElementById('skills');
+    if (skillsSection) {
+        skillsSection.style.cursor = 'pointer';
+        skillsSection.addEventListener('click', () => {
+            window.open(linkedInBaseUrl + 'skills/', '_blank');
+        });
+    }
+
+    // Education section
+    const educationSection = document.getElementById('education');
+    if (educationSection) {
+        educationSection.style.cursor = 'pointer';
+        educationSection.addEventListener('click', () => {
+            window.open(linkedInBaseUrl + 'education/', '_blank');
+        });
+    }
+
+    // Experience section
+    const experienceSection = document.getElementById('experience');
+    if (experienceSection) {
+        experienceSection.style.cursor = 'pointer';
+        experienceSection.addEventListener('click', () => {
+            window.open(linkedInBaseUrl + 'experience/', '_blank');
+        });
+    }
 }
