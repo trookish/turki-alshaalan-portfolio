@@ -84,6 +84,7 @@
 }
 
 html {
+    font-size: 18px;
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
     -webkit-font-smoothing: none;
@@ -648,7 +649,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
     
     .game-title {
-        font-size: 0.6rem;
+        font-size: 0.9rem;
     }
     
     .game-controls-info {
@@ -1121,7 +1122,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
     
     .skill-category-title {
-        font-size: 0.5rem !important;
+        font-size: 0.8rem !important;
         margin-bottom: 0.75rem !important;
     }
     
@@ -1246,6 +1247,43 @@ section:nth-child(8) { animation-delay: 0.7s; }
     .contact-label {
         font-size: 0.8rem !important;
         margin-bottom: 0.15rem !important;
+    }
+    
+    /* Achievements section - compact for print */
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .achievement-card {
+        padding: 1rem !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    
+    .achievement-icon {
+        width: 35px !important;
+        height: 35px !important;
+    }
+    
+    .achievement-icon svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+    
+    .achievement-title {
+        font-size: 1rem !important;
+    }
+    
+    .achievement-description {
+        font-size: 0.8rem !important;
+    }
+    
+    .achievement-tags {
+        gap: 0.25rem !important;
+    }
+    
+    .achievement-tag {
+        font-size: 0.7rem !important;
     }
     
     .contact-value {
@@ -1550,6 +1588,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
+    align-items: start;
 }
 
 .about-highlights .highlight-item {
@@ -1593,7 +1632,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
    ======================================== */
 .section-title {
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
     position: relative;
     display: inline-block;
     left: 50%;
@@ -1632,6 +1671,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
+    align-items: start;
 }
 
 @media (min-width: 640px) {
@@ -1651,15 +1691,95 @@ section:nth-child(8) { animation-delay: 0.7s; }
     border: 3px solid var(--border-color);
     overflow: hidden;
     transition: all var(--transition-fast);
-    display: block;
-    text-decoration: none;
-    color: inherit;
 }
 
 .project-card:hover {
-    transform: translate(-4px, -4px);
     border-color: var(--accent-primary);
     box-shadow: var(--shadow-pixel);
+}
+
+.project-header {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+}
+
+.project-header .project-image {
+    width: 100%;
+    height: 140px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-bottom: 3px solid var(--border-color);
+}
+
+.project-header .project-title {
+    font-family: var(--font-terminal);
+    font-size: 1rem;
+    color: var(--text-primary);
+    padding: 0.75rem;
+    margin: 0;
+}
+
+.expand-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border-top: 2px solid var(--border-color);
+    border-left: 2px solid var(--border-color);
+    transition: transform var(--transition-fast);
+}
+
+.expand-btn svg {
+    transition: transform var(--transition-fast);
+}
+
+.project-card.expanded .expand-btn svg {
+    transform: rotate(180deg);
+}
+
+.project-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    padding: 0 1rem;
+}
+
+.project-card.expanded .project-details {
+    max-height: 500px;
+    padding: 0 1rem 1rem 1rem;
+}
+
+.project-details .project-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.project-link {
+    display: inline-block;
+    font-family: var(--font-terminal);
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    text-decoration: none;
+    margin-top: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    border: 2px solid var(--accent-primary);
+    transition: all var(--transition-fast);
+}
+
+.project-link:hover {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
 }
 
 .project-image {
@@ -1700,6 +1820,41 @@ section:nth-child(8) { animation-delay: 0.7s; }
     line-height: 1.6;
 }
 
+/* Project Category Sections */
+.project-category {
+    margin-bottom: 3rem;
+}
+
+.project-category:last-child {
+    margin-bottom: 0;
+}
+
+.category-title {
+    font-family: var(--font-terminal);
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.category-description {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+/* Placeholder card for empty categories */
+.project-card.placeholder {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+.project-card.placeholder:hover {
+    transform: none;
+    box-shadow: none;
+}
+
 .project-tags {
     display: flex;
     flex-wrap: wrap;
@@ -1720,6 +1875,54 @@ section:nth-child(8) { animation-delay: 0.7s; }
     border-color: var(--accent-primary);
     background: var(--accent-primary);
     color: var(--bg-primary);
+}
+
+.project-team {
+    margin-top: 0.75rem;
+}
+
+.project-team .team-title {
+    font-family: var(--font-terminal);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.project-team .team-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.project-team .team-list li {
+    font-family: var(--font-terminal);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    color: var(--accent-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    transition: all var(--transition-fast);
+}
+
+.project-team .team-list li:hover {
+    border-color: var(--accent-primary);
+    background: transparent;
+    color: var(--accent-primary);
+}
+
+.project-team .team-name {
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.project-team .team-role {
+    color: var(--accent-primary);
 }
 
 /* ========================================
@@ -1786,7 +1989,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .timeline-organization {
     font-family: var(--font-pixel);
-    font-size: 0.55rem;
+    font-size: 0.85rem;
     color: var(--accent-primary);
     margin-bottom: 0.5rem;
     letter-spacing: 1px;
@@ -1812,6 +2015,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
+    align-items: start;
 }
 
 @media (min-width: 640px) {
@@ -1841,7 +2045,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .skill-category-title {
     font-family: var(--font-pixel);
-    font-size: 0.55rem;
+    font-size: 0.85rem;
     color: var(--accent-primary);
     margin-bottom: 1rem;
     letter-spacing: 1px;
@@ -1933,7 +2137,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .education-status {
     font-family: var(--font-pixel);
-    font-size: 0.5rem;
+    font-size: 0.9rem;
     color: var(--accent-primary);
     letter-spacing: 1px;
 }
@@ -1945,6 +2149,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
+    align-items: start;
 }
 
 @media (min-width: 640px) {
@@ -2007,16 +2212,188 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .certification-issuer {
     font-family: var(--font-pixel);
-    font-size: 0.45rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
     letter-spacing: 0.5px;
+}
+
+/* ========================================
+   Achievements Section - Pixel Style
+   ======================================== */
+.achievements {
+    background: var(--bg-secondary);
+    padding: 1.5rem 0;
+}
+
+.achievements .container {
+    max-width: 700px;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    align-items: start;
+}
+
+.achievement-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.achievement-image {
+    display: block;
+    overflow: visible;
+    background: var(--bg-tertiary);
+}
+
+.achievement-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    image-rendering: pixelated;
+}
+
+.achievement-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.achievement-icon {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.achievement-icon svg {
+    width: 12px;
+    height: 12px;
+    color: white;
+}
+
+.achievement-content {
+    flex: 1;
+}
+
+.achievement-title {
+    font-family: var(--font-terminal);
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.achievement-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.achievement-tag {
+    font-family: var(--font-terminal);
+    font-size: 0.75rem;
+    padding: 0.15rem 0.4rem;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    color: var(--accent-primary);
+    transition: all var(--transition-fast);
+    border-radius: 0;
+}
+
+.achievement-tag:hover {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+}
+
+.achievement-team,
+.achievement-mentor {
+    margin-top: 0.25rem;
+}
+
+.achievement-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0;
+}
+
+.team-title,
+.mentor-title {
+    font-family: var(--font-terminal);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-bottom: 0.1rem;
+}
+
+.achievement-team .team-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.achievement-team .team-list li {
+    font-family: var(--font-terminal);
+    font-size: 0.65rem;
+    color: var(--accent-primary);
+    padding: 0.15rem 0.4rem;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    transition: all var(--transition-fast);
+}
+
+.achievement-team .team-list li:hover {
+    border-color: var(--accent-primary);
+    background: transparent;
+    color: var(--accent-primary);
+}
+
+.achievement-team .team-name {
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.mentor-name {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+}
+
+@media (min-width: 640px) {
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* ========================================
    Contact Section - Pixel Style
    ======================================== */
 .contact {
-    background: var(--bg-secondary);
+    background: var(--bg-primary);
 }
 
 .contact-content {
@@ -2151,7 +2528,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .footer-text {
     font-family: var(--font-pixel);
-    font-size: 0.65rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     letter-spacing: 1px;
     text-align: center;

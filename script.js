@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSkillBars();
     initPdfExport();
     initLinkedInNavigation();
+    initProjectExpand();
 });
 
 /**
@@ -443,4 +444,45 @@ function initLinkedInNavigation() {
             window.open(linkedInBaseUrl + 'experience/', '_blank');
         });
     }
+}
+
+/**
+ * Project Expand - Toggle project details
+ */
+function initProjectExpand() {
+    const projectCards = document.querySelectorAll('.project-card');
+
+    projectCards.forEach(card => {
+        const header = card.querySelector('.project-header');
+        if (!header) return;
+
+        header.addEventListener('click', () => {
+            // Check if this card is already expanded
+            const isExpanded = card.classList.contains('expanded');
+
+            // Close all project cards first
+            projectCards.forEach(c => c.classList.remove('expanded'));
+
+            // If it wasn't expanded before, expand it now
+            if (!isExpanded) {
+                card.classList.add('expanded');
+            }
+        });
+
+        // Also allow Enter key to toggle
+        header.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const isExpanded = card.classList.contains('expanded');
+                projectCards.forEach(c => c.classList.remove('expanded'));
+                if (!isExpanded) {
+                    card.classList.add('expanded');
+                }
+            }
+        });
+
+        // Make header focusable
+        header.setAttribute('tabindex', '0');
+        header.setAttribute('role', 'button');
+    });
 }
