@@ -1117,6 +1117,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     
     .skill-category {
         padding: 1rem !important;
+        min-height: 150px !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
@@ -2013,7 +2014,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    align-items: start;
+    align-items: stretch;
 }
 
 @media (min-width: 640px) {
@@ -2032,6 +2033,9 @@ section:nth-child(8) { animation-delay: 0.7s; }
     background: var(--bg-card);
     border: 2px solid var(--border-color);
     padding: 1.25rem;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
     transition: all var(--transition-fast);
 }
 
