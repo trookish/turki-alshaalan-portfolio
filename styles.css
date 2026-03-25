@@ -95,7 +95,9 @@ body {
     font-family: var(--font-body);
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: 1.8;
+    letter-spacing: 0.4px;
+    word-spacing: 3px;
     overflow-x: hidden;
     transition: background-color var(--transition-base), color var(--transition-base);
 }
@@ -107,7 +109,8 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     line-height: 1.4;
     color: var(--text-primary);
-    letter-spacing: 0;
+    letter-spacing: 0.5px;
+    word-spacing: 2px;
 }
 
 h1 { 
@@ -126,15 +129,19 @@ h4 {
 
 p {
     color: var(--text-secondary);
-    line-height: 1.8;
+    line-height: 2;
     max-width: 65ch;
     font-size: 1.15rem;
+    letter-spacing: 0.5px;
+    word-spacing: 3px;
 }
 
 a {
     color: var(--accent-primary);
     text-decoration: none;
     transition: color var(--transition-fast);
+    letter-spacing: 0.3px;
+    word-spacing: 2px;
 }
 
 a:hover {
@@ -971,7 +978,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     .project-card,
     .certification-card,
     .education-card,
-    .timeline-item {
+    .experience-card {
         border: 1px solid var(--border-color) !important;
         background: var(--bg-card) !important;
         page-break-inside: avoid !important;
@@ -1172,8 +1179,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
     
     .education-icon {
-        width: 45px !important;
-        height: 45px !important;
+        width: 50px !important;
+        height: 50px !important;
     }
     
     .education-degree {
@@ -1197,29 +1204,40 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
     
     .certification-card {
-        padding: 0.75rem !important;
-        gap: 0.75rem !important;
+        padding: 0 !important;
+        gap: 0 !important;
+        min-height: 220px !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
     
-    .certification-icon {
-        width: 35px !important;
-        height: 35px !important;
+    .certification-image {
+        height: 100px !important;
     }
     
-    .certification-icon svg {
-        width: 18px !important;
-        height: 18px !important;
+    .certification-image img {
+        object-fit: fill !important;
+    }
+    
+    .certification-info {
+        padding: 0.5rem !important;
     }
     
     .certification-title {
-        font-size: 0.9rem !important;
+        font-size: 0.8rem !important;
         margin-bottom: 0.2rem !important;
     }
     
     .certification-issuer {
-        font-size: 0.8rem !important;
+        font-size: 0.7rem !important;
+    }
+    
+    .certification-actions {
+        display: none !important;
+    }
+    
+    .cert-modal {
+        display: none !important;
     }
     
     /* Contact section */
@@ -1626,6 +1644,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
     font-family: var(--font-terminal);
     font-size: 1rem;
     color: var(--text-muted);
+    letter-spacing: 0.3px;
+    word-spacing: 2px;
 }
 
 /* ========================================
@@ -1641,6 +1661,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     font-family: var(--font-pixel);
     font-size: clamp(0.6rem, 2vw, 0.8rem);
     letter-spacing: 2px;
+    word-spacing: 3px;
     color: var(--accent-primary);
 }
 
@@ -1663,6 +1684,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
     max-width: 450px;
     margin-left: auto;
     margin-right: auto;
+    letter-spacing: 0.5px;
+    word-spacing: 3px;
 }
 
 /* ========================================
@@ -2007,6 +2030,75 @@ section:nth-child(8) { animation-delay: 0.7s; }
     color: var(--text-muted);
 }
 
+/* Experience Card - Single experience without timeline */
+.experience-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    padding: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    transition: all var(--transition-fast);
+}
+
+.experience-icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+}
+
+.experience-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.experience-details {
+    flex: 1;
+}
+
+.experience-card:hover {
+    border-color: var(--accent-primary);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-pixel);
+}
+
+.experience-title {
+    font-family: var(--font-terminal);
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.experience-organization {
+    font-family: var(--font-pixel);
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.experience-description {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.experience-date {
+    font-family: var(--font-terminal);
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
 /* ========================================
    Skills Section - Pixel Style
    ======================================== */
@@ -2064,6 +2156,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .skill-item {
     display: flex;
     align-items: center;
+    letter-spacing: 0.3px;
+    word-spacing: 2px;
 }
 
 .skill-name {
@@ -2105,15 +2199,21 @@ section:nth-child(8) { animation-delay: 0.7s; }
 }
 
 .education-icon {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     flex-shrink: 0;
     background: var(--bg-tertiary);
     border: 2px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-primary);
+    padding: 4px;
+}
+
+.education-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .education-icon svg {
@@ -2144,6 +2244,38 @@ section:nth-child(8) { animation-delay: 0.7s; }
     letter-spacing: 1px;
 }
 
+.education-date {
+    font-family: var(--font-pixel);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+
+.education-grade {
+    font-family: var(--font-pixel);
+    font-size: 0.85rem;
+    color: var(--accent-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.education-activities {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.activities-title {
+    font-family: var(--font-pixel);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.activities-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
 /* ========================================
    Certifications Section - Pixel Style
    ======================================== */
@@ -2151,7 +2283,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
-    align-items: start;
+    align-items: stretch;
 }
 
 @media (min-width: 640px) {
@@ -2162,18 +2294,19 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 @media (min-width: 1024px) {
     .certifications-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
 .certification-card {
     background: var(--bg-card);
     border: 2px solid var(--border-color);
-    padding: 1rem;
+    padding: 0;
     transition: all var(--transition-fast);
     display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
+    flex-direction: column;
+    gap: 0;
+    min-height: 320px;
 }
 
 .certification-card:hover {
@@ -2182,25 +2315,29 @@ section:nth-child(8) { animation-delay: 0.7s; }
     box-shadow: var(--shadow-pixel);
 }
 
-.certification-icon {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    background: var(--bg-tertiary);
-    border: 2px solid var(--border-color);
+.certification-image {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    border-bottom: 2px solid var(--border-color);
+    background-color: var(--bg-tertiary);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-primary);
+    flex-shrink: 0;
 }
 
-.certification-icon svg {
-    width: 18px;
-    height: 18px;
+.certification-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .certification-info {
     flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .certification-title {
@@ -2219,6 +2356,116 @@ section:nth-child(8) { animation-delay: 0.7s; }
     letter-spacing: 0.5px;
 }
 
+.certification-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.cert-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.6rem;
+    font-family: var(--font-terminal);
+    font-size: 0.75rem;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+}
+
+.linkedin-btn {
+    background: #0077b5;
+    color: white;
+    border-color: #0077b5;
+}
+
+.linkedin-btn:hover {
+    background: #005885;
+    border-color: #005885;
+}
+
+.section-linkedin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    margin: 1.5rem auto 0;
+    font-family: var(--font-terminal);
+    font-size: 0.9rem;
+    background: #22c55e;
+    color: white;
+    border: 2px solid #22c55e;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    width: fit-content;
+}
+
+.section-linkedin-btn:hover {
+    background: #16a34a;
+    border-color: #16a34a;
+}
+
+.view-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.view-btn:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* Certificate Modal */
+.cert-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.cert-modal.active {
+    display: flex;
+}
+
+.cert-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.cert-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    z-index: 1;
+}
+
+.cert-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    font-family: var(--font-terminal);
+}
+
+.cert-modal-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border: 2px solid var(--accent-primary);
+    box-shadow: var(--shadow-pixel);
+}
+
 /* ========================================
    Achievements Section - Pixel Style
    ======================================== */
@@ -2234,31 +2481,37 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .achievements-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.5rem;
+    gap: 1rem;
     align-items: start;
+    justify-items: center;
 }
 
 .achievement-card {
     background: var(--bg-card);
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius);
-    padding: 0.5rem 0.75rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
     transition: border-color var(--transition-fast), transform var(--transition-fast);
+    width: 100%;
+    max-width: 400px;
+    min-height: 300px;
 }
 
 .achievement-image {
     display: block;
     overflow: visible;
     background: var(--bg-tertiary);
+    height: 180px;
 }
 
 .achievement-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: cover;
     image-rendering: pixelated;
 }
 
@@ -2284,6 +2537,20 @@ section:nth-child(8) { animation-delay: 0.7s; }
     color: white;
 }
 
+.achievement-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.achievement-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
 .achievement-content {
     flex: 1;
 }
@@ -2292,8 +2559,51 @@ section:nth-child(8) { animation-delay: 0.7s; }
     font-family: var(--font-terminal);
     font-size: 0.85rem;
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
     letter-spacing: 0.5px;
+    flex: 1;
+}
+
+.achievement-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.achievement-card.expanded .achievement-details {
+    max-height: 500px;
+}
+
+.achievement-card .expand-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.achievement-card .expand-btn:hover {
+    transform: scale(1.1);
+}
+
+.achievement-card.expanded .expand-btn svg {
+    transform: rotate(180deg);
+}
+
+.achievement-project-image {
+    margin: 1rem 0;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.achievement-project-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    image-rendering: pixelated;
 }
 
 .achievement-tags {
@@ -2382,12 +2692,14 @@ section:nth-child(8) { animation-delay: 0.7s; }
 @media (min-width: 640px) {
     .achievements-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
 }
 
 @media (min-width: 1024px) {
     .achievements-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
     }
 }
 

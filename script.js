@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initParallax();
     initSkillBars();
     initPdfExport();
-    initLinkedInNavigation();
     initProjectExpand();
+    initAchievementExpand();
 });
 
 /**
@@ -198,10 +198,10 @@ function initHoverSounds() {
         '.nav-link', '.nav-logo', '.play-icon',
         '.project-card',
         '.skill-category',
-        '.timeline-item',
         '.education-card',
         '.certification-card',
         '.contact-item',
+        '.experience-card',
         '.theme-toggle', '.sound-toggle', '.hamburger',
         '.social-link',
         '.hero-image',
@@ -245,10 +245,10 @@ function initClickSounds() {
         'a', 'button', 'input', 'select', 'textarea',
         '.nav-link', '.nav-logo', '.play-icon',
         '.project-card', '.project-image',
-        '.timeline-item',
         '.education-card',
         '.certification-card',
         '.contact-item',
+        '.experience-card',
         '.theme-toggle', '.sound-toggle', '.hamburger',
         '.social-link',
         '.hero-image',
@@ -398,7 +398,7 @@ if ('IntersectionObserver' in window) {
         });
     }, observerOptions);
 
-    document.querySelectorAll('.project-card, .timeline-item, .skill-category, .certification-card, .contact-item').forEach(el => {
+    document.querySelectorAll('.project-card, .experience-card, .skill-category, .certification-card, .contact-item').forEach(el => {
         observer.observe(el);
     });
 }
@@ -406,46 +406,6 @@ if ('IntersectionObserver' in window) {
 /**
  * LinkedIn Navigation - Make sections clickable to LinkedIn
  */
-function initLinkedInNavigation() {
-    const linkedInBaseUrl = 'https://www.linkedin.com/in/turki-alshaalan/details/';
-
-    // Certifications section
-    const certificationsSection = document.getElementById('certifications');
-    if (certificationsSection) {
-        certificationsSection.style.cursor = 'pointer';
-        certificationsSection.addEventListener('click', () => {
-            window.open(linkedInBaseUrl + 'certifications/', '_blank');
-        });
-    }
-
-    // Skills section
-    const skillsSection = document.getElementById('skills');
-    if (skillsSection) {
-        skillsSection.style.cursor = 'pointer';
-        skillsSection.addEventListener('click', () => {
-            window.open(linkedInBaseUrl + 'skills/', '_blank');
-        });
-    }
-
-    // Education section
-    const educationSection = document.getElementById('education');
-    if (educationSection) {
-        educationSection.style.cursor = 'pointer';
-        educationSection.addEventListener('click', () => {
-            window.open(linkedInBaseUrl + 'education/', '_blank');
-        });
-    }
-
-    // Experience section
-    const experienceSection = document.getElementById('experience');
-    if (experienceSection) {
-        experienceSection.style.cursor = 'pointer';
-        experienceSection.addEventListener('click', () => {
-            window.open(linkedInBaseUrl + 'experience/', '_blank');
-        });
-    }
-}
-
 /**
  * Project Expand - Toggle project details
  */
@@ -486,3 +446,64 @@ function initProjectExpand() {
         header.setAttribute('role', 'button');
     });
 }
+
+// Achievement Expand Functionality
+function initAchievementExpand() {
+    const achievementCards = document.querySelectorAll('.achievement-card');
+
+    achievementCards.forEach(card => {
+        const header = card.querySelector('.achievement-header');
+        if (!header) return;
+
+        header.addEventListener('click', () => {
+            // Check if this card is already expanded
+            const isExpanded = card.classList.contains('expanded');
+
+            // Close all achievement cards first
+            achievementCards.forEach(c => c.classList.remove('expanded'));
+
+            // If it wasn't expanded before, expand it now
+            if (!isExpanded) {
+                card.classList.add('expanded');
+            }
+        });
+
+        // Also allow Enter key to toggle
+        header.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const isExpanded = card.classList.contains('expanded');
+                achievementCards.forEach(c => c.classList.remove('expanded'));
+                if (!isExpanded) {
+                    card.classList.add('expanded');
+                }
+            }
+        });
+
+        // Make header focusable
+        header.setAttribute('tabindex', '0');
+        header.setAttribute('role', 'button');
+    });
+}
+
+// Certificate Modal Functions
+function openCertModal(imageSrc) {
+    const modal = document.getElementById('certModal');
+    const modalImg = document.getElementById('certModalImage');
+    modalImg.src = imageSrc;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCertModal() {
+    const modal = document.getElementById('certModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeCertModal();
+    }
+});
