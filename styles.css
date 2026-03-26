@@ -83,6 +83,12 @@
     box-sizing: border-box;
 }
 
+/* Global image constraints */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 html {
     font-size: 18px;
     scroll-behavior: smooth;
@@ -249,6 +255,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .play-icon {
     width: 24px;
     height: 24px;
+    max-width: 24px;
+    max-height: 24px;
     image-rendering: pixelated;
     vertical-align: middle;
 }
@@ -525,6 +533,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .arrow-icon {
     width: 45px;
     height: 45px;
+    max-width: 45px;
+    max-height: 45px;
 }
 
 .dpad-left .arrow-icon {
@@ -578,6 +588,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .action-btn img {
     width: 35px;
+    max-width: 35px;
     height: 35px;
 }
 
@@ -623,6 +634,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .jump-btn .arrow-icon {
     width: 35px;
     height: 35px;
+    max-width: 35px;
+    max-height: 35px;
 }
 
 /* Only show on mobile devices (touch + small screen) */
@@ -681,6 +694,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     
     .dpad-btn img {
         width: 35px;
+        max-width: 35px;
         height: 35px;
     }
     
@@ -699,6 +713,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     
     .action-btn img {
         width: 28px;
+        max-width: 28px;
         height: 28px;
     }
 }
@@ -1216,7 +1231,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
     
     .certification-image img {
-        object-fit: fill !important;
+        object-fit: cover !important;
     }
     
     .certification-info {
@@ -1734,6 +1749,14 @@ section:nth-child(8) { animation-delay: 0.7s; }
     height: 180px;
     flex-shrink: 0;
     border-bottom: 3px solid var(--border-color);
+    overflow: hidden;
+}
+
+.project-header .project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
 }
 
 .project-header .project-title {
@@ -1777,7 +1800,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 }
 
 .project-card.expanded .project-details {
-    max-height: 500px;
+    max-height: 800px;
     padding: 0 1rem 1rem 1rem;
 }
 
@@ -1806,16 +1829,35 @@ section:nth-child(8) { animation-delay: 0.7s; }
 }
 
 .project-image {
+    position: relative;
     display: block;
     height: 200px;
     background: var(--bg-tertiary);
     border-bottom: 3px solid var(--border-color);
 }
 
+.coming-soon-badge {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    width: auto;
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: var(--accent-primary);
+    font-family: var(--font-terminal);
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
 .project-img {
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: cover;
     image-rendering: pixelated;
     transition: transform var(--transition-base);
 }
@@ -1875,6 +1917,17 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .project-card.placeholder:hover {
     transform: none;
     box-shadow: none;
+}
+
+/* Project placeholder for no image */
+.project-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+    color: var(--text-muted);
 }
 
 .project-tags {
@@ -2058,6 +2111,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .experience-logo {
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
 }
 
@@ -2146,6 +2201,70 @@ section:nth-child(8) { animation-delay: 0.7s; }
     text-transform: uppercase;
 }
 
+/* Skills Section - Horizontal List Layout */
+.skill-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 3px solid var(--accent-primary);
+    image-rendering: pixelated;
+}
+
+.skill-row:last-child {
+    border-bottom: none;
+}
+
+.skill-label {
+    min-width: 180px;
+    flex-shrink: 0;
+    padding-top: 0.5rem;
+}
+
+.skill-category-name {
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skill-tags .tag {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.skill-tags .tag:hover {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
+    color: var(--text-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .skill-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .skill-label {
+        min-width: auto;
+        padding-top: 0;
+    }
+}
+
 .skill-list {
     list-style: none;
     display: flex;
@@ -2213,6 +2332,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .education-logo {
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
 }
 
@@ -2461,6 +2582,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .cert-modal-content img {
     max-width: 100%;
     max-height: 85vh;
+    width: auto;
+    height: auto;
     object-fit: contain;
     border: 2px solid var(--accent-primary);
     box-shadow: var(--shadow-pixel);
@@ -2602,6 +2725,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .achievement-project-image img {
     width: 100%;
     height: auto;
+    max-width: 100%;
     display: block;
     image-rendering: pixelated;
 }
@@ -2684,9 +2808,20 @@ section:nth-child(8) { animation-delay: 0.7s; }
 }
 
 .mentor-name {
-    font-family: var(--font-pixel);
-    font-size: 0.6rem;
-    color: var(--text-secondary);
+    font-family: var(--font-terminal);
+    font-size: 0.65rem;
+    color: var(--accent-primary);
+    padding: 0.15rem 0.4rem;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    display: inline-block;
+    transition: all var(--transition-fast);
+}
+
+.mentor-name:hover {
+    border-color: var(--accent-primary);
+    background: transparent;
+    color: var(--accent-primary);
 }
 
 @media (min-width: 640px) {
