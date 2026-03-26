@@ -926,6 +926,53 @@ section:nth-child(8) { animation-delay: 0.7s; }
         page-break-before: avoid !important;
     }
     
+    /* Each project category starts on a new page (except first one) */
+    .project-category + .project-category {
+        page-break-before: always !important;
+        break-before: always !important;
+    }
+    
+    /* Hide LinkedIn buttons in print */
+    .section-linkedin-btn {
+        display: none !important;
+    }
+    
+    /* Hide hero buttons in print */
+    .hero-buttons {
+        display: none !important;
+    }
+    
+    /* Achievement cards - show expanded by default in print */
+    .achievement-card {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    
+    .achievement-card .achievement-content {
+        display: block !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    .achievement-card .expand-btn {
+        display: none !important;
+    }
+    
+    /* Ensure achievement images display in print */
+    .achievement-image img {
+        display: block !important;
+        width: 100% !important;
+        max-width: 300px !important;
+        height: auto !important;
+    }
+    
+    /* Hide certificate modal in print */
+    .cert-modal,
+    .cert-modal-overlay,
+    .cert-modal-content {
+        display: none !important;
+    }
+    
     /* Hero section - fit on one page */
     .hero {
         min-height: auto !important;
@@ -2738,7 +2785,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 }
 
 .achievement-card.expanded .achievement-details {
-    max-height: 500px;
+    max-height: 1000px;
 }
 
 .achievement-card .expand-btn {
@@ -2855,7 +2902,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .mentor-name {
     font-family: var(--font-terminal);
     font-size: 0.65rem;
-    color: var(--accent-primary);
+    color: var(--text-primary);
     padding: 0.15rem 0.4rem;
     background: var(--bg-tertiary);
     border: 2px solid var(--border-color);
