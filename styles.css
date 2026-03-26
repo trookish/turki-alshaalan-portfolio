@@ -1621,8 +1621,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .about-highlights {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    align-items: start;
+    gap: 1rem;
+    align-items: stretch;
 }
 
 .about-highlights .highlight-item {
@@ -1639,12 +1639,57 @@ section:nth-child(8) { animation-delay: 0.7s; }
     border: 2px solid var(--border-color);
     transition: all var(--transition-fast);
     min-width: 150px;
+    min-height: 120px;
 }
 
 .highlight-item:hover {
     border-color: var(--accent-primary);
     transform: translate(-2px, -2px);
     box-shadow: var(--shadow-pixel);
+}
+
+/* Highlight Link Styles - Clickable */
+.highlight-link {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    min-height: 120px;
+}
+
+.highlight-link:hover {
+    border-color: var(--accent-primary);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-pixel);
+    background: var(--bg-card);
+}
+
+.highlight-link .highlight-number {
+    font-family: var(--font-pixel);
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+}
+
+.highlight-link .highlight-label {
+    font-family: var(--font-terminal);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+    margin-bottom: 0.5rem;
+}
+
+.highlight-link .highlight-icon {
+    font-size: 1.2rem;
+    color: var(--accent-primary);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.highlight-link:hover .highlight-icon {
+    opacity: 1;
 }
 
 .highlight-number {
@@ -3080,8 +3125,21 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
 
     .about-highlights {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
+    }
+
+    .highlight-link {
+        min-height: 100px;
+        padding: 1rem;
+    }
+
+    .highlight-link .highlight-number {
+        font-size: 1.25rem;
+    }
+
+    .highlight-link .highlight-label {
+        font-size: 0.8rem;
     }
 
     .education-card {
@@ -3118,6 +3176,27 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
     .hero {
         padding: 4rem 1rem 2rem;
+    }
+
+    .about-highlights {
+        grid-template-columns: 1fr;
+    }
+
+    .highlight-link {
+        min-height: 90px;
+        padding: 0.75rem;
+    }
+
+    .highlight-link .highlight-number {
+        font-size: 1.1rem;
+    }
+
+    .highlight-link .highlight-label {
+        font-size: 0.75rem;
+    }
+
+    .highlight-link .highlight-icon {
+        font-size: 1rem;
     }
 
     .hero-image {
