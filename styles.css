@@ -942,28 +942,30 @@ section:nth-child(8) { animation-delay: 0.7s; }
         display: none !important;
     }
     
-    /* Achievement cards - show expanded by default in print */
+    /* Achievement cards - collapsed state in print */
     .achievement-card {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+        min-height: auto !important;
     }
-    
-    .achievement-card .achievement-content {
-        display: block !important;
-        max-height: none !important;
-        overflow: visible !important;
+
+    .achievement-card .achievement-details {
+        display: none !important;
     }
-    
+
     .achievement-card .expand-btn {
         display: none !important;
     }
-    
-    /* Ensure achievement images display in print */
+
+    .achievement-image {
+        height: 120px !important;
+    }
+
     .achievement-image img {
         display: block !important;
         width: 100% !important;
-        max-width: 300px !important;
-        height: auto !important;
+        height: 100% !important;
+        object-fit: cover !important;
     }
     
     /* Hide certificate modal in print */
@@ -983,6 +985,17 @@ section:nth-child(8) { animation-delay: 0.7s; }
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
+        background: var(--bg-secondary) !important;
+    }
+    
+    .hero-background {
+        display: block !important;
+    }
+    
+    .hero-background::before {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
     
     .hero-content {
@@ -1085,14 +1098,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
         padding: 0.25rem 0 !important;
     }
     
-    /* Preserve hero section */
-    .hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
-    }
-    
     .hero-name, .hero-title, .hero-tagline {
-        color: white !important;
+        color: var(--text-primary) !important;
     }
     
     /* Ensure contact links are visible */
@@ -2849,6 +2856,21 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .achievement-team,
 .achievement-mentor {
     margin-top: 0.25rem;
+}
+
+.achievement-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.achievement-issuer,
+.achievement-date {
+    font-family: var(--font-terminal);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
 }
 
 .achievement-details {

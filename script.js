@@ -332,6 +332,17 @@ function initParallax() {
 
             heroBackground.style.transform = `translateY(${rate}px)`;
         });
+
+        // Reset parallax transform before print so background isn't shifted off-screen
+        window.addEventListener('beforeprint', () => {
+            heroBackground.style.transform = 'translateY(0)';
+        });
+
+        window.addEventListener('afterprint', () => {
+            const scrolled = window.scrollY;
+            const rate = scrolled * 0.3;
+            heroBackground.style.transform = `translateY(${rate}px)`;
+        });
     }
 }
 
