@@ -1,5 +1,7 @@
 # Turki Alshaalan - Portfolio Website
 
+[Live Portfolio](https://trookish.github.io/turki-alshaalan-portfolio/)
+
 A personal portfolio website showcasing the work and skills of Turki Alshaalan, an IT student, Game Developer, and Unity & C# Programmer.
 
 ## Overview
