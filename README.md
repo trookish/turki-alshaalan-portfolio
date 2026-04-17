@@ -186,7 +186,7 @@ Portfolio Website/
 ├── game.js             # Built-in game logic
 ├── README.md           # This file
 ├── CV/                 # CV PDF file
-│   └── Turki_Alshaalan_CV.pdf
+│   └── Turki-Alshalaan-CV.pdf
 ├── images/             # Image assets
 │   ├── Achievement/    # Achievement images
 │   ├── Background/     # Background images
