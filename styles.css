@@ -200,7 +200,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     top: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 75px;
     background: var(--bg-secondary);
     border-bottom: 4px solid var(--border-color);
     z-index: 1000;
@@ -838,6 +838,40 @@ section:nth-child(8) { animation-delay: 0.7s; }
     background: var(--bg-card);
 }
 
+/* Nav Icon Button with Label */
+.nav-icon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding-top: 0.5rem;
+}
+
+.nav-icon-btn .theme-toggle {
+    position: relative;
+}
+
+.nav-btn-label {
+    font-family: var(--font-terminal);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    margin-top: -0.25rem;
+}
+
+.nav-icon-btn .cv-download-nav,
+.nav-icon-btn .pdf-export,
+.nav-icon-btn .theme-toggle {
+    position: relative;
+}
+
+.nav-btn-label {
+    font-family: var(--font-terminal);
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
 .cv-download-nav svg {
     width: 18px;
     height: 18px;
@@ -859,7 +893,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     padding: 0.25rem 0.5rem;
     border: 2px solid var(--border-color);
     font-family: var(--font-terminal);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
@@ -2486,7 +2520,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .activities-title {
     font-family: var(--font-pixel);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
     margin-bottom: 0.25rem;
 }
@@ -3208,7 +3242,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
 
     .highlight-link .highlight-label {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
 
     .education-card {
