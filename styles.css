@@ -3186,7 +3186,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
     .nav-menu {
         position: fixed;
-        top: 60px;
+        top: 75px;
         left: 0;
         right: 0;
         background: var(--bg-primary);
