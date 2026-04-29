@@ -1509,7 +1509,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('images/Background/Background.jpg');
+    background-image: url('images/Background/Background.png');
     background-size: cover;
     background-position: center;
     opacity: 0.2;
