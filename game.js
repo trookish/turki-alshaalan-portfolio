@@ -36,12 +36,21 @@ const GRAVITY = 0.5;
 const FRICTION = 0.9;
 const GROUND_Y = 420;
 
+// Fixed Timestep
+const TARGET_FPS = 60;
+const TIME_STEP = 1000 / TARGET_FPS; // ~16.67ms per logic frame
+const MAX_ACCUMULATOR = TIME_STEP * 5; // Prevent spiral of death
+
 // Game State
 let gameRunning = false;
 let gameState = 'playing'; // playing, gameover, victory, countdown
 let countdownValue = 3;
 let countdownTimer = 0;
 let keys = {};
+
+// Fixed Timestep Variables
+let lastFrameTime = 0;
+let accumulator = 0;
 
 // Visual Effects State
 let screenShake = { x: 0, y: 0, intensity: 0, decay: 0.9 };
@@ -324,7 +333,9 @@ function openGame() {
     playSound('windowOpen');
     resetGame();
     gameRunning = true;
-    gameLoop();
+    lastFrameTime = 0;
+    accumulator = 0;
+    requestAnimationFrame(gameLoop);
 }
 
 function closeGame() {
@@ -376,7 +387,31 @@ function resetGame() {
         state: 'idle',
         stateTimer: 0,
         color: '#ef4444',
-        pattern: 'normal'
+        pattern: 'normal',
+        // Advanced AI state
+        ai: {
+            reactionTimer: 0,
+            reactionDelay: 10,
+            comboCount: 0,
+            maxCombo: 2,
+            phase: 1,
+            lastPlayerX: 100,
+            lastPlayerY: GROUND_Y - 60,
+            playerVelocityX: 0,
+            playerVelocityY: 0,
+            attackPattern: 'normal',
+            patternTimer: 0,
+            feintReady: false,
+            zonePreference: 'mid',
+            consecutiveBlocks: 0,
+            lastAction: 'none',
+            actionCooldown: 0,
+            targetPlatform: null,
+            jumpCommitTimer: 0,
+            antiAirWindow: 0,
+            baitTimer: 0,
+            rageMode: false
+        }
     };
 
     particles = [];
@@ -385,6 +420,8 @@ function resetGame() {
     gameState = 'countdown';
     countdownValue = 3;
     countdownTimer = 0;
+    lastFrameTime = 0;
+    accumulator = 0;
     playSound('countdown');
 }
 
@@ -613,23 +650,176 @@ function updatePlayer() {
     applyPhysics(player);
 }
 
-// Boss AI - Smart Version
-function updateBoss() {
-    boss.stateTimer++;
+// ========================================
+// ADVANCED BOSS AI - Precision Edition
+// ========================================
 
-    // Calculate distance to player
+// AI Helper: Predict player position in N frames
+function predictPlayerPosition(frames) {
+    const ai = boss.ai;
+    let predX = player.x + ai.playerVelocityX * frames;
+    let predY = player.y + ai.playerVelocityY * frames + 0.5 * GRAVITY * frames * frames;
+    // Clamp to screen
+    predX = Math.max(0, Math.min(canvas.width - player.width, predX));
+    predY = Math.min(predY, GROUND_Y - player.height);
+    return { x: predX, y: predY };
+}
+
+// AI Helper: Find optimal platform target
+function findOptimalPlatform() {
+    let best = null;
+    let bestScore = -Infinity;
+    const pred = predictPlayerPosition(20);
+
+    platforms.forEach(plat => {
+        const platCenterX = plat.x + plat.width / 2;
+        const distToPlayer = Math.abs(platCenterX - pred.x);
+        const heightDiff = plat.y - boss.y;
+        const playerHeightDiff = Math.abs(plat.y - pred.y);
+
+        let score = 0;
+        // Prefer platforms near player's predicted X
+        score -= distToPlayer * 0.5;
+        // Prefer platforms at similar height to player
+        score -= playerHeightDiff * 0.3;
+        // Prefer platforms above boss (we want to go UP)
+        if (heightDiff < -20) score += 40;
+        else if (heightDiff < 0) score += 20;
+        // Reachable check
+        if (Math.abs(heightDiff) > 180) score -= 100;
+        // Prefer center platforms for mobility
+        const distFromCenter = Math.abs(platCenterX - canvas.width / 2);
+        score -= distFromCenter * 0.1;
+
+        if (score > bestScore) {
+            bestScore = score;
+            best = plat;
+        }
+    });
+    return best;
+}
+
+// AI Helper: Calculate jump velocity to reach target platform
+function calculateJumpVelocity(targetX, targetY) {
+    const bossCenterX = boss.x + boss.width / 2;
+    const distX = targetX - bossCenterX;
+    const distY = targetY - boss.y;
+
+    // Time to peak and fall
+    const jumpVy = -13;
+    const timeToPeak = -jumpVy / GRAVITY;
+    const peakY = boss.y + jumpVy * timeToPeak + 0.5 * GRAVITY * timeToPeak * timeToPeak;
+
+    // If we can reach with standard jump, return standard
+    if (peakY <= targetY + 10) {
+        const totalTime = timeToPeak * 2;
+        const neededVx = distX / totalTime;
+        return { vx: neededVx, vy: jumpVy };
+    }
+
+    // Otherwise calculate minimum jump
+    return { vx: distX * 0.08, vy: jumpVy };
+}
+
+// AI Helper: Is player attack incoming?
+function isPlayerAttackIncoming() {
+    if (!player.attacking) return false;
+    // Player attack is active in first ~15 frames of 20-frame animation
+    // It can hit when player.facing points toward boss
+    const playerFacesBoss = (player.facing === 1 && player.x < boss.x) ||
+        (player.facing === -1 && player.x > boss.x);
+    const distX = Math.abs(player.x - boss.x);
+    const onSameLevel = Math.abs(player.y - boss.y) < 80;
+    return playerFacesBoss && distX < 90 && onSameLevel;
+}
+
+// AI Helper: Time until player attack hits
+function timeToPlayerImpact() {
+    if (!player.attacking) return Infinity;
+    const distX = Math.abs(player.x - boss.x);
+    return distX / Math.max(Math.abs(player.vx), 1);
+}
+
+function updateBoss() {
+    const ai = boss.ai;
+    boss.stateTimer++;
+    ai.patternTimer++;
+    if (ai.actionCooldown > 0) ai.actionCooldown--;
+    if (ai.reactionTimer > 0) ai.reactionTimer--;
+    if (ai.antiAirWindow > 0) ai.antiAirWindow--;
+    if (ai.baitTimer > 0) ai.baitTimer--;
+    if (ai.jumpCommitTimer > 0) ai.jumpCommitTimer--;
+
+    // Track player velocity for prediction
+    ai.playerVelocityX = player.x - ai.lastPlayerX;
+    ai.playerVelocityY = player.y - ai.lastPlayerY;
+    ai.lastPlayerX = player.x;
+    ai.lastPlayerY = player.y;
+
+    // Phase detection based on health
+    const healthPercent = boss.health / boss.maxHealth;
+    if (healthPercent <= 0.4 && ai.phase === 1) {
+        ai.phase = 2;
+        ai.rageMode = true;
+        boss.speed = 3.8;
+        createFloatingText(boss.x + boss.width / 2, boss.y - 30, 'ENRAGED!', '#ef4444');
+        triggerScreenShake(8);
+    } else if (healthPercent <= 0.75 && ai.phase === 0) {
+        ai.phase = 1;
+        ai.maxCombo = 3;
+    }
+
+    // Calculate distances and predictions
     const dx = player.x - boss.x;
     const dy = player.y - boss.y;
     const distX = Math.abs(dx);
     const distY = Math.abs(dy);
     const onSameLevel = distY < 80;
+    const predictedPlayer = predictPlayerPosition(15);
+    const predDx = predictedPlayer.x - boss.x;
+    const predDistX = Math.abs(predDx);
 
-    // Boss can only block OR attack, not both at the same time
-    // If already attacking, don't block
-    if (!boss.attacking && boss.attackCooldown <= 30) {
-        // Only set block if not currently in attack animation
-        if (player.attacking && distX < 80 && onSameLevel) {
-            boss.blockTimer = 15;
+    // ========================================
+    // DEFENSIVE AI - Precise Blocking & Dodging
+    // ========================================
+
+    // Advanced blocking with reaction delay
+    const attackIncoming = isPlayerAttackIncoming();
+    const timeToImpact = timeToPlayerImpact();
+
+    if (!boss.attacking && boss.attackCooldown <= 25) {
+        if (attackIncoming && timeToImpact < 25 && timeToImpact > 3) {
+            // Start reaction if not already reacting
+            if (ai.reactionTimer === 0 && ai.actionCooldown === 0) {
+                ai.reactionTimer = ai.reactionDelay + Math.floor(Math.random() * 5);
+            }
+        }
+
+        // Execute block after reaction delay
+        if (ai.reactionTimer === 1 && attackIncoming && !boss.blocking) {
+            // Smart block: 80% chance to block, 20% to dodge instead
+            if (Math.random() < 0.85) {
+                boss.blockTimer = 12 + Math.floor(Math.random() * 8);
+                ai.consecutiveBlocks++;
+                ai.lastAction = 'block';
+            } else {
+                // Dodge: jump away instead of blocking
+                if (boss.onGround) {
+                    boss.vy = -11;
+                    boss.vx = -boss.facing * 6;
+                    ai.lastAction = 'dodge';
+                }
+            }
+            ai.actionCooldown = 8;
+        }
+
+        // If player has blocked too many times in a row, mix it up
+        if (ai.consecutiveBlocks >= 2 && attackIncoming) {
+            if (Math.random() < 0.6) {
+                // Counter-attack through block (trade hits intentionally)
+                boss.blockTimer = 0;
+                ai.consecutiveBlocks = 0;
+            }
         }
     }
 
@@ -637,168 +827,396 @@ function updateBoss() {
     if (boss.blockTimer > 0 && !boss.attacking) {
         boss.blockTimer--;
         boss.blocking = true;
+        if (boss.blockTimer === 0) {
+            boss.blocking = false;
+            // Brief vulnerability after block ends
+            ai.actionCooldown = 5;
+        }
     } else {
         boss.blocking = false;
     }
 
-    // Smart platform jumping
-    const needsPlatform = player.y < boss.y - 50; // Player is above
-    const shouldRetreat = player.attacking && distX < 100;
+    // Reset consecutive blocks when player isn't attacking
+    if (!player.attacking) {
+        ai.consecutiveBlocks = 0;
+    }
 
-    // State machine with smart decisions
-    if (boss.stateTimer > 45) {
+    // ========================================
+    // STATE DECISION - Dynamic & Context-Aware
+    // ========================================
+
+    // Determine optimal action based on full battlefield analysis
+    const idealRangeMin = ai.phase === 2 ? 45 : 55; // Enraged = closer
+    const idealRangeMax = ai.phase === 2 ? 90 : 110;
+    const inAttackRange = predDistX < idealRangeMax && onSameLevel;
+    const tooClose = distX < idealRangeMin;
+    const playerAbove = player.y < boss.y - 60;
+    const playerOnPlatform = !player.onGround && player.y < GROUND_Y - 70;
+    const bossOnPlatform = !boss.onGround && boss.y < GROUND_Y - 70;
+
+    // Dynamic state timer: think faster in emergencies
+    let thinkInterval = 40;
+    if (boss.health < 40) thinkInterval = 30; // Faster decisions when low health
+    if (player.attacking && distX < 100) thinkInterval = 15; // Panic mode
+    if (ai.rageMode) thinkInterval = 25;
+
+    if (boss.stateTimer > thinkInterval) {
         boss.stateTimer = 0;
 
-        // Decide state based on situation - can't attack while blocking
-        if (boss.blocking) {
-            // If blocking, stay in retreat/approach mode
+        // Priority 1: Survival - if health critical and player attacking, retreat
+        if (boss.health < 30 && player.attacking && distX < 120) {
             boss.state = 'retreat';
-        } else if (shouldRetreat && !boss.blocking) {
-            boss.state = 'retreat';
-        } else if (distX > 300) {
-            // Far away - approach
-            boss.state = 'approach';
-        } else if (distX < 60 && onSameLevel && !boss.blocking) {
-            // Close range - attack
-            boss.state = 'attack';
-        } else if (needsPlatform && boss.onGround) {
-            // Player above - jump to platform
+            ai.lastAction = 'retreat';
+        }
+        // Priority 2: Anti-air if player is jumping toward us
+        else if (playerAbove && distX < 130 && player.vy < 0 && boss.onGround) {
+            boss.state = 'antiAir';
+            ai.lastAction = 'antiAir';
+        }
+        // Priority 3: Platform chase if player is camping high
+        else if (playerOnPlatform && !bossOnPlatform && boss.onGround && distX > 100) {
             boss.state = 'jumpPlatform';
-        } else if (Math.random() < 0.3) {
-            boss.state = 'idle';
-        } else {
+            ai.targetPlatform = findOptimalPlatform();
+            ai.lastAction = 'jumpPlatform';
+        }
+        // Priority 4: Create distance if too close (spacing)
+        else if (tooClose && !player.attacking && ai.lastAction !== 'retreat') {
+            boss.state = 'retreat';
+            ai.lastAction = 'retreat';
+        }
+        // Priority 5: Attack if in range and not vulnerable
+        else if (inAttackRange && onSameLevel && !boss.blocking && ai.actionCooldown === 0) {
+            // Feint mechanic: sometimes fake an attack to bait player block
+            if (ai.baitTimer === 0 && Math.random() < 0.25 && ai.phase >= 1) {
+                boss.state = 'feint';
+                ai.baitTimer = 90;
+                ai.lastAction = 'feint';
+            } else {
+                boss.state = 'attack';
+                ai.lastAction = 'attack';
+            }
+        }
+        // Priority 6: Approach from optimal angle
+        else if (distX > idealRangeMax || !onSameLevel) {
             boss.state = 'approach';
+            ai.lastAction = 'approach';
+        }
+        // Default: idle but ready
+        else {
+            boss.state = 'idle';
+            ai.lastAction = 'idle';
         }
     }
 
-    // State behavior
-    switch (boss.state) {
-        case 'approach':
-            boss.vx = dx > 0 ? boss.speed : -boss.speed;
-            boss.facing = dx > 0 ? 1 : -1;
+    // ========================================
+    // STATE BEHAVIOR - Precise Execution
+    // ========================================
 
-            // If player jumps, boss should try to jump too
-            if (player.y < boss.y - 100 && boss.onGround && Math.random() < 0.05) {
-                boss.vy = -12;
+    switch (boss.state) {
+        case 'approach': {
+            // Predictive approach: move toward predicted player position
+            const targetX = predictedPlayer.x;
+            const moveDir = targetX > boss.x ? 1 : -1;
+
+            // Speed varies by distance and phase
+            let moveSpeed = boss.speed;
+            if (ai.rageMode) moveSpeed *= 1.3;
+            if (distX > 200) moveSpeed *= 1.1; // Sprint when far
+
+            boss.vx = moveDir * moveSpeed;
+            boss.facing = moveDir;
+
+            // Jump if player is above and we're on ground
+            if (playerAbove && boss.onGround && distX < 150) {
+                if (ai.jumpCommitTimer === 0) {
+                    ai.jumpCommitTimer = 20; // Commit to jump timing
+                }
+                if (ai.jumpCommitTimer === 1) {
+                    // Calculate if we need to jump to a platform or just jump
+                    if (playerOnPlatform) {
+                        ai.targetPlatform = findOptimalPlatform();
+                        if (ai.targetPlatform) {
+                            const platCX = ai.targetPlatform.x + ai.targetPlatform.width / 2;
+                            const jumpCalc = calculateJumpVelocity(platCX, ai.targetPlatform.y);
+                            boss.vy = jumpCalc.vy;
+                            boss.vx = jumpCalc.vx;
+                        } else {
+                            boss.vy = -12;
+                        }
+                    } else {
+                        boss.vy = -12;
+                    }
+                }
             }
             break;
+        }
 
-        case 'attack':
-            if (!boss.attacking && boss.attackCooldown <= 0) {
+        case 'attack': {
+            if (!boss.attacking && boss.attackCooldown <= 0 && ai.actionCooldown === 0) {
                 boss.attacking = true;
-                boss.attackTimer = 25;
-                boss.attackCooldown = 50; // Boss attack cooldown
-                // Charge attack
-                boss.vx = boss.facing * 10;
+                // Combo system: each consecutive hit in a window extends the combo
+                if (ai.comboCount < ai.maxCombo) {
+                    boss.attackTimer = 20;
+                    ai.comboCount++;
+                } else {
+                    boss.attackTimer = 25;
+                    ai.comboCount = 0;
+                }
+                boss.attackCooldown = ai.phase === 2 ? 35 : 45;
+
+                // Lunge toward player with slight prediction
+                const lungeDir = predictedPlayer.x > boss.x ? 1 : -1;
+                boss.vx = lungeDir * (ai.phase === 2 ? 12 : 10);
+                boss.facing = lungeDir;
+                ai.actionCooldown = 10;
             }
 
             if (boss.attackTimer > 0) {
                 boss.attackTimer--;
 
-                // Check player hit (only once per attack)
-                if (boss.attackTimer < 18 && boss.attackTimer > 10 && checkAttackHit(boss, player, 65)) {
-                    if (player.blocking) {
-                        createParticle(player.x + player.width / 2, player.y + player.height / 2, '#fbbf24', 14);
-                        player.vx = boss.facing * 12;
-                        playSound('block');
-                        createFloatingText(player.x + player.width / 2, player.y - 10, 'BLOCK', '#fbbf24');
-                        triggerScreenShake(4);
-                    } else {
-                        player.health -= 5;
-                        player.hit = true;
-                        player.hitTimer = 15;
-                        createParticle(player.x + player.width / 2, player.y + player.height / 2, '#ef4444', 16);
-                        playSound('hit');
-                        createFloatingText(player.x + player.width / 2, player.y - 10, '-5', '#ef4444');
-                        triggerScreenShake(6);
+                // Active hit window with precision timing
+                const hitWindowStart = ai.comboCount > 1 ? 16 : 18;
+                const hitWindowEnd = ai.comboCount > 1 ? 8 : 10;
 
-                        if (player.health <= 0) {
-                            gameState = 'gameover';
-                            playSound('gameOver');
+                if (boss.attackTimer < hitWindowStart && boss.attackTimer > hitWindowEnd) {
+                    // Extended hit range for combos
+                    const hitRange = ai.comboCount > 1 ? 70 : 65;
+                    if (checkAttackHit(boss, player, hitRange)) {
+                        if (player.blocking) {
+                            // Combo breaker on block
+                            createParticle(player.x + player.width / 2, player.y + player.height / 2, '#fbbf24', 16);
+                            player.vx = boss.facing * 14;
+                            playSound('block');
+                            createFloatingText(player.x + player.width / 2, player.y - 10, 'BLOCK', '#fbbf24');
+                            triggerScreenShake(4);
+                            ai.comboCount = 0; // Reset combo on block
+                        } else {
+                            // Damage scales slightly with combo
+                            const damage = ai.comboCount > 1 ? 6 : 5;
+                            player.health -= damage;
+                            player.hit = true;
+                            player.hitTimer = 15;
+                            createParticle(player.x + player.width / 2, player.y + player.height / 2, '#ef4444', 18);
+                            playSound('hit');
+                            createFloatingText(player.x + player.width / 2, player.y - 10, `-${damage}`, '#ef4444');
+                            triggerScreenShake(6 + ai.comboCount);
+
+                            // Pushback
+                            player.vx = boss.facing * 5;
+
+                            if (player.health <= 0) {
+                                gameState = 'gameover';
+                                playSound('gameOver');
+                            }
                         }
                     }
+                }
+
+                // End attack
+                if (boss.attackTimer === 0) {
+                    boss.attacking = false;
+                    // Brief recovery
+                    ai.actionCooldown = ai.phase === 2 ? 4 : 6;
                 }
             } else {
                 boss.attacking = false;
             }
             break;
+        }
 
-        case 'retreat':
-            boss.vx = -boss.facing * (boss.speed * 1.2);
-            // Jump while retreating
-            if (boss.onGround && Math.random() < 0.1) {
+        case 'feint': {
+            // Fake attack startup to bait player block
+            if (!boss.attacking && boss.attackCooldown <= 0) {
+                boss.attacking = true;
+                boss.attackTimer = 12; // Shorter windup
+                boss.attackCooldown = 30;
+                // Small initial lunge
+                boss.vx = boss.facing * 5;
+            }
+
+            if (boss.attackTimer > 0) {
+                boss.attackTimer--;
+                // Cancel early - this is a feint!
+                if (boss.attackTimer < 8) {
+                    boss.attacking = false;
+                    boss.attackTimer = 0;
+                    // Immediately transition to real attack or retreat based on player state
+                    if (player.blocking) {
+                        // Player fell for it! Wait for block to end then attack
+                        boss.state = 'idle';
+                        ai.baitTimer = 40;
+                        // Prepare real attack
+                        setTimeout(() => {
+                            if (gameState === 'playing') {
+                                boss.state = 'attack';
+                                boss.stateTimer = 100; // Immediate think
+                            }
+                        }, 300);
+                    } else {
+                        boss.state = 'retreat';
+                    }
+                }
+            }
+            break;
+        }
+
+        case 'retreat': {
+            // Smart retreat: don't just run away, maintain optimal spacing
+            const idealDist = ai.phase === 2 ? 80 : 100;
+            const currentDist = Math.abs(player.x - boss.x);
+
+            if (currentDist < idealDist) {
+                // Back away
+                boss.vx = -boss.facing * (boss.speed * (ai.rageMode ? 1.4 : 1.2));
+            } else {
+                // We've created enough space - circle around
+                boss.vx = boss.facing * boss.speed * 0.5;
+            }
+
+            // Jump while retreating to avoid ground attacks
+            if (boss.onGround && player.attacking && distX < 120 && Math.random() < 0.15) {
                 boss.vy = -10;
             }
-            break;
 
-        case 'jumpPlatform':
-            // Find best platform to jump to
-            let bestPlatform = null;
-            let bestScore = -Infinity;
-
-            platforms.forEach(plat => {
-                // Score based on: being above boss, closer to player's x, and not too high
-                const aboveBoss = plat.y < boss.y;
-                const nearPlayerX = Math.abs(plat.x + plat.width / 2 - (player.x + player.width / 2)) < 150;
-                const reachable = boss.y - plat.y < 200;
-
-                let score = 0;
-                if (aboveBoss) score += 3;
-                if (nearPlayerX) score += 2;
-                if (reachable) score += 1;
-
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestPlatform = plat;
-                }
-            });
-
-            if (bestPlatform && boss.onGround) {
-                // Jump toward platform
-                const platCenterX = bestPlatform.x + bestPlatform.width / 2;
-                const bossCenterX = boss.x + boss.width / 2;
-
-                if (platCenterX > bossCenterX) {
-                    boss.vx = boss.speed;
-                    boss.facing = 1;
-                } else {
-                    boss.vx = -boss.speed;
-                    boss.facing = -1;
-                }
-
-                // Jump
-                boss.vy = -13;
-                boss.state = 'approach'; // After jumping, continue approaching
-            } else if (!boss.onGround) {
-                // Mid-air: adjust position toward platform
-                if (bestPlatform) {
-                    const platCenterX = bestPlatform.x + bestPlatform.width / 2;
-                    const bossCenterX = boss.x + boss.width / 2;
-                    boss.vx = (platCenterX > bossCenterX) ? 3 : -3;
+            // Occasionally hop to platforms for high ground
+            if (boss.onGround && !playerOnPlatform && Math.random() < 0.05) {
+                const nearbyPlat = platforms.find(p =>
+                    Math.abs(p.x + p.width / 2 - boss.x) < 100 && p.y < boss.y - 40
+                );
+                if (nearbyPlat) {
+                    boss.vy = -12;
+                    boss.vx = (nearbyPlat.x + nearbyPlat.width / 2 > boss.x) ? 4 : -4;
                 }
             }
             break;
+        }
 
-        default:
-            // Idle - face player, slight movement
+        case 'antiAir': {
+            // Prepare to intercept jumping player
             boss.facing = dx > 0 ? 1 : -1;
-            // Small hop to look alive
-            if (boss.onGround && Math.random() < 0.02) {
-                boss.vy = -6;
-            }
-    }
 
-    // Additional smart behaviors
-    // Anti-air: jump if player is above
-    if (player.y < boss.y - 80 && boss.onGround && distX < 100) {
-        if (Math.random() < 0.08) {
-            boss.vy = -12;
+            if (boss.onGround && ai.antiAirWindow === 0) {
+                ai.antiAirWindow = 30;
+            }
+
+            if (ai.antiAirWindow > 0) {
+                // Jump to intercept
+                if (boss.onGround && player.vy < -2) {
+                    // Predict intercept point
+                    const timeToPeak = -player.vy / GRAVITY;
+                    const playerPeakX = player.x + player.vx * timeToPeak;
+                    boss.vx = (playerPeakX > boss.x) ? 5 : -5;
+                    boss.vy = -13;
+                }
+
+                // Attack while rising if close
+                if (!boss.onGround && distX < 70 && !boss.attacking && boss.attackCooldown <= 0) {
+                    boss.attacking = true;
+                    boss.attackTimer = 20;
+                    boss.attackCooldown = 40;
+                }
+            }
+            break;
+        }
+
+        case 'jumpPlatform': {
+            if (!ai.targetPlatform) {
+                ai.targetPlatform = findOptimalPlatform();
+            }
+
+            if (ai.targetPlatform && boss.onGround) {
+                const platCX = ai.targetPlatform.x + ai.targetPlatform.width / 2;
+                const jumpCalc = calculateJumpVelocity(platCX, ai.targetPlatform.y);
+
+                // Position for jump
+                const distToJumpPoint = Math.abs(platCX - (boss.x + boss.width / 2));
+                if (distToJumpPoint > 80) {
+                    // Move toward optimal jump position
+                    boss.vx = platCX > boss.x ? boss.speed : -boss.speed;
+                    boss.facing = platCX > boss.x ? 1 : -1;
+                } else {
+                    // Execute jump
+                    boss.vy = jumpCalc.vy;
+                    boss.vx = jumpCalc.vx;
+                    boss.state = 'approach';
+                }
+            } else if (!boss.onGround) {
+                // Mid-air correction toward target
+                if (ai.targetPlatform) {
+                    const platCX = ai.targetPlatform.x + ai.targetPlatform.width / 2;
+                    const bossCX = boss.x + boss.width / 2;
+                    const correction = (platCX - bossCX) * 0.08;
+                    boss.vx += correction;
+                    // Clamp
+                    boss.vx = Math.max(-6, Math.min(6, boss.vx));
+                }
+                // Transition to approach when landing
+                if (boss.onGround) {
+                    boss.state = 'approach';
+                }
+            } else {
+                boss.state = 'approach';
+            }
+            break;
+        }
+
+        default: {
+            // Idle - face player, maintain spacing
+            boss.facing = dx > 0 ? 1 : -1;
+
+            // Micro-movements to stay unpredictable
+            if (Math.abs(boss.vx) < 0.5) {
+                boss.vx = Math.sin(Date.now() / 400) * 0.8;
+            }
+
+            // Idle hop
+            if (boss.onGround && Math.random() < 0.015) {
+                boss.vy = -5;
+            }
+
+            // Sometimes initiate attack from idle if player is in range
+            if (distX < 70 && onSameLevel && !player.attacking && boss.attackCooldown <= 0 && Math.random() < 0.08) {
+                boss.state = 'attack';
+                boss.stateTimer = 100; // Think immediately
+            }
         }
     }
 
-    // Pursue vertically if player on platform
-    if (!boss.onGround && player.onGround && Math.random() < 0.05) {
-        boss.vx = dx > 0 ? boss.speed * 0.5 : -boss.speed * 0.5;
+    // ========================================
+    // GLOBAL AI BEHAVIORS
+    // ========================================
+
+    // Enraged behavior: chase more aggressively, less blocking
+    if (ai.rageMode) {
+        if (boss.state === 'idle' && distX > 50) {
+            boss.state = 'approach';
+        }
+        // Reduced reaction time
+        ai.reactionDelay = 6;
+    }
+
+    // Wall awareness: don't get stuck at edges
+    if (boss.x < 30) {
+        boss.vx = Math.max(boss.vx, 2);
+        boss.facing = 1;
+    } else if (boss.x > canvas.width - boss.width - 30) {
+        boss.vx = Math.min(boss.vx, -2);
+        boss.facing = -1;
+    }
+
+    // Ledge check: don't walk off platforms
+    if (bossOnPlatform) {
+        const currentPlat = platforms.find(p =>
+            boss.x + boss.width / 2 > p.x &&
+            boss.x + boss.width / 2 < p.x + p.width &&
+            Math.abs(boss.y + boss.height - p.y) < 5
+        );
+        if (currentPlat) {
+            const leftEdge = currentPlat.x + 5;
+            const rightEdge = currentPlat.x + currentPlat.width - boss.width - 5;
+            if (boss.x < leftEdge && boss.vx < 0) boss.vx = 0;
+            if (boss.x > rightEdge && boss.vx > 0) boss.vx = 0;
+        }
     }
 
     // Timers
@@ -1606,33 +2024,51 @@ function draw() {
     ctx.restore();
 }
 
-// Game Loop
-function gameLoop() {
+// Fixed Timestep Game Loop
+function gameLoop(currentTime) {
     if (!gameRunning) return;
 
-    // Countdown state
-    if (gameState === 'countdown') {
-        countdownTimer++;
-        if (countdownTimer >= 60) { // 1 second per countdown
-            countdownTimer = 0;
-            countdownValue--;
-            playSound('countdown');
-            if (countdownValue <= 0) {
-                gameState = 'playing';
+    // Initialize on first frame
+    if (!lastFrameTime) lastFrameTime = currentTime;
+
+    // Calculate delta time since last frame
+    let deltaTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+
+    // Clamp delta to prevent huge jumps if tab was inactive
+    if (deltaTime > MAX_ACCUMULATOR) deltaTime = MAX_ACCUMULATOR;
+
+    accumulator += deltaTime;
+
+    // Run fixed timestep updates
+    while (accumulator >= TIME_STEP) {
+        // Countdown state (60 ticks = 1 second at fixed 60Hz)
+        if (gameState === 'countdown') {
+            countdownTimer++;
+            if (countdownTimer >= 60) {
+                countdownTimer = 0;
+                countdownValue--;
+                playSound('countdown');
+                if (countdownValue <= 0) {
+                    gameState = 'playing';
+                }
             }
         }
+
+        if (gameState === 'playing') {
+            updatePlayer();
+            updateBoss();
+            updateParticles();
+            updateFloatingTexts();
+            updateScreenShake();
+            handleEntityCollision();
+        }
+
+        updateBackground();
+        accumulator -= TIME_STEP;
     }
 
-    if (gameState === 'playing') {
-        updatePlayer();
-        updateBoss();
-        updateParticles();
-        updateFloatingTexts();
-        updateScreenShake();
-        handleEntityCollision(); // Prevent overlapping
-    }
-
-    updateBackground();
+    // Render every frame (smooth visual updates independent of logic speed)
     draw();
     requestAnimationFrame(gameLoop);
 }
