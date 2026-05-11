@@ -36,6 +36,13 @@ const GRAVITY = 0.5;
 const FRICTION = 0.9;
 const GROUND_Y = 420;
 
+// Shield Constants
+const SHIELD_MAX = 100;
+const SHIELD_BLOCK_COST = 12;     // Damage absorbed per blocked hit
+const SHIELD_REGEN_RATE = 0.25;   // Per frame (at 60fps = 15/sec)
+const SHIELD_REGEN_DELAY = 120;   // Frames before regen starts after break
+const SHIELD_BREAK_RECOVERY = 180; // Frames before shield can be used again after breaking
+
 // Fixed Timestep
 const TARGET_FPS = 60;
 const TIME_STEP = 1000 / TARGET_FPS; // ~16.67ms per logic frame
@@ -95,7 +102,12 @@ let player = {
     blockTimer: 0,
     hit: false,
     hitTimer: 0,
-    color: '#4ade80'
+    color: '#4ade80',
+    shield: SHIELD_MAX,
+    maxShield: SHIELD_MAX,
+    shieldBroken: false,
+    shieldBreakTimer: 0,
+    shieldRegenDelay: 0
 };
 
 let boss = {
@@ -118,7 +130,12 @@ let boss = {
     state: 'idle',
     stateTimer: 0,
     color: '#ef4444',
-    pattern: 'normal'
+    pattern: 'normal',
+    shield: SHIELD_MAX,
+    maxShield: SHIELD_MAX,
+    shieldBroken: false,
+    shieldBreakTimer: 0,
+    shieldRegenDelay: 0
 };
 
 // Platforms
@@ -364,7 +381,12 @@ function resetGame() {
         blockTimer: 0,
         hit: false,
         hitTimer: 0,
-        color: '#4ade80'
+        color: '#4ade80',
+        shield: SHIELD_MAX,
+        maxShield: SHIELD_MAX,
+        shieldBroken: false,
+        shieldBreakTimer: 0,
+        shieldRegenDelay: 0
     };
 
     boss = {
@@ -388,6 +410,11 @@ function resetGame() {
         stateTimer: 0,
         color: '#ef4444',
         pattern: 'normal',
+        shield: SHIELD_MAX,
+        maxShield: SHIELD_MAX,
+        shieldBroken: false,
+        shieldBreakTimer: 0,
+        shieldRegenDelay: 0,
         // Advanced AI state
         ai: {
             reactionTimer: 0,
@@ -601,11 +628,22 @@ function updatePlayer() {
 
         // Check hit
         if (checkAttackHit(player, boss, 50)) {
-            if (boss.blocking) {
-                // Blocked
+            if (boss.blocking && boss.shield > 0) {
+                // Blocked - damage shield
+                boss.shield -= SHIELD_BLOCK_COST;
                 createParticle(boss.x + boss.width / 2, boss.y + boss.height / 2, '#fbbf24', 12);
                 boss.vx = player.facing * 8;
-                createFloatingText(boss.x + boss.width / 2, boss.y - 10, 'BLOCKED', '#fbbf24');
+                if (boss.shield <= 0) {
+                    boss.shield = 0;
+                    boss.shieldBroken = true;
+                    boss.shieldBreakTimer = SHIELD_BREAK_RECOVERY;
+                    boss.shieldRegenDelay = SHIELD_REGEN_DELAY;
+                    boss.blocking = false;
+                    createFloatingText(boss.x + boss.width / 2, boss.y - 20, 'SHIELD BREAK!', '#3b82f6');
+                    triggerScreenShake(6);
+                } else {
+                    createFloatingText(boss.x + boss.width / 2, boss.y - 10, 'BLOCKED', '#fbbf24');
+                }
                 triggerScreenShake(3);
             } else {
                 // Hit
@@ -624,10 +662,28 @@ function updatePlayer() {
         }
     }
 
-    // Block
-    if (keys['k']) {
+    // Block - only if shield is not broken
+    if (keys['k'] && !player.shieldBroken && player.shield > 0) {
         player.blocking = true;
         player.blockTimer = 10;
+    } else if (player.shieldBroken || player.shield <= 0) {
+        player.blocking = false;
+    }
+
+    // Shield Regeneration
+    if (player.shieldRegenDelay > 0) {
+        player.shieldRegenDelay--;
+    } else if (player.shield < player.maxShield && !player.blocking) {
+        player.shield = Math.min(player.maxShield, player.shield + SHIELD_REGEN_RATE);
+    }
+
+    // Shield Break Recovery
+    if (player.shieldBroken) {
+        player.shieldBreakTimer--;
+        if (player.shieldBreakTimer <= 0) {
+            player.shieldBroken = false;
+            player.shield = player.maxShield * 0.3; // Come back at 30%
+        }
     }
 
     // Timers
@@ -795,10 +851,17 @@ function updateBoss() {
             }
         }
 
-        // Execute block after reaction delay
-        if (ai.reactionTimer === 1 && attackIncoming && !boss.blocking) {
-            // Smart block: 80% chance to block, 20% to dodge instead
-            if (Math.random() < 0.85) {
+        // Execute block after reaction delay - only if shield is available
+        if (ai.reactionTimer === 1 && attackIncoming && !boss.blocking && !boss.shieldBroken && boss.shield > 0) {
+            // Smart block: check shield health first
+            if (boss.shield < SHIELD_BLOCK_COST * 2) {
+                // Shield is low - prefer dodge instead
+                if (boss.onGround) {
+                    boss.vy = -11;
+                    boss.vx = -boss.facing * 6;
+                    ai.lastAction = 'dodge';
+                }
+            } else if (Math.random() < 0.85) {
                 boss.blockTimer = 12 + Math.floor(Math.random() * 8);
                 ai.consecutiveBlocks++;
                 ai.lastAction = 'block';
@@ -824,7 +887,7 @@ function updateBoss() {
     }
 
     // Update block state
-    if (boss.blockTimer > 0 && !boss.attacking) {
+    if (boss.blockTimer > 0 && !boss.attacking && !boss.shieldBroken && boss.shield > 0) {
         boss.blockTimer--;
         boss.blocking = true;
         if (boss.blockTimer === 0) {
@@ -834,6 +897,22 @@ function updateBoss() {
         }
     } else {
         boss.blocking = false;
+    }
+
+    // Boss Shield Regeneration
+    if (boss.shieldRegenDelay > 0) {
+        boss.shieldRegenDelay--;
+    } else if (boss.shield < boss.maxShield && !boss.blocking) {
+        boss.shield = Math.min(boss.maxShield, boss.shield + SHIELD_REGEN_RATE);
+    }
+
+    // Boss Shield Break Recovery
+    if (boss.shieldBroken) {
+        boss.shieldBreakTimer--;
+        if (boss.shieldBreakTimer <= 0) {
+            boss.shieldBroken = false;
+            boss.shield = boss.maxShield * 0.3;
+        }
     }
 
     // Reset consecutive blocks when player isn't attacking
@@ -982,12 +1061,23 @@ function updateBoss() {
                     // Extended hit range for combos
                     const hitRange = ai.comboCount > 1 ? 70 : 65;
                     if (checkAttackHit(boss, player, hitRange)) {
-                        if (player.blocking) {
-                            // Combo breaker on block
+                        if (player.blocking && player.shield > 0) {
+                            // Blocked - damage player shield
+                            player.shield -= SHIELD_BLOCK_COST;
                             createParticle(player.x + player.width / 2, player.y + player.height / 2, '#fbbf24', 16);
                             player.vx = boss.facing * 14;
                             playSound('block');
-                            createFloatingText(player.x + player.width / 2, player.y - 10, 'BLOCK', '#fbbf24');
+                            if (player.shield <= 0) {
+                                player.shield = 0;
+                                player.shieldBroken = true;
+                                player.shieldBreakTimer = SHIELD_BREAK_RECOVERY;
+                                player.shieldRegenDelay = SHIELD_REGEN_DELAY;
+                                player.blocking = false;
+                                createFloatingText(player.x + player.width / 2, player.y - 20, 'SHIELD BREAK!', '#3b82f6');
+                                triggerScreenShake(7);
+                            } else {
+                                createFloatingText(player.x + player.width / 2, player.y - 10, 'BLOCK', '#fbbf24');
+                            }
                             triggerScreenShake(4);
                             ai.comboCount = 0; // Reset combo on block
                         } else {
@@ -1816,54 +1906,88 @@ function drawFloatingTexts() {
 }
 
 function drawHealthBars() {
-    // Player health bar background
+    // === PLAYER HEALTH BAR ===
     ctx.fillStyle = '#0a0a0a';
     ctx.strokeStyle = '#4ade80';
     ctx.lineWidth = 2;
     ctx.fillRect(20, 20, 200, 24);
     ctx.strokeRect(20, 20, 200, 24);
 
-    // Player health fill
     const playerHealthPercent = Math.max(0, player.health / player.maxHealth);
     const playerHealthColor = player.health > 30 ? '#4ade80' : '#ef4444';
     ctx.fillStyle = playerHealthColor;
     ctx.fillRect(22, 22, playerHealthPercent * 196, 20);
 
-    // Player health segments
     ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
     for (let i = 1; i < 10; i++) {
         ctx.fillRect(22 + (196 / 10) * i, 22, 2, 20);
     }
 
-    // Player name
     ctx.fillStyle = '#ffffff';
     ctx.font = '10px "Press Start 2P"';
     ctx.textAlign = 'left';
     ctx.fillText('PLAYER', 25, 36);
 
-    // Boss health bar background
+    // === PLAYER SHIELD BAR (under health) ===
+    const shieldBarY = 46;
+    ctx.fillStyle = '#0a0a0a';
+    ctx.strokeStyle = player.shieldBroken ? '#525252' : '#3b82f6';
+    ctx.lineWidth = 1;
+    ctx.fillRect(20, shieldBarY, 200, 10);
+    ctx.strokeRect(20, shieldBarY, 200, 10);
+
+    if (!player.shieldBroken) {
+        const playerShieldPercent = Math.max(0, player.shield / player.maxShield);
+        ctx.fillStyle = player.shield > 30 ? '#3b82f6' : '#60a5fa';
+        ctx.fillRect(21, shieldBarY + 1, playerShieldPercent * 198, 8);
+    }
+
+    // Shield label
+    ctx.fillStyle = player.shieldBroken ? '#525252' : '#93c5fd';
+    ctx.font = '7px "Press Start 2P"';
+    ctx.textAlign = 'left';
+    ctx.fillText(player.shieldBroken ? 'BROKEN' : 'SHIELD', 23, shieldBarY + 8);
+
+    // === BOSS HEALTH BAR ===
     ctx.fillStyle = '#0a0a0a';
     ctx.strokeStyle = '#ef4444';
     ctx.lineWidth = 2;
     ctx.fillRect(canvas.width - 220, 20, 200, 24);
     ctx.strokeRect(canvas.width - 220, 20, 200, 24);
 
-    // Boss health fill
     const bossHealthPercent = Math.max(0, boss.health / boss.maxHealth);
     const bossHealthColor = boss.health > 50 ? '#ef4444' : '#f97316';
     ctx.fillStyle = bossHealthColor;
     ctx.fillRect(canvas.width - 218, 22, bossHealthPercent * 196, 20);
 
-    // Boss health segments
     ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
     for (let i = 1; i < 10; i++) {
         ctx.fillRect(canvas.width - 218 + (196 / 10) * i, 22, 2, 20);
     }
 
-    // Boss name
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'right';
     ctx.fillText('BOSS', canvas.width - 25, 36);
+
+    // === BOSS SHIELD BAR (under health) ===
+    const bossShieldBarY = 46;
+    ctx.fillStyle = '#0a0a0a';
+    ctx.strokeStyle = boss.shieldBroken ? '#525252' : '#3b82f6';
+    ctx.lineWidth = 1;
+    ctx.fillRect(canvas.width - 220, bossShieldBarY, 200, 10);
+    ctx.strokeRect(canvas.width - 220, bossShieldBarY, 200, 10);
+
+    if (!boss.shieldBroken) {
+        const bossShieldPercent = Math.max(0, boss.shield / boss.maxShield);
+        ctx.fillStyle = boss.shield > 30 ? '#3b82f6' : '#60a5fa';
+        ctx.fillRect(canvas.width - 219, bossShieldBarY + 1, bossShieldPercent * 198, 8);
+    }
+
+    // Shield label
+    ctx.fillStyle = boss.shieldBroken ? '#525252' : '#93c5fd';
+    ctx.font = '7px "Press Start 2P"';
+    ctx.textAlign = 'right';
+    ctx.fillText(boss.shieldBroken ? 'BROKEN' : 'SHIELD', canvas.width - 23, bossShieldBarY + 8);
     ctx.textAlign = 'left';
 }
 
