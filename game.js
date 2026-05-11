@@ -1,5 +1,6 @@
 // ========================================
 // Browser-Based Minigame: Turki's Battle
+// Visually Enhanced Edition
 // ========================================
 
 const canvas = document.getElementById('gameCanvas');
@@ -41,6 +42,28 @@ let gameState = 'playing'; // playing, gameover, victory, countdown
 let countdownValue = 3;
 let countdownTimer = 0;
 let keys = {};
+
+// Visual Effects State
+let screenShake = { x: 0, y: 0, intensity: 0, decay: 0.9 };
+let floatingTexts = [];
+let backgroundStars = [];
+let bgOffset = 0;
+
+// Initialize background stars
+function initStars() {
+    backgroundStars = [];
+    for (let i = 0; i < 60; i++) {
+        backgroundStars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 0.5,
+            speed: Math.random() * 0.3 + 0.1,
+            brightness: Math.random(),
+            twinkleSpeed: Math.random() * 0.05 + 0.01
+        });
+    }
+}
+initStars();
 
 // Entities
 let player = {
@@ -357,6 +380,8 @@ function resetGame() {
     };
 
     particles = [];
+    floatingTexts = [];
+    screenShake = { x: 0, y: 0, intensity: 0, decay: 0.9 };
     gameState = 'countdown';
     countdownValue = 3;
     countdownTimer = 0;
@@ -445,19 +470,70 @@ function createParticle(x, y, color, count = 5) {
             y: y,
             vx: (Math.random() - 0.5) * 8,
             vy: (Math.random() - 0.5) * 8,
-            life: 30,
+            life: 30 + Math.random() * 20,
+            maxLife: 50,
             color: color,
-            size: Math.random() * 4 + 2
+            size: Math.random() * 4 + 2,
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: (Math.random() - 0.5) * 0.3,
+            gravity: 0.15
         });
     }
+}
+
+function createFloatingText(x, y, text, color) {
+    floatingTexts.push({
+        x: x,
+        y: y,
+        text: text,
+        color: color,
+        life: 40,
+        vy: -1.5
+    });
+}
+
+function triggerScreenShake(intensity) {
+    screenShake.intensity = intensity;
 }
 
 function updateParticles() {
     particles = particles.filter(p => {
         p.x += p.vx;
         p.y += p.vy;
+        p.vy += p.gravity;
+        p.rotation += p.rotationSpeed;
         p.life--;
         return p.life > 0;
+    });
+}
+
+function updateFloatingTexts() {
+    floatingTexts = floatingTexts.filter(t => {
+        t.y += t.vy;
+        t.life--;
+        return t.life > 0;
+    });
+}
+
+function updateScreenShake() {
+    if (screenShake.intensity > 0.5) {
+        screenShake.x = (Math.random() - 0.5) * screenShake.intensity;
+        screenShake.y = (Math.random() - 0.5) * screenShake.intensity;
+        screenShake.intensity *= screenShake.decay;
+    } else {
+        screenShake.x = 0;
+        screenShake.y = 0;
+        screenShake.intensity = 0;
+    }
+}
+
+function updateBackground() {
+    bgOffset += 0.2;
+    backgroundStars.forEach(star => {
+        star.brightness += star.twinkleSpeed;
+        if (star.brightness > 1 || star.brightness < 0.2) {
+            star.twinkleSpeed *= -1;
+        }
     });
 }
 
@@ -490,15 +566,19 @@ function updatePlayer() {
         if (checkAttackHit(player, boss, 50)) {
             if (boss.blocking) {
                 // Blocked
-                createParticle(boss.x + boss.width / 2, boss.y + boss.height / 2, '#fbbf24', 8);
+                createParticle(boss.x + boss.width / 2, boss.y + boss.height / 2, '#fbbf24', 12);
                 boss.vx = player.facing * 8;
+                createFloatingText(boss.x + boss.width / 2, boss.y - 10, 'BLOCKED', '#fbbf24');
+                triggerScreenShake(3);
             } else {
                 // Hit
                 boss.health -= 6;
                 playSound('hit');
                 boss.hit = true;
                 boss.hitTimer = 15;
-                createParticle(boss.x + boss.width / 2, boss.y + boss.height / 2, '#ef4444', 10);
+                createParticle(boss.x + boss.width / 2, boss.y + boss.height / 2, '#ef4444', 15);
+                createFloatingText(boss.x + boss.width / 2, boss.y - 10, '-6', '#ef4444');
+                triggerScreenShake(5);
 
                 if (boss.health <= 0) {
                     gameState = 'victory';
@@ -618,15 +698,19 @@ function updateBoss() {
                 // Check player hit (only once per attack)
                 if (boss.attackTimer < 18 && boss.attackTimer > 10 && checkAttackHit(boss, player, 65)) {
                     if (player.blocking) {
-                        createParticle(player.x + player.width / 2, player.y + player.height / 2, '#fbbf24', 10);
+                        createParticle(player.x + player.width / 2, player.y + player.height / 2, '#fbbf24', 14);
                         player.vx = boss.facing * 12;
                         playSound('block');
+                        createFloatingText(player.x + player.width / 2, player.y - 10, 'BLOCK', '#fbbf24');
+                        triggerScreenShake(4);
                     } else {
                         player.health -= 5;
                         player.hit = true;
                         player.hitTimer = 15;
-                        createParticle(player.x + player.width / 2, player.y + player.height / 2, '#ef4444', 12);
+                        createParticle(player.x + player.width / 2, player.y + player.height / 2, '#ef4444', 16);
                         playSound('hit');
+                        createFloatingText(player.x + player.width / 2, player.y - 10, '-5', '#ef4444');
+                        triggerScreenShake(6);
 
                         if (player.health <= 0) {
                             gameState = 'gameover';
@@ -729,159 +813,797 @@ function updateBoss() {
     applyPhysics(boss);
 }
 
-// Rendering
-function draw() {
-    // Clear
-    ctx.fillStyle = '#0a0a0a';
+// ========================================
+// VISUAL RENDERING - ENHANCED
+// ========================================
+
+function drawBackground() {
+    // Deep space gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#0a0a12');
+    gradient.addColorStop(0.5, '#0f0f1a');
+    gradient.addColorStop(1, '#151525');
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw platforms
-    ctx.fillStyle = '#1f1f1f';
-    ctx.strokeStyle = '#4ade80';
-    ctx.lineWidth = 2;
-    platforms.forEach(plat => {
-        ctx.fillRect(plat.x, plat.y, plat.width, plat.height);
-        ctx.strokeRect(plat.x, plat.y, plat.width, plat.height);
+    // Retro grid floor effect (below ground)
+    ctx.save();
+    ctx.strokeStyle = 'rgba(74, 222, 128, 0.08)';
+    ctx.lineWidth = 1;
+    const gridSize = 40;
+    const perspectiveOffset = (bgOffset % gridSize);
+
+    // Horizontal grid lines with perspective
+    for (let y = GROUND_Y + 10; y < canvas.height; y += gridSize) {
+        const perspective = (y - GROUND_Y) / (canvas.height - GROUND_Y);
+        const alpha = 0.08 * (1 - perspective);
+        ctx.strokeStyle = `rgba(74, 222, 128, ${alpha})`;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+
+    // Vertical grid lines
+    for (let x = -perspectiveOffset; x < canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, GROUND_Y);
+        ctx.lineTo(x + (x - canvas.width / 2) * 0.3, canvas.height);
+        ctx.stroke();
+    }
+    ctx.restore();
+
+    // Stars
+    backgroundStars.forEach(star => {
+        const alpha = 0.3 + star.brightness * 0.7;
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fillRect(star.x, star.y, star.size, star.size);
     });
 
-    // Draw ground
-    ctx.fillStyle = '#1a1a1a';
+    // Distant mountains / silhouettes
+    ctx.fillStyle = '#0d0d15';
+    ctx.beginPath();
+    ctx.moveTo(0, GROUND_Y);
+    for (let x = 0; x <= canvas.width; x += 20) {
+        const height = Math.sin(x * 0.01) * 30 + Math.sin(x * 0.03) * 15 + 20;
+        ctx.lineTo(x, GROUND_Y - height);
+    }
+    ctx.lineTo(canvas.width, GROUND_Y);
+    ctx.closePath();
+    ctx.fill();
+
+    // Second layer of silhouettes
+    ctx.fillStyle = '#12121c';
+    ctx.beginPath();
+    ctx.moveTo(0, GROUND_Y);
+    for (let x = 0; x <= canvas.width; x += 15) {
+        const height = Math.sin(x * 0.015 + 2) * 20 + Math.sin(x * 0.04) * 10 + 10;
+        ctx.lineTo(x, GROUND_Y - height);
+    }
+    ctx.lineTo(canvas.width, GROUND_Y);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function drawGround() {
+    // Ground base
+    ctx.fillStyle = '#1a1a2e';
     ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
+
+    // Ground top edge - glowing line
     ctx.strokeStyle = '#4ade80';
+    ctx.lineWidth = 2;
+    ctx.shadowColor = '#4ade80';
+    ctx.shadowBlur = 8;
     ctx.beginPath();
     ctx.moveTo(0, GROUND_Y);
     ctx.lineTo(canvas.width, GROUND_Y);
     ctx.stroke();
+    ctx.shadowBlur = 0;
 
-    // Draw player
-    ctx.fillStyle = player.hit ? '#ffffff' : player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    // Ground texture - horizontal lines
+    ctx.strokeStyle = 'rgba(74, 222, 128, 0.15)';
+    ctx.lineWidth = 1;
+    for (let y = GROUND_Y + 10; y < canvas.height; y += 12) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
 
-    // Player eyes
+    // Ground edge highlight
+    ctx.fillStyle = 'rgba(74, 222, 128, 0.1)';
+    ctx.fillRect(0, GROUND_Y, canvas.width, 4);
+}
+
+function drawPlatforms() {
+    platforms.forEach(plat => {
+        // Platform shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(plat.x + 4, plat.y + 4, plat.width, plat.height);
+
+        // Platform base
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(plat.x, plat.y, plat.width, plat.height);
+
+        // Platform top surface
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(plat.x, plat.y, plat.width, 6);
+
+        // Platform highlight edge
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(plat.x, plat.y, plat.width, 2);
+
+        // Platform border
+        ctx.strokeStyle = '#4ade80';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(plat.x, plat.y, plat.width, plat.height);
+
+        // Platform surface detail - small dots
+        ctx.fillStyle = 'rgba(74, 222, 128, 0.2)';
+        for (let i = 0; i < plat.width; i += 15) {
+            ctx.fillRect(plat.x + i + 4, plat.y + 10, 4, 4);
+        }
+
+        // Platform support pillar (visual only)
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.5)';
+        ctx.fillRect(plat.x + plat.width / 2 - 4, plat.y + plat.height, 8, GROUND_Y - plat.y - plat.height);
+    });
+}
+
+function drawShadow(x, y, width) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.beginPath();
+    ctx.ellipse(x + width / 2, GROUND_Y - 2, width / 2, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function drawPlayer() {
+    const p = player;
+    const facing = p.facing;
+
+    // Shadow
+    if (p.onGround) {
+        drawShadow(p.x, p.y, p.width);
+    } else {
+        // Smaller shadow when in air
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.beginPath();
+        ctx.ellipse(p.x + p.width / 2, GROUND_Y - 2, p.width / 3, 3, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Hit flash
+    if (p.hit && p.hitTimer > 0) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.hitTimer / 15 * 0.6})`;
+        ctx.fillRect(p.x - 5, p.y - 5, p.width + 10, p.height + 10);
+    }
+
+    // Idle bobbing animation
+    const bobOffset = p.onGround ? Math.sin(Date.now() / 300) * 1.5 : 0;
+
+    ctx.save();
+    ctx.translate(p.x + p.width / 2, p.y + p.height / 2 + bobOffset);
+    if (facing === -1) ctx.scale(-1, 1);
+
+    // Body color
+    const bodyColor = p.hit ? '#ffffff' : p.color;
+    const darkBodyColor = p.hit ? '#cccccc' : '#22c55e';
+
+    // Legs
+    const legOffset = Math.abs(p.vx) > 0.5 && p.onGround ? Math.sin(Date.now() / 80) * 4 : 0;
+    ctx.fillStyle = darkBodyColor;
+    // Left leg
+    ctx.fillRect(-12, 15, 8, 18 + legOffset);
+    // Right leg
+    ctx.fillRect(4, 15, 8, 18 - legOffset);
+
+    // Boots
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-13, 28 + legOffset, 10, 6);
+    ctx.fillRect(3, 28 - legOffset, 10, 6);
+
+    // Body / Torso
+    ctx.fillStyle = bodyColor;
+    ctx.fillRect(-14, -5, 28, 22);
+
+    // Armor details
+    ctx.fillStyle = darkBodyColor;
+    ctx.fillRect(-10, -2, 20, 3);
+    ctx.fillRect(-10, 5, 20, 3);
+    ctx.fillRect(-10, 12, 20, 3);
+
+    // Belt
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-14, 15, 28, 4);
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillRect(-2, 15, 4, 4);
+
+    // Head
+    ctx.fillStyle = bodyColor;
+    ctx.fillRect(-10, -22, 20, 18);
+
+    // Helmet visor
     ctx.fillStyle = '#0a0a0a';
-    const eyeX = player.facing === 1 ? player.x + 25 : player.x + 8;
-    ctx.fillRect(eyeX, player.y + 15, 6, 6);
+    ctx.fillRect(-8, -18, 16, 8);
 
-    // Player sword
-    if (player.attacking) {
+    // Eye glow
+    ctx.fillStyle = '#4ade80';
+    ctx.fillRect(-4, -16, 4, 3);
+
+    // Helmet crest
+    ctx.fillStyle = darkBodyColor;
+    ctx.fillRect(-2, -26, 4, 6);
+    ctx.fillRect(-4, -24, 8, 3);
+
+    // Arms
+    const armSwing = p.attacking ? -20 : (Math.abs(p.vx) > 0.5 && p.onGround ? Math.sin(Date.now() / 80 + Math.PI) * 6 : 0);
+    ctx.fillStyle = bodyColor;
+    // Left arm (back)
+    ctx.fillRect(-18, -5, 6, 14 + armSwing * 0.3);
+    // Right arm (front)
+    ctx.fillRect(12, -5, 6, 14 + armSwing);
+
+    // Hands
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-19, 6 + armSwing * 0.3, 8, 5);
+    ctx.fillRect(11, 6 + armSwing, 8, 5);
+
+    // Sword
+    if (p.attacking) {
+        const swingProgress = 1 - (p.attackTimer / 20);
+        const swingAngle = swingProgress * Math.PI * 0.8 - Math.PI * 0.4;
+
+        ctx.save();
+        ctx.translate(16, 5);
+        ctx.rotate(swingAngle);
+
+        // Sword blade
+        ctx.fillStyle = '#e2e8f0';
+        ctx.fillRect(0, -28, 5, 32);
+
+        // Sword edge highlight
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, -28, 2, 32);
+
+        // Sword glow
+        ctx.shadowColor = '#fbbf24';
+        ctx.shadowBlur = 10;
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(-1, -29, 7, 34);
+        ctx.shadowBlur = 0;
+
+        // Hilt
+        ctx.fillStyle = '#92400e';
+        ctx.fillRect(-3, 2, 11, 4);
+        ctx.fillRect(-1, 6, 7, 3);
+
+        // Crossguard
         ctx.fillStyle = '#fbbf24';
-        const swordX = player.facing === 1 ? player.x + player.width : player.x - 30;
-        ctx.fillRect(swordX, player.y + 25, 30, 8);
+        ctx.fillRect(-6, -1, 17, 3);
+
+        ctx.restore();
+
+        // Sword trail
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.3)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(16, 5, 20, swingAngle - 0.3, swingAngle);
+        ctx.stroke();
+    } else {
+        // Sword sheathed / idle
+        ctx.save();
+        ctx.translate(16, 5);
+        ctx.rotate(0.1);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(0, -20, 4, 24);
+        ctx.fillStyle = '#92400e';
+        ctx.fillRect(-2, 2, 8, 3);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(-4, -1, 12, 2);
+
+        ctx.restore();
     }
 
-    // Player shield
-    if (player.blocking) {
+    // Shield
+    if (p.blocking) {
+        ctx.save();
+        ctx.translate(-18, 5);
+
+        // Shield glow
+        ctx.shadowColor = '#3b82f6';
+        ctx.shadowBlur = 12;
+
+        // Shield body
+        ctx.fillStyle = '#1e40af';
+        ctx.beginPath();
+        ctx.moveTo(0, -15);
+        ctx.lineTo(10, -10);
+        ctx.lineTo(10, 15);
+        ctx.lineTo(0, 20);
+        ctx.lineTo(-10, 15);
+        ctx.lineTo(-10, -10);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+
+        // Shield border
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Shield center
         ctx.fillStyle = '#3b82f6';
-        const shieldX = player.facing === 1 ? player.x + player.width - 5 : player.x - 5;
-        ctx.fillRect(shieldX, player.y + 20, 10, 30);
+        ctx.beginPath();
+        ctx.arc(0, 2, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Shield cross
+        ctx.strokeStyle = '#60a5fa';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -8);
+        ctx.lineTo(0, 12);
+        ctx.moveTo(-6, 2);
+        ctx.lineTo(6, 2);
+        ctx.stroke();
+
+        ctx.restore();
     }
 
-    // Draw boss
-    ctx.fillStyle = boss.hit ? '#ffffff' : boss.color;
-    ctx.fillRect(boss.x, boss.y, boss.width, boss.height);
+    ctx.restore();
+}
 
-    // Boss eyes
+function drawBoss() {
+    const b = boss;
+    const facing = b.facing;
+
+    // Shadow
+    if (b.onGround) {
+        drawShadow(b.x, b.y, b.width);
+    }
+
+    // Hit flash
+    if (b.hit && b.hitTimer > 0) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${b.hitTimer / 15 * 0.6})`;
+        ctx.fillRect(b.x - 5, b.y - 5, b.width + 10, b.height + 10);
+    }
+
+    // Idle breathing animation
+    const breatheScale = 1 + Math.sin(Date.now() / 400) * 0.02;
+
+    ctx.save();
+    ctx.translate(b.x + b.width / 2, b.y + b.height / 2);
+    ctx.scale(breatheScale, breatheScale);
+    if (facing === -1) ctx.scale(-1, 1);
+
+    // Body color
+    const bodyColor = b.hit ? '#ffffff' : b.color;
+    const darkBodyColor = b.hit ? '#cccccc' : '#b91c1c';
+
+    // Legs
+    const legOffset = Math.abs(b.vx) > 0.5 && b.onGround ? Math.sin(Date.now() / 100) * 5 : 0;
+    ctx.fillStyle = darkBodyColor;
+    ctx.fillRect(-15, 20, 10, 18 + legOffset);
+    ctx.fillRect(5, 20, 10, 18 - legOffset);
+
+    // Claws / feet
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-17, 32 + legOffset, 14, 6);
+    ctx.fillRect(3, 32 - legOffset, 14, 6);
+    ctx.fillStyle = '#525252';
+    ctx.fillRect(-16, 33 + legOffset, 4, 4);
+    ctx.fillRect(12, 33 - legOffset, 4, 4);
+
+    // Body / Torso - larger and more menacing
+    ctx.fillStyle = bodyColor;
+    ctx.fillRect(-18, -10, 36, 32);
+
+    // Armor plates
+    ctx.fillStyle = darkBodyColor;
+    ctx.fillRect(-14, -6, 28, 6);
+    ctx.fillRect(-14, 4, 28, 6);
+    ctx.fillRect(-14, 14, 28, 6);
+
+    // Spikes on back
+    ctx.fillStyle = '#7f1d1d';
+    ctx.beginPath();
+    ctx.moveTo(-18, -5);
+    ctx.lineTo(-26, 0);
+    ctx.lineTo(-18, 5);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-18, 8);
+    ctx.lineTo(-24, 13);
+    ctx.lineTo(-18, 18);
+    ctx.fill();
+
+    // Head
+    ctx.fillStyle = bodyColor;
+    ctx.fillRect(-14, -28, 28, 20);
+
+    // Horns
+    ctx.fillStyle = '#525252';
+    ctx.beginPath();
+    ctx.moveTo(-12, -26);
+    ctx.lineTo(-20, -38);
+    ctx.lineTo(-8, -28);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(12, -26);
+    ctx.lineTo(20, -38);
+    ctx.lineTo(8, -28);
+    ctx.fill();
+
+    // Eyes - glowing red
     ctx.fillStyle = '#0a0a0a';
-    const bossEyeX = boss.facing === 1 ? boss.x + 35 : boss.x + 8;
-    ctx.fillRect(bossEyeX, boss.y + 15, 8, 8);
+    ctx.fillRect(-10, -22, 20, 10);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(-6, -20, 5, 4);
+    ctx.fillRect(2, -20, 5, 4);
 
-    // Boss sword
-    if (boss.attacking) {
+    // Eye glow effect
+    ctx.shadowColor = '#ef4444';
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = '#fca5a5';
+    ctx.fillRect(-5, -19, 2, 2);
+    ctx.fillRect(3, -19, 2, 2);
+    ctx.shadowBlur = 0;
+
+    // Mouth
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-6, -10, 12, 4);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(-4, -9, 8, 2);
+
+    // Arms
+    const armSwing = b.attacking ? -25 : (Math.abs(b.vx) > 0.5 && b.onGround ? Math.sin(Date.now() / 100 + Math.PI) * 7 : 0);
+    ctx.fillStyle = bodyColor;
+    ctx.fillRect(-24, -5, 8, 16 + armSwing * 0.3);
+    ctx.fillRect(16, -5, 8, 16 + armSwing);
+
+    // Hands / claws
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-26, 8 + armSwing * 0.3, 12, 6);
+    ctx.fillRect(14, 8 + armSwing, 12, 6);
+
+    // Sword (boss uses a larger sword)
+    if (b.attacking) {
+        const swingProgress = 1 - (b.attackTimer / 25);
+        const swingAngle = swingProgress * Math.PI * 0.9 - Math.PI * 0.45;
+
+        ctx.save();
+        ctx.translate(20, 5);
+        ctx.rotate(swingAngle);
+
+        // Sword blade - larger
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(0, -35, 7, 40);
+
+        // Sword edge
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, -35, 3, 40);
+
+        // Sword glow
+        ctx.shadowColor = '#fbbf24';
+        ctx.shadowBlur = 12;
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(-1, -36, 9, 42);
+        ctx.shadowBlur = 0;
+
+        // Hilt
+        ctx.fillStyle = '#7f1d1d';
+        ctx.fillRect(-3, 3, 13, 5);
+        ctx.fillRect(-1, 8, 9, 4);
+
+        // Crossguard
         ctx.fillStyle = '#fbbf24';
-        const bossSwordX = boss.facing === 1 ? boss.x + boss.width : boss.x - 35;
-        ctx.fillRect(bossSwordX, boss.y + 25, 35, 10);
+        ctx.fillRect(-8, 0, 23, 4);
+
+        ctx.restore();
+
+        // Sword trail
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.25)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(20, 5, 25, swingAngle - 0.4, swingAngle);
+        ctx.stroke();
+    } else {
+        // Idle sword
+        ctx.save();
+        ctx.translate(20, 5);
+        ctx.rotate(0.15);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(0, -24, 5, 28);
+        ctx.fillStyle = '#7f1d1d';
+        ctx.fillRect(-2, 2, 9, 4);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(-5, -1, 15, 3);
+
+        ctx.restore();
     }
 
-    // Boss shield - only show when blocking
-    if (boss.blocking) {
+    // Shield
+    if (b.blocking) {
+        ctx.save();
+        ctx.translate(-22, 5);
+
+        // Shield glow
+        ctx.shadowColor = '#3b82f6';
+        ctx.shadowBlur = 14;
+
+        // Shield body - larger
+        ctx.fillStyle = '#1e3a8a';
+        ctx.beginPath();
+        ctx.moveTo(0, -18);
+        ctx.lineTo(12, -12);
+        ctx.lineTo(12, 18);
+        ctx.lineTo(0, 24);
+        ctx.lineTo(-12, 18);
+        ctx.lineTo(-12, -12);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+
+        // Shield border
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Shield center
         ctx.fillStyle = '#3b82f6';
-        const bossShieldX = boss.facing === 1 ? boss.x + boss.width - 8 : boss.x - 8;
-        ctx.fillRect(bossShieldX, boss.y + 20, 12, 35);
+        ctx.beginPath();
+        ctx.arc(0, 3, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
     }
 
-    // Draw particles
+    ctx.restore();
+}
+
+function drawParticles() {
     particles.forEach(p => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = p.life / p.maxLife;
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.life / 30;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
     });
     ctx.globalAlpha = 1;
+}
 
-    // Skip drawing health bars and game elements if in countdown
-    if (gameState === 'countdown') {
-        // Still draw background and countdown
-        ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw platforms (minimal)
-        ctx.fillStyle = '#374151';
-        ctx.fillRect(0, GROUND_Y, canvas.width, 60);
-
-        // Draw countdown
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#fbbf24';
-        ctx.font = '72px "Press Start 2P"';
+function drawFloatingTexts() {
+    floatingTexts.forEach(t => {
+        ctx.save();
+        ctx.globalAlpha = t.life / 40;
+        ctx.fillStyle = t.color;
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 3;
+        ctx.font = 'bold 16px "Press Start 2P"';
         ctx.textAlign = 'center';
+        ctx.strokeText(t.text, t.x, t.y);
+        ctx.fillText(t.text, t.x, t.y);
+        ctx.restore();
+    });
+    ctx.globalAlpha = 1;
+}
 
-        let displayText = countdownValue > 0 ? countdownValue.toString() : 'GO!';
-        ctx.fillText(displayText, canvas.width / 2, canvas.height / 2 + 20);
-        ctx.textAlign = 'left';
+function drawHealthBars() {
+    // Player health bar background
+    ctx.fillStyle = '#0a0a0a';
+    ctx.strokeStyle = '#4ade80';
+    ctx.lineWidth = 2;
+    ctx.fillRect(20, 20, 200, 24);
+    ctx.strokeRect(20, 20, 200, 24);
+
+    // Player health fill
+    const playerHealthPercent = Math.max(0, player.health / player.maxHealth);
+    const playerHealthColor = player.health > 30 ? '#4ade80' : '#ef4444';
+    ctx.fillStyle = playerHealthColor;
+    ctx.fillRect(22, 22, playerHealthPercent * 196, 20);
+
+    // Player health segments
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    for (let i = 1; i < 10; i++) {
+        ctx.fillRect(22 + (196 / 10) * i, 22, 2, 20);
+    }
+
+    // Player name
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '10px "Press Start 2P"';
+    ctx.textAlign = 'left';
+    ctx.fillText('PLAYER', 25, 36);
+
+    // Boss health bar background
+    ctx.fillStyle = '#0a0a0a';
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2;
+    ctx.fillRect(canvas.width - 220, 20, 200, 24);
+    ctx.strokeRect(canvas.width - 220, 20, 200, 24);
+
+    // Boss health fill
+    const bossHealthPercent = Math.max(0, boss.health / boss.maxHealth);
+    const bossHealthColor = boss.health > 50 ? '#ef4444' : '#f97316';
+    ctx.fillStyle = bossHealthColor;
+    ctx.fillRect(canvas.width - 218, 22, bossHealthPercent * 196, 20);
+
+    // Boss health segments
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    for (let i = 1; i < 10; i++) {
+        ctx.fillRect(canvas.width - 218 + (196 / 10) * i, 22, 2, 20);
+    }
+
+    // Boss name
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'right';
+    ctx.fillText('BOSS', canvas.width - 25, 36);
+    ctx.textAlign = 'left';
+}
+
+function drawCountdown() {
+    // Dark overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Countdown number or GO
+    const displayText = countdownValue > 0 ? countdownValue.toString() : 'GO!';
+    const pulseScale = countdownValue > 0 ? 1 + Math.sin(Date.now() / 100) * 0.1 : 1.2;
+
+    ctx.save();
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.scale(pulseScale, pulseScale);
+
+    // Text shadow
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.font = '72px "Press Start 2P"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(displayText, 4, 4);
+
+    // Main text
+    ctx.fillStyle = '#fbbf24';
+    ctx.shadowColor = '#fbbf24';
+    ctx.shadowBlur = 20;
+    ctx.fillText(displayText, 0, 0);
+    ctx.shadowBlur = 0;
+
+    ctx.restore();
+}
+
+function drawGameOver() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+
+    // Game Over text
+    ctx.fillStyle = '#ef4444';
+    ctx.shadowColor = '#ef4444';
+    ctx.shadowBlur = 15;
+    ctx.font = '40px "Press Start 2P"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('GAME OVER', 0, -20);
+
+    ctx.shadowBlur = 0;
+
+    // Subtitle
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '14px "Press Start 2P"';
+    ctx.fillText('Press R to Restart', 0, 20);
+
+    ctx.restore();
+
+    if (keys['r']) {
+        resetGame();
+    }
+}
+
+function drawVictory() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+
+    // Victory text
+    ctx.fillStyle = '#4ade80';
+    ctx.shadowColor = '#4ade80';
+    ctx.shadowBlur = 15;
+    ctx.font = '40px "Press Start 2P"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('VICTORY!', 0, -20);
+
+    ctx.shadowBlur = 0;
+
+    // Subtitle
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '14px "Press Start 2P"';
+    ctx.fillText('Press R to Play Again', 0, 20);
+
+    ctx.restore();
+
+    if (keys['r']) {
+        resetGame();
+    }
+}
+
+function drawVignette() {
+    const gradient = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, canvas.height * 0.4,
+        canvas.width / 2, canvas.height / 2, canvas.height * 0.8
+    );
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+// Main Rendering
+function draw() {
+    ctx.save();
+
+    // Apply screen shake
+    ctx.translate(screenShake.x, screenShake.y);
+
+    // Background
+    drawBackground();
+
+    // Ground
+    drawGround();
+
+    // Platforms
+    drawPlatforms();
+
+    // Characters (drawn back-to-front based on Y position for pseudo-depth)
+    if (player.y + player.height < boss.y + boss.height) {
+        drawPlayer();
+        drawBoss();
+    } else {
+        drawBoss();
+        drawPlayer();
+    }
+
+    // Particles
+    drawParticles();
+
+    // Floating damage numbers
+    drawFloatingTexts();
+
+    // Skip UI if in countdown (but still draw background elements)
+    if (gameState === 'countdown') {
+        drawCountdown();
+        ctx.restore();
         return;
     }
 
-    // Draw health bars
-    // Player health
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(20, 20, 200, 20);
-    ctx.fillStyle = player.health > 30 ? '#4ade80' : '#ef4444';
-    ctx.fillRect(22, 22, (player.health / player.maxHealth) * 196, 16);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '10px "Press Start 2P"';
-    ctx.fillText('PLAYER', 25, 34);
-
-    // Boss health
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(canvas.width - 220, 20, 200, 20);
-    ctx.fillStyle = boss.health > 50 ? '#ef4444' : '#f97316';
-    ctx.fillRect(canvas.width - 218, 22, (boss.health / boss.maxHealth) * 196, 16);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText('BOSS', canvas.width - 212, 34);
+    // Health bars
+    drawHealthBars();
 
     // Game state overlays
     if (gameState === 'gameover') {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#ef4444';
-        ctx.font = '40px "Press Start 2P"';
-        ctx.textAlign = 'center';
-        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '14px "Press Start 2P"';
-        ctx.fillText('Press R to Restart', canvas.width / 2, canvas.height / 2 + 40);
-        ctx.textAlign = 'left';
-
-        if (keys['r']) {
-            resetGame();
-        }
+        drawGameOver();
     }
 
     if (gameState === 'victory') {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#4ade80';
-        ctx.font = '40px "Press Start 2P"';
-        ctx.textAlign = 'center';
-        ctx.fillText('VICTORY!', canvas.width / 2, canvas.height / 2);
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '14px "Press Start 2P"';
-        ctx.fillText('Press R to Play Again', canvas.width / 2, canvas.height / 2 + 40);
-        ctx.textAlign = 'left';
-
-        if (keys['r']) {
-            resetGame();
-        }
+        drawVictory();
     }
+
+    // Vignette effect
+    drawVignette();
+
+    ctx.restore();
 }
 
 // Game Loop
@@ -905,9 +1627,12 @@ function gameLoop() {
         updatePlayer();
         updateBoss();
         updateParticles();
+        updateFloatingTexts();
+        updateScreenShake();
         handleEntityCollision(); // Prevent overlapping
     }
 
+    updateBackground();
     draw();
     requestAnimationFrame(gameLoop);
 }
