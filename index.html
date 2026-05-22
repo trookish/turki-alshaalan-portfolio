@@ -287,8 +287,10 @@
                                             Design</span></li>
                                 </ul>
                             </div>
-                            <a href="https://trookish.itch.io/dungeon-puzzle" target="_blank" class="project-link">View
-                                Project →</a>
+                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <a href="https://trookish.itch.io/dungeon-puzzle" target="_blank" class="project-link">View Project →</a>
+                                <button class="project-link showcase-trigger" data-project="dungeon-puzzle">View Gallery →</button>
+                            </div>
                         </div>
                     </div>
 
@@ -320,8 +322,10 @@
                                 <span class="tag">AI</span>
                                 <span class="tag">Game Jam</span>
                             </div>
-                            <a href="https://trookish.itch.io/scary-library" target="_blank" class="project-link">View
-                                Project →</a>
+                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <a href="https://trookish.itch.io/scary-library" target="_blank" class="project-link">View Project →</a>
+                                <button class="project-link showcase-trigger" data-project="scary-library">View Gallery →</button>
+                            </div>
                         </div>
                     </div>
 
@@ -351,9 +355,10 @@
                                 <span class="tag">Survival</span>
                                 <span class="tag">Endless</span>
                             </div>
-                            <a href="https://trookish.itch.io/tuwaiq-game-turki-alshalaan" target="_blank"
-                                class="project-link">View
-                                Project →</a>
+                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <a href="https://trookish.itch.io/tuwaiq-game-turki-alshalaan" target="_blank" class="project-link">View Project →</a>
+                                <button class="project-link showcase-trigger" data-project="knight-with-gun">View Gallery →</button>
+                            </div>
                         </div>
                     </div>
 
@@ -393,8 +398,10 @@
                                             Programmer</span></li>
                                 </ul>
                             </div>
-                            <a href="https://s3-od.itch.io/the-hidden-kanz" target="_blank" class="project-link">View
-                                Project →</a>
+                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <a href="https://s3-od.itch.io/the-hidden-kanz" target="_blank" class="project-link">View Project →</a>
+                                <button class="project-link showcase-trigger" data-project="the-hidden-kanz">View Gallery →</button>
+                            </div>
                         </div>
                     </div>
 
@@ -433,7 +440,7 @@
                                             Designer</span></li>
                                 </ul>
                             </div>
-                            <button class="project-link syntax-strike-trigger" style="background: transparent; cursor: pointer; text-align: center;">View Gallery & Specs →</button>
+                            <button class="project-link showcase-trigger" data-project="syntax-strike">View Gallery & Specs →</button>
                         </div>
                     </div>
                 </div>
@@ -717,7 +724,7 @@
                                             Designer</span></li>
                                 </ul>
                             </div>
-                            <button class="project-link syntax-strike-trigger" style="background: transparent; cursor: pointer; text-align: center;">View Gallery & Specs →</button>
+                            <button class="project-link showcase-trigger" data-project="syntax-strike">View Gallery & Specs →</button>
                         </div>
                     </div>
                 </div>
@@ -1291,9 +1298,9 @@
         </div>
     </footer>
 
-    <!-- Syntax Strike Project Showcase Modal -->
-    <div id="syntaxStrikeModal" class="ss-overlay" aria-hidden="true">
-        <div class="ss-modal" role="dialog" aria-modal="true" aria-labelledby="ssModalTitle">
+    <!-- Project Showcase Modal -->
+    <div id="projectShowcaseModal" class="ss-overlay" aria-hidden="true">
+        <div class="ss-modal" role="dialog" aria-modal="true" aria-labelledby="showcaseModalTitle">
             <!-- Retro CRT Screen Scanlines effect -->
             <div class="crt-lines"></div>
             
@@ -1301,7 +1308,7 @@
             <div class="ss-header">
                 <div class="ss-title-container">
                     <span class="ss-status-dot"></span>
-                    <h2 id="ssModalTitle" class="ss-title">SYSTEM STATUS: SYNTAX_STRIKE_SHOWCASE.EXE</h2>
+                    <h2 id="showcaseModalTitle" class="ss-title">SYSTEM STATUS: LOADING...</h2>
                 </div>
                 <button class="ss-close-btn" aria-label="Close modal">[X]</button>
             </div>
@@ -1310,13 +1317,13 @@
             <div class="ss-content">
                 
                 <!-- Panel 1: Gameplay Gallery -->
-                <div class="ss-panel active" id="ss-panel-gallery">
+                <div class="ss-panel active" id="showcase-panel-gallery">
                     <div class="ss-gallery-container">
                         <!-- Main Viewer -->
                         <div class="ss-gallery-main">
                             <button class="ss-nav-arrow prev-arrow" aria-label="Previous image">&lt;</button>
                             <div class="ss-image-wrapper">
-                                <img id="ss-main-image" src="images/Projects/SyntaxStrike/screenshot1.png" alt="Syntax Strike Gameplay Screenshot">
+                                <img id="showcase-main-image" src="" alt="Gameplay Screenshot">
                             </div>
                             <button class="ss-nav-arrow next-arrow" aria-label="Next image">&gt;</button>
                         </div>
@@ -1324,35 +1331,14 @@
                         <!-- Caption and Counter -->
                         <div class="ss-caption-container">
                             <div class="ss-caption-header">
-                                <span id="ss-image-title" class="ss-image-title">Various Enemy Types in Combat</span>
-                                <span id="ss-image-counter" class="ss-image-counter">1 / 8</span>
+                                <span id="showcase-image-title" class="ss-image-title">Loading Title...</span>
+                                <span id="showcase-image-counter" class="ss-image-counter">0 / 0</span>
                             </div>
-                            <p id="ss-image-desc" class="ss-image-desc">Real-time combat in the facility showing the player robot fighting multiple enemy types (Shooter Robots, Spider Bots, and Turrets) using the sword and shield.</p>
+                            <p id="showcase-image-desc" class="ss-image-desc">Loading Description...</p>
                         </div>
                         
-                        <!-- Thumbnails Grid -->
-                        <div class="ss-thumbnails-grid">
-                            <button class="ss-thumb-btn active" data-index="0">
-                                <img src="images/Projects/SyntaxStrike/screenshot1.png" alt="Thumbnail 1">
-                            </button>
-                            <button class="ss-thumb-btn" data-index="1">
-                                <img src="images/Projects/SyntaxStrike/screenshot2.png" alt="Thumbnail 2">
-                            </button>
-                            <button class="ss-thumb-btn" data-index="2">
-                                <img src="images/Projects/SyntaxStrike/screenshot3.png" alt="Thumbnail 3">
-                            </button>
-                            <button class="ss-thumb-btn" data-index="3">
-                                <img src="images/Projects/SyntaxStrike/screenshot4.png" alt="Thumbnail 4">
-                            </button>
-                            <button class="ss-thumb-btn" data-index="4">
-                                <img src="images/Projects/SyntaxStrike/screenshot5.png" alt="Thumbnail 5">
-                            </button>
-                            <button class="ss-thumb-btn" data-index="5">
-                                <img src="images/Projects/SyntaxStrike/screenshot6.png" alt="Thumbnail 6">
-                            </button>
-                            <button class="ss-thumb-btn" data-index="6">
-                                <img src="images/Projects/SyntaxStrike/screenshot7.png" alt="Thumbnail 7">
-                            </button>
+                        <!-- Thumbnails Grid (populated dynamically) -->
+                        <div class="ss-thumbnails-grid" id="showcase-thumbnails-grid">
                         </div>
                     </div>
                 </div>

@@ -3550,7 +3550,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #050505;
+    background-color: #000000;
     border: 2px solid var(--border-color);
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -3700,4 +3700,12 @@ section:nth-child(8) { animation-delay: 0.7s; }
     .ss-modal {
         max-height: 98vh;
     }
+}
+
+button.project-link {
+    background: transparent;
+    cursor: pointer;
+    text-align: center;
+    font-family: var(--font-terminal);
+    line-height: inherit;
 }
