@@ -294,12 +294,19 @@ function initRevealAnimations() {
  * Smooth Scroll - Anchor link navigation
  */
 function initSmoothScroll() {
-    const links = document.querySelectorAll('a[href^="#"]');
+    // Exclude the showcase details link since its href starts with '#' initially
+    // but gets dynamically updated to a real URL later.
+    const links = document.querySelectorAll('a[href^="#"]:not(#showcase-details-link)');
 
     links.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
             const targetId = link.getAttribute('href');
+
+            // If the href has been dynamically updated to an external link/non-anchor,
+            // do not prevent default navigation.
+            if (!targetId || !targetId.startsWith('#')) return;
+
+            e.preventDefault();
 
             if (targetId === '#') return;
 
