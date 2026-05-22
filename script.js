@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPdfExport();
     initProjectExpand();
     initAchievementExpand();
+    initSyntaxStrikeShowcase();
 });
 
 /**
@@ -518,3 +519,164 @@ document.addEventListener('keydown', (e) => {
         closeCertModal();
     }
 });
+
+/**
+ * Syntax Strike Project Showcase Modal Logic
+ * Controls open/close triggers, tab switching, and image gallery slideshow
+ */
+function initSyntaxStrikeShowcase() {
+    const modal = document.getElementById('syntaxStrikeModal');
+    if (!modal) return;
+
+    const triggers = document.querySelectorAll('.syntax-strike-trigger');
+    const closeBtn = modal.querySelector('.ss-close-btn');
+
+    // Gallery Elements
+    const mainImg = document.getElementById('ss-main-image');
+    const imgTitle = document.getElementById('ss-image-title');
+    const imgCounter = document.getElementById('ss-image-counter');
+    const imgDesc = document.getElementById('ss-image-desc');
+    const prevArrow = modal.querySelector('.prev-arrow');
+    const nextArrow = modal.querySelector('.next-arrow');
+    const thumbBtns = modal.querySelectorAll('.ss-thumb-btn');
+
+    let currentIndex = 0;
+
+    const screenshots = [
+        {
+            src: 'images/Projects/SyntaxStrike/screenshot1.png',
+            title: 'Various Enemy Types in Combat',
+            desc: 'Real-time combat in the facility showing the player robot fighting multiple enemy types (Shooter Robots, Spider Bots, and Turrets) using the sword and shield.'
+        },
+        {
+            src: 'images/Projects/SyntaxStrike/screenshot2.png',
+            title: 'Spider Enemies Attacking',
+            desc: 'Engaging fast Spider Bots and ranged enemies inside the warehouse facility. Ranged enemies can fire projectiles and self-destruct if they get too close.'
+        },
+        {
+            src: 'images/Projects/SyntaxStrike/screenshot3.png',
+            title: 'Hacking Tool Pickup in the Environment',
+            desc: 'Locating the Hacking Tool in the facility. Acquiring the tool allows the player to interact with terminals and hack disabled enemies to solve programming puzzles.'
+        },
+        {
+            src: 'images/Projects/SyntaxStrike/screenshot4.png',
+            title: 'Hacking Tool Acquired Notification',
+            desc: 'On-screen notification upon picking up the hacking tool, preparing the student to hack enemies and override secure doors.'
+        },
+        {
+            src: 'images/Projects/SyntaxStrike/screenshot5.png',
+            title: 'Electrical Water Hazard',
+            desc: 'Navigating environmental hazards. The student must avoid electrical pools or use a nearby control console to disable the hazard before traversing.'
+        },
+        {
+            src: 'images/Projects/SyntaxStrike/screenshot6.png',
+            title: 'Final Boss Encounter',
+            desc: 'The final encounter with the Boss robot. The player must dodge shockwaves and stomp attacks, reduce the Boss\'s health to zero, and solve a hard programming puzzle to win.'
+        },
+        {
+            src: 'images/Projects/SyntaxStrike/screenshot7.png',
+            title: 'Level Completion Score Scene',
+            desc: 'Level completion scoreboard tracking player statistics including enemies defeated, programming puzzle accuracy, time bonuses, and final score.'
+        }
+    ];
+
+    // Show screenshot by index
+    function showScreenshot(index) {
+        if (index < 0) index = screenshots.length - 1;
+        if (index >= screenshots.length) index = 0;
+        
+        currentIndex = index;
+        const current = screenshots[currentIndex];
+        
+        // Apply fade transition
+        mainImg.style.opacity = '0';
+        setTimeout(() => {
+            mainImg.src = current.src;
+            mainImg.alt = current.title;
+            imgTitle.textContent = current.title;
+            imgCounter.textContent = `${currentIndex + 1} / ${screenshots.length}`;
+            imgDesc.textContent = current.desc;
+            mainImg.style.opacity = '1';
+        }, 100);
+
+        // Update active thumbnail
+        thumbBtns.forEach((btn, idx) => {
+            if (idx === currentIndex) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // Modal Control Functions
+    function openModal() {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        
+        // Reset to first screenshot
+        showScreenshot(0);
+        
+        // Play window open sound if it exists
+        const openSound = new Audio('Sounds/Game/windowopen.wav');
+        openSound.volume = 0.3;
+        if (localStorage.getItem('sound') !== 'false') {
+            openSound.play().catch(() => {});
+        }
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    // Event Listeners
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', openModal);
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Escape key listener for this modal specifically
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // Gallery navigation listeners
+    prevArrow.addEventListener('click', () => {
+        showScreenshot(currentIndex - 1);
+    });
+
+    nextArrow.addEventListener('click', () => {
+        showScreenshot(currentIndex + 1);
+    });
+
+    // Keyboard navigation for gallery
+    document.addEventListener('keydown', (e) => {
+        if (modal.classList.contains('active')) {
+            if (e.key === 'ArrowLeft') {
+                showScreenshot(currentIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                showScreenshot(currentIndex + 1);
+            }
+        }
+    });
+
+    // Thumbnail click listeners
+    thumbBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.getAttribute('data-index'), 10);
+            showScreenshot(index);
+        });
+    });
+}

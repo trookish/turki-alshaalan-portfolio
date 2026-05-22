@@ -402,8 +402,7 @@
                     <div class="project-card">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/SyntaxStrike.png" alt="Syntax Strike" class="project-img">
-                                <div class="coming-soon-badge">COMING SOON</div>
+                                <img src="images/Projects/SyntaxStrike.png" alt="Syntax Strike" class="project-img project-img-contain">
                             </div>
                             <h3 class="project-title">Syntax Strike</h3>
                             <button class="expand-btn" aria-label="Expand project">
@@ -414,17 +413,13 @@
                             </button>
                         </div>
                         <div class="project-details">
-                            <p class="project-description">A gamified programming learning environment built with Unity
-                                that helps students learn programming concepts through engaging gameplay. Turki handles
-                                the mechanics and functionality of the game, while Saud designs and creates levels
-                                using assets prepared by Abdulaziz, who also handles project coordination and
-                                communication with the supervisor.</p>
+                            <p class="project-description">A 3D educational action-RPG built in Unity where players master coding by solving Java puzzles. Features compiler-integrated combat mechanics, dynamic quest lines, and a custom evaluation companion. Turki engineered the C# game systems, player state controllers, parser integration, and enemy AI combat patterns.</p>
                             <div class="project-tags">
-                                <span class="tag">Unity</span>
-                                <span class="tag">C#</span>
-                                <span class="tag">Educational</span>
-                                <span class="tag">Programming</span>
-                                <span class="tag">AI</span>
+                                <span class="tag">Unity 3D</span>
+                                <span class="tag">C# Scripting</span>
+                                <span class="tag">Core Mechanics</span>
+                                <span class="tag">AI Combat</span>
+                                <span class="tag">AST Parsing</span>
                             </div>
                             <div class="project-team">
                                 <p class="team-title">Team Members:</p>
@@ -438,7 +433,7 @@
                                             Designer</span></li>
                                 </ul>
                             </div>
-                            <a href="#" target="_blank" class="project-link">Coming Soon</a>
+                            <button class="project-link syntax-strike-trigger" style="background: transparent; cursor: pointer; text-align: center;">View Gallery & Specs →</button>
                         </div>
                     </div>
                 </div>
@@ -691,8 +686,7 @@
                         <div class="project-header">
                             <div class="project-image">
                                 <img src="images/Projects/SyntaxStrike.png"
-                                    alt="IT492 - Gamified Programming Learning Environment" class="project-img">
-                                <div class="coming-soon-badge">COMING SOON</div>
+                                    alt="IT492 - Gamified Programming Learning Environment" class="project-img project-img-contain">
                             </div>
                             <h3 class="project-title">Graduation Project</h3>
                             <button class="expand-btn" aria-label="Expand project">
@@ -703,18 +697,13 @@
                             </button>
                         </div>
                         <div class="project-details">
-                            <p class="project-description">Gamified Programming Learning Environment by Unity - A
-                                graduation project focused on creating an engaging educational game that teaches
-                                programming concepts through interactive gameplay. Currently in GP2 phase: full
-                                production game implementation and testing. Turki handles the mechanics and
-                                functionality, Saud creates levels using assets from Abdulaziz who coordinates
-                                the project and handles supervisor communication.</p>
+                            <p class="project-description">A senior graduation project (IT492) investigating game-based learning effectiveness. Designed to assess the pedagogical impact of interactive coding puzzles (Parsons Problems) in reducing learning barriers for CS students. Evaluated using structured player feedback and learning-gain metrics. Abdulaziz led agile coordination and stakeholder reporting, Turki directed implementation logic, and Saud managed levels and user testing.</p>
                             <div class="project-tags">
-                                <span class="tag">Unity</span>
-                                <span class="tag">C#</span>
-                                <span class="tag">Educational</span>
-                                <span class="tag">Programming</span>
-                                <span class="tag">Graduation</span>
+                                <span class="tag">Educational Research</span>
+                                <span class="tag">Pedagogy Theory</span>
+                                <span class="tag">Agile Sprints</span>
+                                <span class="tag">User Studies</span>
+                                <span class="tag">QA Validation</span>
                             </div>
                             <div class="project-team">
                                 <p class="team-title">Team Members:</p>
@@ -728,7 +717,7 @@
                                             Designer</span></li>
                                 </ul>
                             </div>
-                            <a href="#" target="_blank" class="project-link">Coming Soon</a>
+                            <button class="project-link syntax-strike-trigger" style="background: transparent; cursor: pointer; text-align: center;">View Gallery & Specs →</button>
                         </div>
                     </div>
                 </div>
@@ -1301,6 +1290,76 @@
             <p class="footer-copyright">&copy; 2026. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Syntax Strike Project Showcase Modal -->
+    <div id="syntaxStrikeModal" class="ss-overlay" aria-hidden="true">
+        <div class="ss-modal" role="dialog" aria-modal="true" aria-labelledby="ssModalTitle">
+            <!-- Retro CRT Screen Scanlines effect -->
+            <div class="crt-lines"></div>
+            
+            <!-- Modal Header -->
+            <div class="ss-header">
+                <div class="ss-title-container">
+                    <span class="ss-status-dot"></span>
+                    <h2 id="ssModalTitle" class="ss-title">SYSTEM STATUS: SYNTAX_STRIKE_SHOWCASE.EXE</h2>
+                </div>
+                <button class="ss-close-btn" aria-label="Close modal">[X]</button>
+            </div>
+            
+            <!-- Modal Content (Gameplay Gallery Only) -->
+            <div class="ss-content">
+                
+                <!-- Panel 1: Gameplay Gallery -->
+                <div class="ss-panel active" id="ss-panel-gallery">
+                    <div class="ss-gallery-container">
+                        <!-- Main Viewer -->
+                        <div class="ss-gallery-main">
+                            <button class="ss-nav-arrow prev-arrow" aria-label="Previous image">&lt;</button>
+                            <div class="ss-image-wrapper">
+                                <img id="ss-main-image" src="images/Projects/SyntaxStrike/screenshot1.png" alt="Syntax Strike Gameplay Screenshot">
+                            </div>
+                            <button class="ss-nav-arrow next-arrow" aria-label="Next image">&gt;</button>
+                        </div>
+                        
+                        <!-- Caption and Counter -->
+                        <div class="ss-caption-container">
+                            <div class="ss-caption-header">
+                                <span id="ss-image-title" class="ss-image-title">Various Enemy Types in Combat</span>
+                                <span id="ss-image-counter" class="ss-image-counter">1 / 8</span>
+                            </div>
+                            <p id="ss-image-desc" class="ss-image-desc">Real-time combat in the facility showing the player robot fighting multiple enemy types (Shooter Robots, Spider Bots, and Turrets) using the sword and shield.</p>
+                        </div>
+                        
+                        <!-- Thumbnails Grid -->
+                        <div class="ss-thumbnails-grid">
+                            <button class="ss-thumb-btn active" data-index="0">
+                                <img src="images/Projects/SyntaxStrike/screenshot1.png" alt="Thumbnail 1">
+                            </button>
+                            <button class="ss-thumb-btn" data-index="1">
+                                <img src="images/Projects/SyntaxStrike/screenshot2.png" alt="Thumbnail 2">
+                            </button>
+                            <button class="ss-thumb-btn" data-index="2">
+                                <img src="images/Projects/SyntaxStrike/screenshot3.png" alt="Thumbnail 3">
+                            </button>
+                            <button class="ss-thumb-btn" data-index="3">
+                                <img src="images/Projects/SyntaxStrike/screenshot4.png" alt="Thumbnail 4">
+                            </button>
+                            <button class="ss-thumb-btn" data-index="4">
+                                <img src="images/Projects/SyntaxStrike/screenshot5.png" alt="Thumbnail 5">
+                            </button>
+                            <button class="ss-thumb-btn" data-index="5">
+                                <img src="images/Projects/SyntaxStrike/screenshot6.png" alt="Thumbnail 6">
+                            </button>
+                            <button class="ss-thumb-btn" data-index="6">
+                                <img src="images/Projects/SyntaxStrike/screenshot7.png" alt="Thumbnail 7">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <script src="game.js"></script>
