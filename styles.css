@@ -3709,7 +3709,7 @@ button.project-link {
 /* Unified Showcase Grid Container */
 .ss-grid-container {
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 0.85fr 1.15fr;
     gap: 1.5rem;
     align-items: start;
     width: 100%;
@@ -3720,6 +3720,8 @@ button.project-link {
     flex-direction: column;
     width: 100%;
     min-width: 0; /* Prevents overflow in grid items */
+    grid-column: 2;
+    grid-row: 1;
 }
 
 .ss-col-details {
@@ -3728,6 +3730,8 @@ button.project-link {
     width: 100%;
     color: var(--text-primary);
     padding: 0 0.25rem;
+    grid-column: 1;
+    grid-row: 1;
 }
 
 .ss-details-title {
@@ -3801,6 +3805,16 @@ button.project-link {
     .ss-grid-container {
         grid-template-columns: 1fr;
         gap: 1.25rem;
+    }
+    
+    .ss-col-media {
+        grid-column: auto;
+        grid-row: auto;
+    }
+    
+    .ss-col-details {
+        grid-column: auto;
+        grid-row: auto;
     }
     
     .ss-details-title {
