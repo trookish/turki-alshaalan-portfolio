@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initParallax();
     initSkillBars();
     initPdfExport();
-    initProjectExpand();
     initAchievementExpand();
     initProjectShowcase();
 });
@@ -418,46 +417,7 @@ if ('IntersectionObserver' in window) {
 /**
  * LinkedIn Navigation - Make sections clickable to LinkedIn
  */
-/**
- * Project Expand - Toggle project details
- */
-function initProjectExpand() {
-    const projectCards = document.querySelectorAll('.project-card');
-
-    projectCards.forEach(card => {
-        const header = card.querySelector('.project-header');
-        if (!header) return;
-
-        header.addEventListener('click', () => {
-            // Check if this card is already expanded
-            const isExpanded = card.classList.contains('expanded');
-
-            // Close all project cards first
-            projectCards.forEach(c => c.classList.remove('expanded'));
-
-            // If it wasn't expanded before, expand it now
-            if (!isExpanded) {
-                card.classList.add('expanded');
-            }
-        });
-
-        // Also allow Enter key to toggle
-        header.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                const isExpanded = card.classList.contains('expanded');
-                projectCards.forEach(c => c.classList.remove('expanded'));
-                if (!isExpanded) {
-                    card.classList.add('expanded');
-                }
-            }
-        });
-
-        // Make header focusable
-        header.setAttribute('tabindex', '0');
-        header.setAttribute('role', 'button');
-    });
-}
+// Project expand functionality retired in favor of unified showcase popup.
 
 // Achievement Expand Functionality
 function initAchievementExpand() {
@@ -528,7 +488,7 @@ function initProjectShowcase() {
     const modal = document.getElementById('projectShowcaseModal');
     if (!modal) return;
 
-    const triggers = document.querySelectorAll('.showcase-trigger');
+    const projectCards = document.querySelectorAll('.project-card');
     const closeBtn = modal.querySelector('.ss-close-btn');
 
     // Gallery Elements
@@ -540,13 +500,22 @@ function initProjectShowcase() {
     const nextArrow = modal.querySelector('.next-arrow');
     const thumbnailsGrid = document.getElementById('showcase-thumbnails-grid');
     const modalTitleElem = document.getElementById('showcaseModalTitle');
+    const captionContainer = document.getElementById('showcase-caption-container');
+
+    // Details Column Elements
+    const detailsTitle = document.getElementById('showcase-details-title');
+    const detailsDesc = document.getElementById('showcase-details-desc');
+    const detailsTags = document.getElementById('showcase-details-tags');
+    const detailsTeamContainer = document.getElementById('showcase-details-team-container');
+    const detailsTeam = document.getElementById('showcase-details-team');
+    const detailsLink = document.getElementById('showcase-details-link');
 
     let currentProject = '';
     let currentIndex = 0;
+    let screenshotsList = [];
 
     const projectData = {
         'dungeon-puzzle': {
-            title: 'SYSTEM STATUS: DUNGEON_PUZZLE_SHOWCASE.EXE',
             screenshots: [
                 {
                     src: 'images/Projects/DungeonPuzzle/screenshot1.png',
@@ -581,7 +550,6 @@ function initProjectShowcase() {
             ]
         },
         'scary-library': {
-            title: 'SYSTEM STATUS: SCARY_LIBRARY_SHOWCASE.EXE',
             screenshots: [
                 {
                     src: 'images/Projects/ScaryLibrary/screenshot1.png',
@@ -601,7 +569,6 @@ function initProjectShowcase() {
             ]
         },
         'knight-with-gun': {
-            title: 'SYSTEM STATUS: KNIGHT_WITH_GUN_SHOWCASE.EXE',
             screenshots: [
                 {
                     src: 'images/Projects/KnightWithGun/screenshot1.png',
@@ -621,7 +588,6 @@ function initProjectShowcase() {
             ]
         },
         'the-hidden-kanz': {
-            title: 'SYSTEM STATUS: THE_HIDDEN_KANZ_SHOWCASE.EXE',
             screenshots: [
                 {
                     src: 'images/Projects/TheHiddenKanz/screenshot1.jpeg',
@@ -646,7 +612,6 @@ function initProjectShowcase() {
             ]
         },
         'syntax-strike': {
-            title: 'SYSTEM STATUS: SYNTAX_STRIKE_SHOWCASE.EXE',
             screenshots: [
                 {
                     src: 'images/Projects/SyntaxStrike/screenshot1.png',
@@ -689,15 +654,13 @@ function initProjectShowcase() {
 
     // Show screenshot by index
     function showScreenshot(index) {
-        const project = projectData[currentProject];
-        if (!project) return;
-        const screenshots = project.screenshots;
+        if (!screenshotsList || screenshotsList.length === 0) return;
 
-        if (index < 0) index = screenshots.length - 1;
-        if (index >= screenshots.length) index = 0;
+        if (index < 0) index = screenshotsList.length - 1;
+        if (index >= screenshotsList.length) index = 0;
         
         currentIndex = index;
-        const current = screenshots[currentIndex];
+        const current = screenshotsList[currentIndex];
         
         // Apply fade transition
         mainImg.style.opacity = '0';
@@ -705,7 +668,7 @@ function initProjectShowcase() {
             mainImg.src = current.src;
             mainImg.alt = current.title;
             imgTitle.textContent = current.title;
-            imgCounter.textContent = `${currentIndex + 1} / ${screenshots.length}`;
+            imgCounter.textContent = `${currentIndex + 1} / ${screenshotsList.length}`;
             imgDesc.textContent = current.desc;
             mainImg.style.opacity = '1';
         }, 100);
@@ -722,12 +685,15 @@ function initProjectShowcase() {
     }
 
     // Generate thumbnails dynamically
-    function generateThumbnails(projectKey) {
+    function generateThumbnails() {
         thumbnailsGrid.innerHTML = '';
-        const project = projectData[projectKey];
-        if (!project) return;
+        if (!screenshotsList || screenshotsList.length <= 1) {
+            thumbnailsGrid.style.display = 'none';
+            return;
+        }
+        thumbnailsGrid.style.display = 'grid';
 
-        project.screenshots.forEach((screenshot, index) => {
+        screenshotsList.forEach((screenshot, index) => {
             const btn = document.createElement('button');
             btn.className = 'ss-thumb-btn';
             btn.setAttribute('data-index', index);
@@ -764,15 +730,84 @@ function initProjectShowcase() {
     }
 
     // Modal Control Functions
-    function openModal(projectKey) {
-        const project = projectData[projectKey];
-        if (!project) return;
-
+    function openModal(projectKey, card) {
         currentProject = projectKey;
-        modalTitleElem.textContent = project.title;
+
+        // Scrape details from DOM
+        const titleText = card.querySelector('.project-title').textContent.trim();
+        const descText = card.querySelector('.project-description').textContent.trim();
+        
+        // Format the SYSTEM STATUS text: uppercase with underscores
+        const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
+        modalTitleElem.textContent = `SYSTEM STATUS: ${sysStatusName}_SHOWCASE.EXE`;
+
+        // Populate scraped details
+        detailsTitle.textContent = titleText;
+        detailsDesc.textContent = descText;
+
+        // Populate tech tags
+        detailsTags.innerHTML = '';
+        const tags = card.querySelectorAll('.project-tags .tag');
+        tags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.textContent = tag.textContent.trim();
+            detailsTags.appendChild(span);
+        });
+
+        // Populate team members
+        const teamElement = card.querySelector('.project-team');
+        if (teamElement) {
+            detailsTeamContainer.style.display = 'block';
+            detailsTeam.innerHTML = teamElement.innerHTML;
+        } else {
+            detailsTeamContainer.style.display = 'none';
+            detailsTeam.innerHTML = '';
+        }
+
+        // Populate external link button
+        const externalLink = card.querySelector('a.project-link');
+        if (externalLink) {
+            detailsLink.style.display = 'inline-block';
+            detailsLink.href = externalLink.href;
+            detailsLink.textContent = externalLink.textContent.trim();
+        } else {
+            detailsLink.style.display = 'none';
+        }
+
+        // Determine screenshot list
+        const projectRecord = projectData[projectKey];
+        if (projectRecord && projectRecord.screenshots && projectRecord.screenshots.length > 0) {
+            screenshotsList = projectRecord.screenshots;
+            
+            // Show gallery layout elements
+            captionContainer.style.display = 'block';
+            if (screenshotsList.length > 1) {
+                prevArrow.style.display = 'flex';
+                nextArrow.style.display = 'flex';
+            } else {
+                prevArrow.style.display = 'none';
+                nextArrow.style.display = 'none';
+            }
+        } else {
+            // No gallery data, fall back to cover image
+            const coverImg = card.querySelector('.project-image img');
+            const coverSrc = coverImg ? coverImg.src : '';
+            
+            screenshotsList = [{
+                src: coverSrc,
+                title: titleText,
+                desc: titleText
+            }];
+
+            // Hide gallery layout elements
+            captionContainer.style.display = 'none';
+            prevArrow.style.display = 'none';
+            nextArrow.style.display = 'none';
+        }
 
         // Populate thumbnails
-        generateThumbnails(projectKey);
+        generateThumbnails();
 
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
@@ -795,11 +830,41 @@ function initProjectShowcase() {
         document.body.style.overflow = '';
     }
 
-    // Event Listeners
-    triggers.forEach(trigger => {
-        trigger.addEventListener('click', () => {
-            const projectKey = trigger.getAttribute('data-project');
-            openModal(projectKey);
+    // Event Listeners for Project Cards
+    projectCards.forEach(card => {
+        const projectKey = card.getAttribute('data-project');
+        if (!projectKey) return;
+
+        // Hover sound
+        const hoverSound = new Audio('Sounds/Normal/Hover.wav');
+        hoverSound.volume = 0.3;
+        card.addEventListener('mouseenter', () => {
+            if (localStorage.getItem('sound') !== 'false') {
+                hoverSound.currentTime = 0;
+                hoverSound.play().catch(() => {});
+            }
+        });
+
+        // Click event opens showcase
+        card.addEventListener('click', (e) => {
+            // Play click sound
+            const clickSound = new Audio('Sounds/Normal/Click.wav');
+            clickSound.volume = 0.4;
+            if (localStorage.getItem('sound') !== 'false') {
+                clickSound.currentTime = 0;
+                clickSound.play().catch(() => {});
+            }
+            openModal(projectKey, card);
+        });
+
+        // Make keyboard navigable
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
         });
     });
 
@@ -819,17 +884,19 @@ function initProjectShowcase() {
     });
 
     // Gallery navigation listeners
-    prevArrow.addEventListener('click', () => {
+    prevArrow.addEventListener('click', (e) => {
+        e.stopPropagation(); // prevent modal click from triggering close
         showScreenshot(currentIndex - 1);
     });
 
-    nextArrow.addEventListener('click', () => {
+    nextArrow.addEventListener('click', (e) => {
+        e.stopPropagation(); // prevent modal click from triggering close
         showScreenshot(currentIndex + 1);
     });
 
     // Keyboard navigation for gallery
     document.addEventListener('keydown', (e) => {
-        if (modal.classList.contains('active')) {
+        if (modal.classList.contains('active') && screenshotsList.length > 1) {
             if (e.key === 'ArrowLeft') {
                 showScreenshot(currentIndex - 1);
             } else if (e.key === 'ArrowRight') {
