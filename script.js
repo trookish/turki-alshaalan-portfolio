@@ -14,9 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initRevealAnimations();
     initSmoothScroll();
     initParallax();
-    initSkillBars();
     initPdfExport();
-    initAchievementExpand();
+    // initAchievementExpand(); // Retired in favor of unified showcase popup
     initProjectShowcase();
 });
 
@@ -27,39 +26,79 @@ function initNavigation() {
     const navbar = document.getElementById('navbar');
     const scrollThreshold = 50;
 
+    let navTicking = false;
     window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
+        if (!navTicking) {
+            window.requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
 
-        if (scrollY > scrollThreshold) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+                if (scrollY > scrollThreshold) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                navTicking = false;
+            });
+            navTicking = true;
         }
-    });
+    }, { passive: true });
 
-    // Add active state to nav links based on current section
+    // Add active state to nav links based on current section (using high-performance IntersectionObserver)
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    window.addEventListener('scroll', () => {
-        let current = '';
+    if ('IntersectionObserver' in window) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-30% 0px -60% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const currentId = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${currentId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
 
         sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-
-            if (scrollY >= sectionTop - 200) {
-                current = section.getAttribute('id');
-            }
+            observer.observe(section);
         });
+    } else {
+        // Fallback for older browsers
+        let fallbackTicking = false;
+        window.addEventListener('scroll', () => {
+            if (!fallbackTicking) {
+                window.requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    let current = '';
 
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        if (scrollY >= sectionTop - 200) {
+                            current = section.getAttribute('id');
+                        }
+                    });
+
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${current}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                    fallbackTicking = false;
+                });
+                fallbackTicking = true;
             }
-        });
-    });
+        }, { passive: true });
+    }
 }
 
 /**
@@ -265,29 +304,66 @@ function initClickSounds() {
  * Reveal Animations - Section fade-in on scroll
  */
 function initRevealAnimations() {
-    const revealElements = document.querySelectorAll('.section-title, .section-subtitle, .about-text, .about-highlights, .project-card, .timeline-item, .skill-category, .education-card, .certification-card, .contact-item');
+    // Select elements to reveal, ensuring they match actual classes in index.html.
+    // Added: .experience-card, .achievement-card, .skill-row. Removed: .skill-category, .timeline-item
+    const revealElements = document.querySelectorAll(
+        '.section-title, .section-subtitle, .about-text, .about-highlights, ' +
+        '.project-card, .experience-card, .skill-row, .education-card, ' +
+        '.certification-card, .contact-item, .achievement-card'
+    );
 
-    const revealOnScroll = () => {
-        const windowHeight = window.innerHeight;
-        const revealPoint = 100;
+    // Apply staggered transition delay once during initialization to avoid layouts/reflows on scroll
+    revealElements.forEach((element, index) => {
+        const delay = (index % 4) * 0.1;
+        element.style.transitionDelay = `${delay}s`;
+    });
 
-        revealElements.forEach((element, index) => {
-            const elementTop = element.getBoundingClientRect().top;
+    if ('IntersectionObserver' in window) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -80px 0px',
+            threshold: 0.05
+        };
 
-            if (elementTop < windowHeight - revealPoint) {
-                // Add staggered delay based on index and parent
-                const delay = (index % 4) * 0.1;
-                element.style.transitionDelay = `${delay}s`;
-                element.classList.add('reveal', 'active');
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal', 'active');
+                    obs.unobserve(entry.target); // Stop observing once revealed!
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach(el => observer.observe(el));
+    } else {
+        // Fallback for older browsers
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const revealPoint = 100;
+
+            revealElements.forEach(element => {
+                if (element.classList.contains('active')) return;
+                
+                const elementTop = element.getBoundingClientRect().top;
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('reveal', 'active');
+                }
+            });
+        };
+
+        revealOnScroll();
+        
+        let revealTicking = false;
+        window.addEventListener('scroll', () => {
+            if (!revealTicking) {
+                window.requestAnimationFrame(() => {
+                    revealOnScroll();
+                    revealTicking = false;
+                });
+                revealTicking = true;
             }
-        });
-    };
-
-    // Initial check
-    revealOnScroll();
-
-    // Check on scroll
-    window.addEventListener('scroll', revealOnScroll);
+        }, { passive: true });
+    }
 }
 
 /**
@@ -333,12 +409,19 @@ function initParallax() {
     const heroBackground = document.querySelector('.hero-background');
 
     if (heroBackground) {
+        let parallaxTicking = false;
         window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY;
-            const rate = scrolled * 0.3;
+            if (!parallaxTicking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    const rate = scrolled * 0.3;
 
-            heroBackground.style.transform = `translateY(${rate}px)`;
-        });
+                    heroBackground.style.transform = `translateY(${rate}px)`;
+                    parallaxTicking = false;
+                });
+                parallaxTicking = true;
+            }
+        }, { passive: true });
 
         // Reset parallax transform before print so background isn't shifted off-screen
         window.addEventListener('beforeprint', () => {
@@ -349,84 +432,19 @@ function initParallax() {
             const scrolled = window.scrollY;
             const rate = scrolled * 0.3;
             heroBackground.style.transform = `translateY(${rate}px)`;
-        });
+        }, { passive: true });
     }
 }
 
-/**
- * Skill Bars - Animate on scroll into view
- */
-function initSkillBars() {
-    const skillBars = document.querySelectorAll('.skill-progress');
-
-    const animateSkillBars = () => {
-        skillBars.forEach(bar => {
-            const barTop = bar.getBoundingClientRect().top;
-            const windowHeight = window.innerHeight;
-
-            if (barTop < windowHeight - 100) {
-                // Get the progress value from CSS custom property
-                const progress = bar.style.getPropertyValue('--progress');
-                bar.style.width = progress;
-            }
-        });
-    };
-
-    // Initial check
-    animateSkillBars();
-
-    // Check on scroll
-    window.addEventListener('scroll', animateSkillBars);
-}
-
-/**
- * Utility: Debounce function for performance
- */
-function debounce(func, wait = 10, immediate = true) {
-    let timeout;
-    return function executedFunction() {
-        const context = this;
-        const args = arguments;
-        const later = function () {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        const callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-}
-
-/**
- * Intersection Observer for more efficient scroll handling
- */
-if ('IntersectionObserver' in window) {
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('reveal', 'active');
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.project-card, .experience-card, .skill-category, .certification-card, .contact-item').forEach(el => {
-        observer.observe(el);
-    });
-}
+// Obsolete skill progress bars, unused debounce helper, and duplicate top-level observer block removed.
 
 /**
  * LinkedIn Navigation - Make sections clickable to LinkedIn
  */
 // Project expand functionality retired in favor of unified showcase popup.
 
-// Achievement Expand Functionality
+// Achievement Expand Functionality retired in favor of unified showcase popup.
+/*
 function initAchievementExpand() {
     const achievementCards = document.querySelectorAll('.achievement-card');
 
@@ -464,6 +482,7 @@ function initAchievementExpand() {
         header.setAttribute('role', 'button');
     });
 }
+*/
 
 // Certificate Modal Functions
 function openCertModal(imageSrc) {
@@ -511,8 +530,19 @@ function initProjectShowcase() {
 
     // Details Column Elements
     const detailsTitle = document.getElementById('showcase-details-title');
+    const subtitleElem = document.getElementById('showcase-details-subtitle');
     const detailsDesc = document.getElementById('showcase-details-desc');
+    const tagsLabel = document.getElementById('showcase-details-tags-label');
     const detailsTags = document.getElementById('showcase-details-tags');
+    const teamLabel = document.getElementById('showcase-details-team-label');
+
+    // Pre-instantiated shared sounds for performance
+    const hoverSound = new Audio('Sounds/Normal/Hover.wav');
+    hoverSound.volume = 0.3;
+    const clickSound = new Audio('Sounds/Normal/Click.wav');
+    clickSound.volume = 0.4;
+    const openSound = new Audio('Sounds/Game/windowopen.wav');
+    openSound.volume = 0.3;
     const detailsTeamContainer = document.getElementById('showcase-details-team-container');
     const detailsTeam = document.getElementById('showcase-details-team');
     const detailsLink = document.getElementById('showcase-details-link');
@@ -713,9 +743,7 @@ function initProjectShowcase() {
             btn.appendChild(img);
             thumbnailsGrid.appendChild(btn);
 
-            // Add hover sound for dynamically created thumbnail
-            const hoverSound = new Audio('Sounds/Normal/Hover.wav');
-            hoverSound.volume = 0.3;
+            // Use pre-instantiated hover sound
             btn.addEventListener('mouseenter', () => {
                 if (localStorage.getItem('sound') !== 'false') {
                     hoverSound.currentTime = 0;
@@ -723,9 +751,7 @@ function initProjectShowcase() {
                 }
             });
 
-            // Add click sound for dynamically created thumbnail
-            const clickSound = new Audio('Sounds/Normal/Click.wav');
-            clickSound.volume = 0.4;
+            // Use pre-instantiated click sound
             btn.addEventListener('click', () => {
                 if (localStorage.getItem('sound') !== 'false') {
                     clickSound.currentTime = 0;
@@ -737,80 +763,183 @@ function initProjectShowcase() {
     }
 
     // Modal Control Functions
-    function openModal(projectKey, card) {
+    function openModal(projectKey, card, isAchievement = false) {
         currentProject = projectKey;
 
-        // Scrape details from DOM
-        const titleText = card.querySelector('.project-title').textContent.trim();
-        const descText = card.querySelector('.project-description').textContent.trim();
-        
-        // Format the SYSTEM STATUS text: uppercase with underscores
-        const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
-        modalTitleElem.textContent = `SYSTEM STATUS: ${sysStatusName}_SHOWCASE.EXE`;
+        // Reset label defaults in case they were modified by achievements
+        if (subtitleElem) subtitleElem.style.display = 'none';
+        if (tagsLabel) tagsLabel.textContent = 'TECH STACK';
+        if (teamLabel) teamLabel.textContent = 'DEVELOPMENT TEAM';
 
-        // Populate scraped details
-        detailsTitle.textContent = titleText;
-        detailsDesc.textContent = descText;
+        if (isAchievement) {
+            // Scrape achievement details
+            const titleText = card.querySelector('.achievement-title').textContent.trim();
+            const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
+            modalTitleElem.textContent = `SYSTEM STATUS: ACHIEVEMENT_${sysStatusName}.EXE`;
 
-        // Populate tech tags
-        detailsTags.innerHTML = '';
-        const tags = card.querySelectorAll('.project-tags .tag');
-        tags.forEach(tag => {
-            const span = document.createElement('span');
-            span.className = 'tag';
-            span.textContent = tag.textContent.trim();
-            detailsTags.appendChild(span);
-        });
+            detailsTitle.textContent = titleText;
 
-        // Populate team members
-        const teamElement = card.querySelector('.project-team');
-        if (teamElement) {
-            detailsTeamContainer.style.display = 'block';
-            detailsTeam.innerHTML = teamElement.innerHTML;
-        } else {
-            detailsTeamContainer.style.display = 'none';
-            detailsTeam.innerHTML = '';
-        }
+            // Populate subtitle: Issuer & Date
+            const issuerText = card.querySelector('.achievement-issuer') ? card.querySelector('.achievement-issuer').textContent.trim() : '';
+            const dateText = card.querySelector('.achievement-date') ? card.querySelector('.achievement-date').textContent.trim() : '';
+            if (subtitleElem) {
+                subtitleElem.style.display = 'block';
+                subtitleElem.textContent = `${issuerText} | ${dateText}`;
+            }
 
-        // Populate external link button
-        const externalLink = card.querySelector('a.project-link');
-        if (externalLink) {
-            detailsLink.style.display = 'inline-block';
-            detailsLink.href = externalLink.href;
-            detailsLink.textContent = externalLink.textContent.trim();
-        } else {
-            detailsLink.style.display = 'none';
-        }
+            // Description: Project/Game name + description
+            const projTitleEl = card.querySelector('.achievement-project .project-title');
+            const projDescEl = card.querySelector('.achievement-project .project-description');
+            let descHtml = '';
+            if (projTitleEl) {
+                descHtml += `<strong style="color: var(--accent-primary); font-family: var(--font-terminal);">${projTitleEl.textContent.trim()}</strong><br><br>`;
+            }
+            if (projDescEl) {
+                descHtml += projDescEl.textContent.trim();
+            }
+            detailsDesc.innerHTML = descHtml;
 
-        // Determine screenshot list
-        const projectRecord = projectData[projectKey];
-        if (projectRecord && projectRecord.screenshots && projectRecord.screenshots.length > 0) {
-            screenshotsList = projectRecord.screenshots;
+            // Populate tags (change label to TAGS)
+            if (tagsLabel) tagsLabel.textContent = 'TAGS';
+            detailsTags.innerHTML = '';
+            const tags = card.querySelectorAll('.achievement-tag');
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.textContent = tag.textContent.trim();
+                detailsTags.appendChild(span);
+            });
+
+            // Populate team / mentor
+            const teamElement = card.querySelector('.achievement-team');
+            const mentorElement = card.querySelector('.achievement-mentor');
+            if (teamLabel) teamLabel.textContent = 'TEAM & MENTORS';
             
-            // Show gallery layout elements
-            captionContainer.style.display = 'block';
-            if (screenshotsList.length > 1) {
-                prevArrow.style.display = 'flex';
-                nextArrow.style.display = 'flex';
+            if (teamElement || mentorElement) {
+                detailsTeamContainer.style.display = 'block';
+                let teamHtml = '';
+                if (teamElement) {
+                    teamHtml += teamElement.innerHTML;
+                }
+                if (mentorElement) {
+                    teamHtml += mentorElement.innerHTML;
+                }
+                detailsTeam.innerHTML = teamHtml;
             } else {
+                detailsTeamContainer.style.display = 'none';
+                detailsTeam.innerHTML = '';
+            }
+
+            // Hide external link (achievements don't have one)
+            detailsLink.style.display = 'none';
+
+            // Build screenshots list (cover image + optional project screenshot)
+            const mainImgEl = card.querySelector('.achievement-image img');
+            const projImgEl = card.querySelector('.achievement-project-image img');
+            
+            screenshotsList = [];
+            if (mainImgEl) {
+                screenshotsList.push({
+                    src: mainImgEl.src,
+                    title: 'Certificate / Event',
+                    desc: titleText
+                });
+            }
+            if (projImgEl) {
+                screenshotsList.push({
+                    src: projImgEl.src,
+                    title: 'Project Screenshot',
+                    desc: projTitleEl ? projTitleEl.textContent.trim() : 'Project Screenshot'
+                });
+            }
+            
+            if (screenshotsList.length > 0) {
+                captionContainer.style.display = 'block';
+                if (screenshotsList.length > 1) {
+                    prevArrow.style.display = 'flex';
+                    nextArrow.style.display = 'flex';
+                } else {
+                    prevArrow.style.display = 'none';
+                    nextArrow.style.display = 'none';
+                }
+            } else {
+                captionContainer.style.display = 'none';
                 prevArrow.style.display = 'none';
                 nextArrow.style.display = 'none';
             }
         } else {
-            // No gallery data, fall back to cover image
-            const coverImg = card.querySelector('.project-image img');
-            const coverSrc = coverImg ? coverImg.src : '';
+            // Scrape details from DOM
+            const titleText = card.querySelector('.project-title').textContent.trim();
+            const descText = card.querySelector('.project-description').textContent.trim();
             
-            screenshotsList = [{
-                src: coverSrc,
-                title: titleText,
-                desc: titleText
-            }];
+            // Format the SYSTEM STATUS text: uppercase with underscores
+            const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
+            modalTitleElem.textContent = `SYSTEM STATUS: ${sysStatusName}_SHOWCASE.EXE`;
 
-            // Hide gallery layout elements
-            captionContainer.style.display = 'none';
-            prevArrow.style.display = 'none';
-            nextArrow.style.display = 'none';
+            // Populate scraped details
+            detailsTitle.textContent = titleText;
+            detailsDesc.textContent = descText;
+
+            // Populate tech tags
+            detailsTags.innerHTML = '';
+            const tags = card.querySelectorAll('.project-tags .tag');
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.textContent = tag.textContent.trim();
+                detailsTags.appendChild(span);
+            });
+
+            // Populate team members
+            const teamElement = card.querySelector('.project-team');
+            if (teamElement) {
+                detailsTeamContainer.style.display = 'block';
+                detailsTeam.innerHTML = teamElement.innerHTML;
+            } else {
+                detailsTeamContainer.style.display = 'none';
+                detailsTeam.innerHTML = '';
+            }
+
+            // Populate external link button
+            const externalLink = card.querySelector('a.project-link');
+            if (externalLink) {
+                detailsLink.style.display = 'inline-block';
+                detailsLink.href = externalLink.href;
+                detailsLink.textContent = externalLink.textContent.trim();
+            } else {
+                detailsLink.style.display = 'none';
+            }
+
+            // Determine screenshot list
+            const projectRecord = projectData[projectKey];
+            if (projectRecord && projectRecord.screenshots && projectRecord.screenshots.length > 0) {
+                screenshotsList = projectRecord.screenshots;
+                
+                // Show gallery layout elements
+                captionContainer.style.display = 'block';
+                if (screenshotsList.length > 1) {
+                    prevArrow.style.display = 'flex';
+                    nextArrow.style.display = 'flex';
+                } else {
+                    prevArrow.style.display = 'none';
+                    nextArrow.style.display = 'none';
+                }
+            } else {
+                // No gallery data, fall back to cover image
+                const coverImg = card.querySelector('.project-image img');
+                const coverSrc = coverImg ? coverImg.src : '';
+                
+                screenshotsList = [{
+                    src: coverSrc,
+                    title: titleText,
+                    desc: titleText
+                }];
+
+                // Hide gallery layout elements
+                captionContainer.style.display = 'none';
+                prevArrow.style.display = 'none';
+                nextArrow.style.display = 'none';
+            }
         }
 
         // Populate thumbnails
@@ -824,9 +953,8 @@ function initProjectShowcase() {
         showScreenshot(0);
         
         // Play window open sound if it exists
-        const openSound = new Audio('Sounds/Game/windowopen.wav');
-        openSound.volume = 0.3;
         if (localStorage.getItem('sound') !== 'false') {
+            openSound.currentTime = 0;
             openSound.play().catch(() => {});
         }
     }
@@ -842,26 +970,28 @@ function initProjectShowcase() {
         const projectKey = card.getAttribute('data-project');
         if (!projectKey) return;
 
-        // Hover sound
-        const hoverSound = new Audio('Sounds/Normal/Hover.wav');
-        hoverSound.volume = 0.3;
-        card.addEventListener('mouseenter', () => {
-            if (localStorage.getItem('sound') !== 'false') {
-                hoverSound.currentTime = 0;
-                hoverSound.play().catch(() => {});
-            }
-        });
-
         // Click event opens showcase
         card.addEventListener('click', (e) => {
-            // Play click sound
-            const clickSound = new Audio('Sounds/Normal/Click.wav');
-            clickSound.volume = 0.4;
-            if (localStorage.getItem('sound') !== 'false') {
-                clickSound.currentTime = 0;
-                clickSound.play().catch(() => {});
-            }
             openModal(projectKey, card);
+        });
+
+        // Make keyboard navigable
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
+
+    // Event Listeners for Achievement Cards
+    const achievementCards = document.querySelectorAll('.achievement-card');
+    achievementCards.forEach(card => {
+        // Click event opens showcase
+        card.addEventListener('click', (e) => {
+            openModal('', card, true);
         });
 
         // Make keyboard navigable
