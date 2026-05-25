@@ -1544,7 +1544,7 @@ function initLanguageToggle() {
                 // Skip elements that are handled by static translations (data-translate)
                 if (el.hasAttribute('data-translate')) return;
 
-                const text = el.textContent.trim();
+                const text = el.textContent.trim().replace(/\s+/g, ' ');
                 if (!text) return;
 
                 if (isArabic) {
@@ -1567,7 +1567,7 @@ function initLanguageToggle() {
         // 3. Translate specific contact values that should be localized (not emails/URLs/phone)
         document.querySelectorAll('.contact-value').forEach(el => {
             if (el.hasAttribute('href')) return; // Skip links (email, phone, linkedin, github)
-            const text = el.textContent.trim();
+            const text = el.textContent.trim().replace(/\s+/g, ' ');
             if (!text) return;
             if (isArabic) {
                 if (!el.hasAttribute('data-orig-html')) {
