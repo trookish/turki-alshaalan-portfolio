@@ -1024,6 +1024,33 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 /* Print Styles - For PDF Export */
 @media print {
+    /* Force light theme colors for clean paper-based printing */
+    :root, [data-theme] {
+        --bg-primary: #ffffff !important;
+        --bg-secondary: #f8fafc !important;
+        --bg-tertiary: #f1f5f9 !important;
+        --bg-card: #ffffff !important;
+        
+        --text-primary: #0f172a !important;
+        --text-secondary: #334155 !important;
+        --text-muted: #64748b !important;
+        
+        --accent-primary: #16a34a !important;
+        --accent-secondary: #15803d !important;
+        --accent-tertiary: #4d7c0f !important;
+        --accent-dark: #365314 !important;
+        
+        --border-color: #cbd5e1 !important;
+        --border-light: #e2e8f0 !important;
+        --border-accent: #16a34a !important;
+        
+        --shadow-sm: none !important;
+        --shadow-md: none !important;
+        --shadow-lg: none !important;
+        --shadow-pixel: none !important;
+        --shadow-accent: none !important;
+    }
+
     /* Preserve colors and backgrounds */
     * {
         -webkit-print-color-adjust: exact !important;
@@ -1031,14 +1058,22 @@ section:nth-child(8) { animation-delay: 0.7s; }
         color-adjust: exact !important;
     }
     
-    /* Hide non-essential elements */
+    /* Hide non-essential/interactive elements in print */
+    .navbar,
     .sound-toggle,
     .theme-toggle,
     .lang-toggle,
     .pdf-export,
+    .cv-download-nav,
+    .play-icon-wrapper,
     .hamburger,
     .scroll-indicator,
-    .game-modal {
+    .game-modal,
+    .showcase-btn,
+    .showcase-trigger,
+    .section-linkedin-btn,
+    .hero-buttons,
+    .expand-btn {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
@@ -1046,10 +1081,10 @@ section:nth-child(8) { animation-delay: 0.7s; }
         pointer-events: none !important;
     }
     
-    /* Dark theme print styles */
+    /* Light theme print styles */
     body, html {
-        background: var(--bg-primary) !important;
-        color: var(--text-primary) !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
         font-size: 11pt !important;
         line-height: 1.4 !important;
     }
@@ -1063,13 +1098,11 @@ section:nth-child(8) { animation-delay: 0.7s; }
     /* Each section starts on a new page */
     section {
         page-break-before: always !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
         padding: 30px 0 !important;
         margin-bottom: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
+        display: block !important;
     }
     
     /* First section doesn't need page break */
@@ -1083,16 +1116,6 @@ section:nth-child(8) { animation-delay: 0.7s; }
         break-before: always !important;
     }
     
-    /* Hide LinkedIn buttons in print */
-    .section-linkedin-btn {
-        display: none !important;
-    }
-    
-    /* Hide hero buttons in print */
-    .hero-buttons {
-        display: none !important;
-    }
-    
     /* Achievement cards - collapsed state in print */
     .achievement-card {
         page-break-inside: avoid !important;
@@ -1101,7 +1124,8 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
 
     .achievement-card .achievement-details {
-        display: none !important;
+        display: block !important;
+        margin-top: 0.5rem !important;
     }
 
     .achievement-card .expand-btn {
@@ -1260,6 +1284,14 @@ section:nth-child(8) { animation-delay: 0.7s; }
     
     /* Preserve section titles */
     .section-title {
+        display: block !important;
+        width: fit-content !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        text-align: center !important;
         color: var(--text-primary) !important;
         border-bottom: 2px solid var(--accent-primary) !important;
         padding-bottom: 0.5rem !important;
@@ -1314,7 +1346,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
     
     .project-image {
-        height: 150px !important;
+        height: 110px !important;
     }
     
     .project-content {
@@ -1336,31 +1368,42 @@ section:nth-child(8) { animation-delay: 0.7s; }
         gap: 0.3rem !important;
     }
     
-    /* Skills section - multi-column compact layout */
-    .skills-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 1rem !important;
-    }
-    
-    .skill-category {
-        padding: 1rem !important;
-        min-height: 150px !important;
+    /* Skills section - horizontal flow layout */
+    .skill-row {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: 1.25rem !important;
+        padding-bottom: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+        border-bottom: 1px solid var(--border-color) !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
     
-    .skill-category-title {
-        font-size: 0.8rem !important;
-        margin-bottom: 0.75rem !important;
+    .skill-row:last-child {
+        border-bottom: none !important;
     }
     
-    .skill-list {
+    .skill-label {
+        min-width: 140px !important;
+        width: 140px !important;
+        flex-shrink: 0 !important;
+        padding-top: 0.15rem !important;
+    }
+    
+    .skill-category-name {
+        font-family: var(--font-body) !important;
+        font-size: 0.85rem !important;
+        color: var(--accent-primary) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+    }
+    
+    .skill-tags {
+        display: flex !important;
+        flex-wrap: wrap !important;
         gap: 0.35rem !important;
-    }
-    
-    .skill-name {
-        font-size: 0.9rem !important;
-        padding: 0.25rem 0 !important;
     }
     
     /* Experience section */
@@ -1424,32 +1467,32 @@ section:nth-child(8) { animation-delay: 0.7s; }
     }
     
     .certification-card {
-        padding: 0 !important;
-        gap: 0 !important;
-        min-height: 220px !important;
+        padding: 0.75rem !important;
+        gap: 0.25rem !important;
+        min-height: auto !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
     }
     
     .certification-image {
-        height: 100px !important;
-    }
-    
-    .certification-image img {
-        object-fit: cover !important;
+        display: none !important;
     }
     
     .certification-info {
-        padding: 0.5rem !important;
+        padding: 0 !important;
     }
     
     .certification-title {
-        font-size: 0.8rem !important;
+        font-size: 0.85rem !important;
         margin-bottom: 0.2rem !important;
+        font-weight: 700 !important;
     }
     
     .certification-issuer {
-        font-size: 0.7rem !important;
+        font-size: 0.75rem !important;
     }
     
     .certification-actions {
