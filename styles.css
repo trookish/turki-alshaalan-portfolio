@@ -1024,33 +1024,6 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 /* Print Styles - For PDF Export */
 @media print {
-    /* Force light theme colors for clean paper-based printing */
-    :root, [data-theme] {
-        --bg-primary: #ffffff !important;
-        --bg-secondary: #f8fafc !important;
-        --bg-tertiary: #f1f5f9 !important;
-        --bg-card: #ffffff !important;
-        
-        --text-primary: #0f172a !important;
-        --text-secondary: #334155 !important;
-        --text-muted: #64748b !important;
-        
-        --accent-primary: #16a34a !important;
-        --accent-secondary: #15803d !important;
-        --accent-tertiary: #4d7c0f !important;
-        --accent-dark: #365314 !important;
-        
-        --border-color: #cbd5e1 !important;
-        --border-light: #e2e8f0 !important;
-        --border-accent: #16a34a !important;
-        
-        --shadow-sm: none !important;
-        --shadow-md: none !important;
-        --shadow-lg: none !important;
-        --shadow-pixel: none !important;
-        --shadow-accent: none !important;
-    }
-
     /* Preserve colors and backgrounds */
     * {
         -webkit-print-color-adjust: exact !important;
@@ -1081,10 +1054,10 @@ section:nth-child(8) { animation-delay: 0.7s; }
         pointer-events: none !important;
     }
     
-    /* Light theme print styles */
+    /* Theme-aware print styles */
     body, html {
-        background: #ffffff !important;
-        color: #0f172a !important;
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
         font-size: 11pt !important;
         line-height: 1.4 !important;
     }
