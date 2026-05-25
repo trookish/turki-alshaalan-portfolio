@@ -1078,6 +1078,7 @@ function initProjectShowcase() {
                 captionContainer.style.display = 'none';
                 prevArrow.style.display = 'none';
                 nextArrow.style.display = 'none';
+            }
         }
 
         // Populate thumbnails
@@ -1095,7 +1096,6 @@ function initProjectShowcase() {
             openSound.currentTime = 0;
             openSound.play().catch(() => {});
         }
-    }
     }
 
     function closeModal() {
