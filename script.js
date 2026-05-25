@@ -955,6 +955,7 @@ function initProjectShowcase() {
             if (teamLabel) teamLabel.textContent = isArabic ? 'الفريق والموجهون' : 'TEAM & MENTORS';
             
             if (teamElement || mentorElement) {
+                detailsTeamContainer.className = 'ss-details-section achievement-team';
                 detailsTeamContainer.style.display = 'block';
                 let teamHtml = '';
                 if (teamElement) {
@@ -965,6 +966,7 @@ function initProjectShowcase() {
                 }
                 detailsTeam.innerHTML = teamHtml;
             } else {
+                detailsTeamContainer.className = 'ss-details-section';
                 detailsTeamContainer.style.display = 'none';
                 detailsTeam.innerHTML = '';
             }
@@ -1032,9 +1034,11 @@ function initProjectShowcase() {
             // Populate team members
             const teamElement = card.querySelector('.project-team');
             if (teamElement) {
+                detailsTeamContainer.className = 'ss-details-section project-team';
                 detailsTeamContainer.style.display = 'block';
                 detailsTeam.innerHTML = teamElement.innerHTML;
             } else {
+                detailsTeamContainer.className = 'ss-details-section';
                 detailsTeamContainer.style.display = 'none';
                 detailsTeam.innerHTML = '';
             }
@@ -1531,7 +1535,7 @@ function initLanguageToggle() {
             '.certification-title', '.certification-issuer',
             // Achievements
             '.achievement-title', '.achievement-issuer', '.achievement-date', '.achievement-project .project-title', '.achievement-project .project-description',
-            '.achievement-team .team-title', '.achievement-team .team-name', '.achievement-team .team-role', '.achievement-mentor .mentor-title', '.achievement-mentor .mentor-name',
+            '.achievement-team .team-title', '.achievement-team .team-name', '.achievement-team .team-role', '.achievement-mentor .mentor-title', '.achievement-mentor .mentor-name', '.achievement-mentor .team-name',
             '.achievement-tag',
             // Contact (labels only, not values which may be links/emails)
             '.contact-label',
