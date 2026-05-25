@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 </head>
 
@@ -36,30 +36,30 @@
             <a href="#home" class="nav-logo"><span class="play-icon-wrapper" data-tooltip="Play?"><img
                         src="images/Game/Play.webp" alt="Play Game" class="play-icon" id="playGameBtn"></span></a>
             <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#experience" class="nav-link">Experience</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#education" class="nav-link">Education</a></li>
-                <li><a href="#certifications" class="nav-link">Certifications</a></li>
-                <li><a href="#achievements" class="nav-link">Achievements</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#home" class="nav-link" data-translate="nav_home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-translate="nav_about">About</a></li>
+                <li><a href="#projects" class="nav-link" data-translate="nav_projects">Projects</a></li>
+                <li><a href="#experience" class="nav-link" data-translate="nav_experience">Experience</a></li>
+                <li><a href="#skills" class="nav-link" data-translate="nav_skills">Skills</a></li>
+                <li><a href="#education" class="nav-link" data-translate="nav_education">Education</a></li>
+                <li><a href="#certifications" class="nav-link" data-translate="nav_certifications">Certifications</a></li>
+                <li><a href="#achievements" class="nav-link" data-translate="nav_achievements">Achievements</a></li>
+                <li><a href="#contact" class="nav-link" data-translate="nav_contact">Contact</a></li>
             </ul>
             <div class="nav-controls">
                 <div class="nav-icon-btn">
                     <a href="CV/Turki-Alshalaan-CV.pdf" download="Turki_Alshaalan_CV.pdf" class="cv-download-nav"
-                        aria-label="Download CV">
+                        aria-label="Download CV" data-tooltip="Download CV" data-translate-tooltip="nav_cv_tooltip">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
                     </a>
-                    <span class="nav-btn-label">CV</span>
+                    <span class="nav-btn-label" data-translate="nav_cv_label">CV</span>
                 </div>
                 <div class="nav-icon-btn">
-                    <button class="pdf-export" id="pdfExport" aria-label="Export to PDF">
+                    <button class="pdf-export" id="pdfExport" aria-label="Export to PDF" data-tooltip="Export PDF" data-translate-tooltip="nav_pdf_tooltip">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
@@ -68,10 +68,10 @@
                             <polyline points="10 9 9 9 8 9"></polyline>
                         </svg>
                     </button>
-                    <span class="nav-btn-label">PDF</span>
+                    <span class="nav-btn-label" data-translate="nav_pdf_label">PDF</span>
                 </div>
                 <div class="nav-icon-btn">
-                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-tooltip="Toggle Theme" data-translate-tooltip="nav_theme_tooltip">
                         <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <circle cx="12" cy="12" r="5"></circle>
@@ -89,7 +89,15 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </button>
-                    <span class="nav-btn-label">Theme</span>
+                    <span class="nav-btn-label" data-translate="nav_theme_label">Theme</span>
+                </div>
+                <div class="nav-icon-btn">
+                    <button class="lang-toggle" id="langToggle" aria-label="Switch language" data-tooltip="Language" data-translate-tooltip="nav_lang_tooltip">
+                        <span class="lang-code en active">EN</span>
+                        <span class="lang-divider">/</span>
+                        <span class="lang-code ar">AR</span>
+                    </button>
+                    <span class="nav-btn-label" id="langToggleLabel" data-translate="nav_lang_label">العربية</span>
                 </div>
                 <div class="hamburger" id="hamburger">
                     <span></span>
@@ -105,11 +113,11 @@
         <div class="game-overlay" id="gameOverlay"></div>
         <div class="game-container">
             <div class="game-header">
-                <span class="game-title">TURKI'S BATTLE GAME</span>
+                <span class="game-title" data-translate="game_title">TURKI'S BATTLE GAME</span>
                 <div class="game-header-controls">
                     <button class="control-toggle" id="controlToggle" title="Toggle Mobile Controls">
                         <span class="toggle-icon">📱</span>
-                        <span class="toggle-text">Mobile</span>
+                        <span class="toggle-text" data-translate="game_btn_mobile">Mobile</span>
                     </button>
                     <button class="game-close" id="gameClose">&times;</button>
                 </div>
@@ -120,8 +128,8 @@
                 <!-- System Buttons (Exit/Restart) -->
                 <div class="game-btn-row">
                     <div class="game-system-btns">
-                        <button class="system-btn exit-btn" id="mobileExit">EXIT</button>
-                        <button class="system-btn restart-btn" id="mobileRestart">RESTART</button>
+                        <button class="system-btn exit-btn" id="mobileExit" data-translate="game_btn_exit">EXIT</button>
+                        <button class="system-btn restart-btn" id="mobileRestart" data-translate="game_btn_restart">RESTART</button>
                     </div>
                 </div>
                 <!-- Game Controls Row -->
@@ -152,11 +160,11 @@
                 </div>
             </div>
             <div class="game-controls-info">
-                <span>[A/D] Move</span>
-                <span>[W/Space] Jump</span>
-                <span>[J] Attack</span>
-                <span>[K] Block</span>
-                <span>[ESC] Exit</span>
+                <span data-translate="game_info_move">[A/D] Move</span>
+                <span data-translate="game_info_jump">[W/Space] Jump</span>
+                <span data-translate="game_info_attack">[J] Attack</span>
+                <span data-translate="game_info_block">[K] Block</span>
+                <span data-translate="game_info_exit">[ESC] Exit</span>
             </div>
         </div>
     </div>
@@ -173,11 +181,11 @@
                 </div>
             </a>
             <div class="hero-text">
-                <h1 class="hero-name">Turki Alshaalan</h1>
-                <h2 class="hero-title">IT Student | Game Developer | Unity & C# Programmer</h2>
+                <h1 class="hero-name" data-translate="hero_name">Turki Alshaalan</h1>
+                <h2 class="hero-title" data-translate="hero_title">IT Student | Game Developer | Unity & C# Programmer</h2>
                 <div class="hero-buttons">
-                    <a href="#projects" class="btn btn-primary">View Projects</a>
-                    <a href="#contact" class="btn btn-secondary">Contact Me</a>
+                    <a href="#projects" class="btn btn-primary" data-translate="hero_btn_projects">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary" data-translate="hero_btn_contact">Contact Me</a>
                 </div>
             </div>
         </div>
@@ -191,43 +199,43 @@
     <!-- About Section -->
     <section class="about" id="about">
         <div class="container">
-            <h2 class="section-title">About Me</h2>
+            <h2 class="section-title" data-translate="about_title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>I'm an IT student at <strong>Imam Muhammad ibn Saud Islamic University</strong> with over 1 year
+                    <p data-translate="about_p1">I'm an IT student at <strong>Imam Muhammad ibn Saud Islamic University</strong> with over 1 year
                         of experience in <strong>Unity</strong> and <strong>C#</strong> programming. My focus lies in
                         creating engaging 3D gameplay systems, intelligent AI behaviors, and challenging puzzle
                         mechanics.</p>
-                    <p>I work with <strong>Blender</strong> for 3D modeling and asset creation, allowing me to bring my
+                    <p data-translate="about_p2">I work with <strong>Blender</strong> for 3D modeling and asset creation, allowing me to bring my
                         game concepts to life from prototype to polished experience. I'm passionate about game feel,
                         immersion, and creating memorable player experiences.</p>
-                    <p>As a collaborative team member, I've contributed to various game projects, combining technical
+                    <p data-translate="about_p3">As a collaborative team member, I've contributed to various game projects, combining technical
                         skills with creative problem-solving to deliver engaging interactive experiences.</p>
                 </div>
                 <div class="about-highlights">
                     <a href="#experience" class="highlight-item highlight-link">
                         <span class="highlight-number">1+</span>
-                        <span class="highlight-label">Year Experience</span>
+                        <span class="highlight-label" data-translate="about_exp_label">Year Experience</span>
                         <span class="highlight-icon">→</span>
                     </a>
                     <a href="#projects" class="highlight-item highlight-link">
                         <span class="highlight-number">9+</span>
-                        <span class="highlight-label">Completed Projects</span>
+                        <span class="highlight-label" data-translate="about_proj_label">Completed Projects</span>
                         <span class="highlight-icon">→</span>
                     </a>
                     <a href="#certifications" class="highlight-item highlight-link">
                         <span class="highlight-number">5+</span>
-                        <span class="highlight-label">Certifications</span>
+                        <span class="highlight-label" data-translate="about_cert_label">Certifications</span>
                         <span class="highlight-icon">→</span>
                     </a>
                     <a href="#skills" class="highlight-item highlight-link">
                         <span class="highlight-number">6</span>
-                        <span class="highlight-label">Skills Categories</span>
+                        <span class="highlight-label" data-translate="about_skills_label">Skills Categories</span>
                         <span class="highlight-icon">→</span>
                     </a>
                     <a href="#achievements" class="highlight-item highlight-link">
                         <span class="highlight-number">2</span>
-                        <span class="highlight-label">Achievements</span>
+                        <span class="highlight-label" data-translate="about_ach_label">Achievements</span>
                         <span class="highlight-icon">→</span>
                     </a>
                 </div>

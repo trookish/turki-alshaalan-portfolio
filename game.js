@@ -6,6 +6,38 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Translation helpers for dynamic language toggling
+function getGameText(enText) {
+    const isArabic = document.documentElement.lang === 'ar';
+    if (!isArabic) return enText;
+    
+    const gameTranslations = {
+        'PLAYER': 'اللاعب',
+        'BOSS': 'الزعيم',
+        'SHIELD': 'الدرع',
+        'BROKEN': 'مكسور',
+        'GO!': 'انطلق!',
+        'GAME OVER': 'انتهت اللعبة',
+        'Press R to Restart': 'اضغط R لإعادة التشغيل',
+        'VICTORY!': 'انتصار!',
+        'Press R to Play Again': 'اضغط R للعب مجدداً',
+        'SHIELD BREAK!': 'انكسار الدرع!',
+        'BLOCKED': 'مصدود',
+        'BLOCK': 'صد',
+        'ENRAGED!': 'غاضب!'
+    };
+    
+    return gameTranslations[enText] || enText;
+}
+
+function getGameFont(baseSize, isBold = false) {
+    const isArabic = document.documentElement.lang === 'ar';
+    if (isArabic) {
+        return `${isBold ? 'bold ' : ''}${baseSize + 2}px "Cairo", sans-serif`;
+    }
+    return `${isBold ? 'bold ' : ''}${baseSize}px "Press Start 2P"`;
+}
+
 // Sound Effects
 const sounds = {
     jump: new Audio('Sounds/Game/jump.wav'),
@@ -479,7 +511,7 @@ function lerpSquash(entity) {
 
 function createFloatingText(x, y, text, color, big) {
     floatingTexts.push({
-        x: x, y: y, text: text, color: color,
+        x: x, y: y, text: getGameText(text), color: color,
         life: 55, maxLife: 55,
         vy: -2.2,
         scale: 0.25,
@@ -1536,7 +1568,7 @@ function drawFloatingTexts() {
         // Fade out in last 30% of life
         ctx.globalAlpha = lifeRatio < 0.3 ? lifeRatio / 0.3 : 1;
         const fontSize = t.big ? 18 : 14;
-        ctx.font = `bold ${fontSize}px "Press Start 2P"`;
+        ctx.font = getGameFont(fontSize, true);
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.strokeStyle = '#000000';
@@ -1567,8 +1599,8 @@ function drawHealthBars() {
     }
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
     for (let i = 1; i < 10; i++) ctx.fillRect(22 + (196 / 10) * i, 22, 2, 20);
-    ctx.fillStyle = '#ffffff'; ctx.font = '10px "Press Start 2P"'; ctx.textAlign = 'left';
-    ctx.fillText('PLAYER', 25, 36);
+    ctx.fillStyle = '#ffffff'; ctx.font = getGameFont(10); ctx.textAlign = 'left';
+    ctx.fillText(getGameText('PLAYER'), 25, 36);
 
     // === Player Shield ===
     const shieldBarY = 46;
@@ -1582,8 +1614,8 @@ function drawHealthBars() {
         ctx.fillRect(21, shieldBarY + 1, psp * 198, 8);
     }
     ctx.fillStyle = player.shieldBroken ? '#525252' : '#93c5fd';
-    ctx.font = '7px "Press Start 2P"'; ctx.textAlign = 'left';
-    ctx.fillText(player.shieldBroken ? 'BROKEN' : 'SHIELD', 23, shieldBarY + 8);
+    ctx.font = getGameFont(7); ctx.textAlign = 'left';
+    ctx.fillText(getGameText(player.shieldBroken ? 'BROKEN' : 'SHIELD'), 23, shieldBarY + 8);
 
     // === Boss Health ===
     ctx.fillStyle = '#0a0a0a'; ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2;
@@ -1601,8 +1633,8 @@ function drawHealthBars() {
     }
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
     for (let i = 1; i < 10; i++) ctx.fillRect(canvas.width - 218 + (196 / 10) * i, 22, 2, 20);
-    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'right';
-    ctx.fillText('BOSS', canvas.width - 25, 36);
+    ctx.fillStyle = '#ffffff'; ctx.font = getGameFont(10); ctx.textAlign = 'right';
+    ctx.fillText(getGameText('BOSS'), canvas.width - 25, 36);
 
     // === Boss Shield ===
     const bossShieldBarY = 46;
@@ -1617,21 +1649,21 @@ function drawHealthBars() {
         ctx.fillRect(canvas.width - 219, bossShieldBarY + 1, bsp * 198, 8);
     }
     ctx.fillStyle = boss.shieldBroken ? '#525252' : '#93c5fd';
-    ctx.font = '7px "Press Start 2P"'; ctx.textAlign = 'right';
-    ctx.fillText(boss.shieldBroken ? 'BROKEN' : 'SHIELD', canvas.width - 23, bossShieldBarY + 8);
+    ctx.font = getGameFont(7); ctx.textAlign = 'right';
+    ctx.fillText(getGameText(boss.shieldBroken ? 'BROKEN' : 'SHIELD'), canvas.width - 23, bossShieldBarY + 8);
     ctx.textAlign = 'left';
 }
 
 function drawCountdown() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    const displayText = countdownValue > 0 ? countdownValue.toString() : 'GO!';
+    const displayText = countdownValue > 0 ? countdownValue.toString() : getGameText('GO!');
     const pulseScale = countdownValue > 0 ? 1 + Math.sin(Date.now() / 100) * 0.1 : 1.2;
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.scale(pulseScale, pulseScale);
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.font = '72px "Press Start 2P"';
+    ctx.font = getGameFont(72);
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(displayText, 4, 4);
     ctx.fillStyle = '#fbbf24'; ctx.shadowColor = '#fbbf24'; ctx.shadowBlur = 20;
@@ -1646,11 +1678,11 @@ function drawGameOver() {
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.fillStyle = '#ef4444'; ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 15;
-    ctx.font = '40px "Press Start 2P"'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('GAME OVER', 0, -20);
+    ctx.font = getGameFont(40); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(getGameText('GAME OVER'), 0, -20);
     ctx.shadowBlur = 0;
-    ctx.fillStyle = '#ffffff'; ctx.font = '14px "Press Start 2P"';
-    ctx.fillText('Press R to Restart', 0, 20);
+    ctx.fillStyle = '#ffffff'; ctx.font = getGameFont(14);
+    ctx.fillText(getGameText('Press R to Restart'), 0, 20);
     ctx.restore();
     if (keys['r']) resetGame();
 }
@@ -1689,11 +1721,11 @@ function drawVictory() {
     ctx.fillStyle = `hsl(${hue}, 90%, 65%)`;
     ctx.shadowColor = `hsl(${hue}, 90%, 65%)`;
     ctx.shadowBlur = 18 + Math.sin(t * 4) * 7;
-    ctx.font = '40px "Press Start 2P"'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('VICTORY!', 0, -20);
+    ctx.font = getGameFont(40); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(getGameText('VICTORY!'), 0, -20);
     ctx.shadowBlur = 0;
-    ctx.fillStyle = '#ffffff'; ctx.font = '14px "Press Start 2P"';
-    ctx.fillText('Press R to Play Again', 0, 20);
+    ctx.fillStyle = '#ffffff'; ctx.font = getGameFont(14);
+    ctx.fillText(getGameText('Press R to Play Again'), 0, 20);
     ctx.restore();
     if (keys['r']) resetGame();
 }
