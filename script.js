@@ -555,32 +555,32 @@ function initProjectShowcase() {
         'dungeon-puzzle': {
             screenshots: [
                 {
-                    src: 'images/Projects/DungeonPuzzle/screenshot1.png',
+                    src: 'images/Projects/DungeonPuzzle/screenshot1.webp',
                     title: 'Start Room',
                     desc: 'The initial room featuring a wooden table, chairs, paintings, and locked iron gates.'
                 },
                 {
-                    src: 'images/Projects/DungeonPuzzle/screenshot2.png',
+                    src: 'images/Projects/DungeonPuzzle/screenshot2.webp',
                     title: 'Dungeon Corridors',
                     desc: 'Navigating hallways with cells, chains, and a wall sign pointing to the Key Room.'
                 },
                 {
-                    src: 'images/Projects/DungeonPuzzle/screenshot3.png',
+                    src: 'images/Projects/DungeonPuzzle/screenshot3.webp',
                     title: 'Torture Chamber',
                     desc: 'A large room containing torture devices, executioner blocks, wooden horses, hanging cages, and iron maidens.'
                 },
                 {
-                    src: 'images/Projects/DungeonPuzzle/screenshot4.png',
+                    src: 'images/Projects/DungeonPuzzle/screenshot4.webp',
                     title: 'The Armory',
                     desc: 'A room with racks of swords and shields, candle chandeliers, and a hanging red banner.'
                 },
                 {
-                    src: 'images/Projects/DungeonPuzzle/screenshot5.png',
+                    src: 'images/Projects/DungeonPuzzle/screenshot5.webp',
                     title: 'Lava Trap Room',
                     desc: 'Crossing a narrow stone bridge over boiling lava while dodging giant swinging blades.'
                 },
                 {
-                    src: 'images/Projects/DungeonPuzzle/screenshot6.png',
+                    src: 'images/Projects/DungeonPuzzle/screenshot6.webp',
                     title: 'Treasure Corner',
                     desc: 'A corner housing ancient wooden chests.'
                 }
@@ -589,17 +589,17 @@ function initProjectShowcase() {
         'scary-library': {
             screenshots: [
                 {
-                    src: 'images/Projects/ScaryLibrary/screenshot1.png',
+                    src: 'images/Projects/ScaryLibrary/screenshot1.webp',
                     title: 'The Book Puzzle Shelf',
                     desc: 'A stone wall shelf with slots for 5 books, instructing the player to place them in order.'
                 },
                 {
-                    src: 'images/Projects/ScaryLibrary/screenshot2.png',
+                    src: 'images/Projects/ScaryLibrary/screenshot2.webp',
                     title: 'AI Monster Patrolling',
                     desc: 'Creepy white-faced monster patrolling the library corridors as a red book sits on a table.'
                 },
                 {
-                    src: 'images/Projects/ScaryLibrary/screenshot3.png',
+                    src: 'images/Projects/ScaryLibrary/screenshot3.webp',
                     title: 'Library Jumpscare',
                     desc: 'Horrifying moment the player is caught close-up by the monster.'
                 }
@@ -608,17 +608,17 @@ function initProjectShowcase() {
         'knight-with-gun': {
             screenshots: [
                 {
-                    src: 'images/Projects/KnightWithGun/screenshot1.png',
+                    src: 'images/Projects/KnightWithGun/screenshot1.webp',
                     title: 'Game Main Menu',
                     desc: 'Start interface with a fully armored knight holding a glowing yellow cube weapon.'
                 },
                 {
-                    src: 'images/Projects/KnightWithGun/screenshot2.png',
+                    src: 'images/Projects/KnightWithGun/screenshot2.webp',
                     title: 'Bridge Combat Arena',
                     desc: 'Fighting glowing red cylinder enemies on a narrow stone bridge under a crimson sky.'
                 },
                 {
-                    src: 'images/Projects/KnightWithGun/screenshot3.png',
+                    src: 'images/Projects/KnightWithGun/screenshot3.webp',
                     title: 'Pause Menu Interface',
                     desc: 'Retro-style pause overlay with Resume and Quit buttons.'
                 }
@@ -627,22 +627,22 @@ function initProjectShowcase() {
         'the-hidden-kanz': {
             screenshots: [
                 {
-                    src: 'images/Projects/TheHiddenKanz/screenshot1.jpeg',
+                    src: 'images/Projects/TheHiddenKanz/screenshot1.webp',
                     title: 'Main Menu Scene',
                     desc: 'Main menu showcasing a carved stone tomb entrance in desert sand dunes.'
                 },
                 {
-                    src: 'images/Projects/TheHiddenKanz/screenshot2.jpeg',
+                    src: 'images/Projects/TheHiddenKanz/screenshot2.webp',
                     title: 'First-Person Combat View',
                     desc: 'Stone corridor exploration holding a sword and a green magical flame against skeleton enemies.'
                 },
                 {
-                    src: 'images/Projects/TheHiddenKanz/screenshot3.jpeg',
+                    src: 'images/Projects/TheHiddenKanz/screenshot3.webp',
                     title: 'Magic Ability Casting',
                     desc: 'Engaging skeleton warrior while preparing to cast a pink magic spell.'
                 },
                 {
-                    src: 'images/Projects/TheHiddenKanz/screenshot4.jpeg',
+                    src: 'images/Projects/TheHiddenKanz/screenshot4.webp',
                     title: 'Statue Chamber',
                     desc: 'Spacious room lined with tall hooded statues, archway tunnels, and hanging cages.'
                 }
@@ -651,37 +651,37 @@ function initProjectShowcase() {
         'syntax-strike': {
             screenshots: [
                 {
-                    src: 'images/Projects/SyntaxStrike/screenshot1.png',
+                    src: 'images/Projects/SyntaxStrike/screenshot1.webp',
                     title: 'Various Enemy Types in Combat',
                     desc: 'Real-time combat in the facility showing the player robot fighting multiple enemy types (Shooter Robots, Spider Bots, and Turrets) using the sword and shield.'
                 },
                 {
-                    src: 'images/Projects/SyntaxStrike/screenshot2.png',
+                    src: 'images/Projects/SyntaxStrike/screenshot2.webp',
                     title: 'Spider Enemies Attacking',
                     desc: 'Engaging fast Spider Bots and ranged enemies inside the warehouse facility. Ranged enemies can fire projectiles and self-destruct if they get too close.'
                 },
                 {
-                    src: 'images/Projects/SyntaxStrike/screenshot3.png',
+                    src: 'images/Projects/SyntaxStrike/screenshot3.webp',
                     title: 'Hacking Tool Pickup in the Environment',
                     desc: 'Locating the Hacking Tool in the facility. Acquiring the tool allows the player to interact with terminals and hack disabled enemies to solve programming puzzles.'
                 },
                 {
-                    src: 'images/Projects/SyntaxStrike/screenshot4.png',
+                    src: 'images/Projects/SyntaxStrike/screenshot4.webp',
                     title: 'Hacking Tool Acquired Notification',
                     desc: 'On-screen notification upon picking up the hacking tool, preparing the student to hack enemies and override secure doors.'
                 },
                 {
-                    src: 'images/Projects/SyntaxStrike/screenshot5.png',
+                    src: 'images/Projects/SyntaxStrike/screenshot5.webp',
                     title: 'Electrical Water Hazard',
                     desc: 'Navigating environmental hazards. The student must avoid electrical pools or use a nearby control console to disable the hazard before traversing.'
                 },
                 {
-                    src: 'images/Projects/SyntaxStrike/screenshot6.png',
+                    src: 'images/Projects/SyntaxStrike/screenshot6.webp',
                     title: 'Final Boss Encounter',
                     desc: 'The final encounter with the Boss robot. The player must dodge shockwaves and stomp attacks, reduce the Boss\'s health to zero, and solve a hard programming puzzle to win.'
                 },
                 {
-                    src: 'images/Projects/SyntaxStrike/screenshot7.png',
+                    src: 'images/Projects/SyntaxStrike/screenshot7.webp',
                     title: 'Level Completion Score Scene',
                     desc: 'Level completion scoreboard tracking player statistics including enemies defeated, programming puzzle accuracy, time bonuses, and final score.'
                 }
@@ -737,7 +737,7 @@ function initProjectShowcase() {
             btn.setAttribute('aria-label', `View screenshot ${index + 1}`);
 
             const img = document.createElement('img');
-            img.src = screenshot.src;
+            img.src = screenshot.src.replace(/screenshot(\d+)\.(png|jpeg|jpg|webp)/i, 'screenshot$1_thumb.webp');
             img.alt = `Thumbnail ${index + 1}`;
 
             btn.appendChild(img);
