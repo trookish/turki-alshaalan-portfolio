@@ -33,7 +33,7 @@ function getGameText(enText) {
 function getGameFont(baseSize, isBold = false) {
     const isArabic = document.documentElement.lang === 'ar';
     if (isArabic) {
-        return `${isBold ? 'bold ' : ''}${baseSize + 2}px "Cairo", sans-serif`;
+        return `${isBold ? 'bold ' : ''}${baseSize + 2}px "Handjet", sans-serif`;
     }
     return `${isBold ? 'bold ' : ''}${baseSize}px "Press Start 2P"`;
 }

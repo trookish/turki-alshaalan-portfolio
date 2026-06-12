@@ -67,7 +67,7 @@ The Boss is governed by a state machine that reads game vectors in real-time, ex
 ### 🌐 Complete Bilingual Localization (EN / AR)
 The site includes a custom translation engine that handles structural and dynamic content. Switching language modes updates the typography to match cultural norms:
 - **English View**: Uses retro-game fonts `Pixelify Sans`, `Press Start 2P`, and `VT323`.
-- **Arabic View**: Dynamically scales margins, changes block directions, and adopts the modern `Cairo` font for readability.
+- **Arabic View**: Dynamically scales margins, changes block directions, and adopts the `Handjet` font for readability.
 - **Engine Logic**:
   - **Static Strings**: Replaces tags marked with `data-translate` and `data-translate-tooltip` using a translation map in [script.js](file:///c:/Users/trookish/Dev/Web-Projects/Portfolio-Website/script.js).
   - **Dynamic Content**: Auto-matches content terms dynamically to keep HTML modifications clean.
