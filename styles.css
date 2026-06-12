@@ -3959,9 +3959,17 @@ html[dir="rtl"] li,
 html[dir="rtl"] input,
 html[dir="rtl"] textarea {
     font-family: 'Handjet', sans-serif !important;
+    font-size: 1.15rem !important;
     letter-spacing: 0px !important;
     word-spacing: normal !important;
 }
+
+html[dir="rtl"] h1 { font-size: 2.6rem !important; }
+html[dir="rtl"] h2 { font-size: 2.1rem !important; }
+html[dir="rtl"] h3 { font-size: 1.5rem !important; }
+html[dir="rtl"] h4 { font-size: 1.25rem !important; }
+html[dir="rtl"] h5 { font-size: 1.15rem !important; }
+html[dir="rtl"] h6 { font-size: 1.1rem !important; }
 
 html[dir="rtl"] h1,
 html[dir="rtl"] h2,
@@ -3984,6 +3992,7 @@ html[dir="rtl"] .game-controls-info span,
 html[dir="rtl"] .system-btn {
     font-family: 'Handjet', sans-serif !important;
     font-weight: 700 !important;
+    font-size: 1.1rem !important;
     letter-spacing: 0px !important;
 }
 
