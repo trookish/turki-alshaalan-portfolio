@@ -69,8 +69,8 @@ The site includes a custom translation engine that handles structural and dynami
 - **English View**: Uses retro-game fonts `Pixelify Sans`, `Press Start 2P`, and `VT323`.
 - **Arabic View**: Dynamically scales margins, changes block directions, and adopts the `Handjet` font for readability.
 - **Engine Logic**:
-  - **Static Strings**: Replaces tags marked with `data-translate` and `data-translate-tooltip` using a translation map in [script.js](file:///c:/Users/trookish/Dev/Web-Projects/Portfolio-Website/script.js).
-  - **Dynamic Content**: Auto-matches content terms dynamically to keep HTML modifications clean.
+  - **Static Strings**: Replaces tags marked with `data-translate` and `data-translate-tooltip` using language maps in [translations/en.js](translations/en.js) and [translations/ar.js](translations/ar.js). `script.js` is loaded as an ES module and imports both maps at startup.
+  - **Dynamic Content**: Auto-matches content terms dynamically via the EN→AR lookup in [translations/dynamic.js](translations/dynamic.js) to keep HTML modifications clean.
 
 ### 🔊 Interactive Sound System & Audio Manager
 A background sound engine enhances tactile feedback:

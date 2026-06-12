@@ -3,6 +3,12 @@
  * Interactive functionality and animations
  */
 
+import { en as enStatic } from './translations/en.js';
+import { ar as arStatic } from './translations/ar.js';
+import { termTranslations } from './translations/dynamic.js';
+
+const staticTranslations = { en: enStatic, ar: arStatic };
+
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all functionality
     initNavigation();
@@ -590,33 +596,33 @@ function initProjectShowcase() {
                 ar: [
                     {
                         src: 'images/Projects/DungeonPuzzle/screenshot1.webp',
-                        title: 'غرفة البداية',
-                        desc: 'الغرفة الأولية التي تضم طاولة خشبية، كراسي، لوحات، وبوابات حديدية مغلقة.'
+                        title: 'ØºØ±ÙØ© Ø§Ù„Ø¨Ø¯Ø§ÙŠØ©',
+                        desc: 'Ø§Ù„ØºØ±ÙØ© Ø§Ù„Ø£ÙˆÙ„ÙŠØ© Ø§Ù„ØªÙŠ ØªØ¶Ù… Ø·Ø§ÙˆÙ„Ø© Ø®Ø´Ø¨ÙŠØ©ØŒ ÙƒØ±Ø§Ø³ÙŠØŒ Ù„ÙˆØ­Ø§ØªØŒ ÙˆØ¨ÙˆØ§Ø¨Ø§Øª Ø­Ø¯ÙŠØ¯ÙŠØ© Ù…ØºÙ„Ù‚Ø©.'
                     },
                     {
                         src: 'images/Projects/DungeonPuzzle/screenshot2.webp',
-                        title: 'ممرات السجن',
-                        desc: 'التنقل عبر الممرات التي تحتوي على زنازين، سلاسل، ولوحة حائط تشير إلى غرفة المفتاح.'
+                        title: 'Ù…Ù…Ø±Ø§Øª Ø§Ù„Ø³Ø¬Ù†',
+                        desc: 'Ø§Ù„ØªÙ†Ù‚Ù„ Ø¹Ø¨Ø± Ø§Ù„Ù…Ù…Ø±Ø§Øª Ø§Ù„ØªÙŠ ØªØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ Ø²Ù†Ø§Ø²ÙŠÙ†ØŒ Ø³Ù„Ø§Ø³Ù„ØŒ ÙˆÙ„ÙˆØ­Ø© Ø­Ø§Ø¦Ø· ØªØ´ÙŠØ± Ø¥Ù„Ù‰ ØºØ±ÙØ© Ø§Ù„Ù…ÙØªØ§Ø­.'
                     },
                     {
                         src: 'images/Projects/DungeonPuzzle/screenshot3.webp',
-                        title: 'غرفة التعذيب',
-                        desc: 'غرفة واسعة تحتوي على أدوات تعذيب، كتل إعدام، أحصنة خشبية، أقفاص معلقة، وتابوت حديدي (Iron Maidens).'
+                        title: 'ØºØ±ÙØ© Ø§Ù„ØªØ¹Ø°ÙŠØ¨',
+                        desc: 'ØºØ±ÙØ© ÙˆØ§Ø³Ø¹Ø© ØªØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ Ø£Ø¯ÙˆØ§Øª ØªØ¹Ø°ÙŠØ¨ØŒ ÙƒØªÙ„ Ø¥Ø¹Ø¯Ø§Ù…ØŒ Ø£Ø­ØµÙ†Ø© Ø®Ø´Ø¨ÙŠØ©ØŒ Ø£Ù‚ÙØ§Øµ Ù…Ø¹Ù„Ù‚Ø©ØŒ ÙˆØªØ§Ø¨ÙˆØª Ø­Ø¯ÙŠØ¯ÙŠ (Iron Maidens).'
                     },
                     {
                         src: 'images/Projects/DungeonPuzzle/screenshot4.webp',
-                        title: 'مستودع الأسلحة',
-                        desc: 'غرفة تحتوي على رفوف للسيوف والدروع، ثريات شموع، وراية حمراء معلقة.'
+                        title: 'Ù…Ø³ØªÙˆØ¯Ø¹ Ø§Ù„Ø£Ø³Ù„Ø­Ø©',
+                        desc: 'ØºØ±ÙØ© ØªØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ Ø±ÙÙˆÙ Ù„Ù„Ø³ÙŠÙˆÙ ÙˆØ§Ù„Ø¯Ø±ÙˆØ¹ØŒ Ø«Ø±ÙŠØ§Øª Ø´Ù…ÙˆØ¹ØŒ ÙˆØ±Ø§ÙŠØ© Ø­Ù…Ø±Ø§Ø¡ Ù…Ø¹Ù„Ù‚Ø©.'
                     },
                     {
                         src: 'images/Projects/DungeonPuzzle/screenshot5.webp',
-                        title: 'غرفة فخ الحمم',
-                        desc: 'عبور جسر حجري ضيق فوق حمم بركانية مغلية مع تفادي شفرات ضخمة متأرجحة.'
+                        title: 'ØºØ±ÙØ© ÙØ® Ø§Ù„Ø­Ù…Ù…',
+                        desc: 'Ø¹Ø¨ÙˆØ± Ø¬Ø³Ø± Ø­Ø¬Ø±ÙŠ Ø¶ÙŠÙ‚ ÙÙˆÙ‚ Ø­Ù…Ù… Ø¨Ø±ÙƒØ§Ù†ÙŠØ© Ù…ØºÙ„ÙŠØ© Ù…Ø¹ ØªÙØ§Ø¯ÙŠ Ø´ÙØ±Ø§Øª Ø¶Ø®Ù…Ø© Ù…ØªØ£Ø±Ø¬Ø­Ø©.'
                     },
                     {
                         src: 'images/Projects/DungeonPuzzle/screenshot6.webp',
-                        title: 'ركن الكنز',
-                        desc: 'ركن يحتوي على صناديق خشبية أثرية.'
+                        title: 'Ø±ÙƒÙ† Ø§Ù„ÙƒÙ†Ø²',
+                        desc: 'Ø±ÙƒÙ† ÙŠØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ ØµÙ†Ø§Ø¯ÙŠÙ‚ Ø®Ø´Ø¨ÙŠØ© Ø£Ø«Ø±ÙŠØ©.'
                     }
                 ]
             }
@@ -643,18 +649,18 @@ function initProjectShowcase() {
                 ar: [
                     {
                         src: 'images/Projects/ScaryLibrary/screenshot1.webp',
-                        title: 'رف لغز الكتب',
-                        desc: 'رف حائطي حجري مع فتحات لخمسة كتب، يوجه اللاعب لترتيبها بشكل صحيح.'
+                        title: 'Ø±Ù Ù„ØºØ² Ø§Ù„ÙƒØªØ¨',
+                        desc: 'Ø±Ù Ø­Ø§Ø¦Ø·ÙŠ Ø­Ø¬Ø±ÙŠ Ù…Ø¹ ÙØªØ­Ø§Øª Ù„Ø®Ù…Ø³Ø© ÙƒØªØ¨ØŒ ÙŠÙˆØ¬Ù‡ Ø§Ù„Ù„Ø§Ø¹Ø¨ Ù„ØªØ±ØªÙŠØ¨Ù‡Ø§ Ø¨Ø´ÙƒÙ„ ØµØ­ÙŠØ­.'
                     },
                     {
                         src: 'images/Projects/ScaryLibrary/screenshot2.webp',
-                        title: 'وحش الذكاء الاصطناعي في دورية',
-                        desc: 'وحش مخيف ذو وجه أبيض يقوم بدورية في ممرات المكتبة بينما يستقر كتاب أحمر على الطاولة.'
+                        title: 'ÙˆØ­Ø´ Ø§Ù„Ø°ÙƒØ§Ø¡ Ø§Ù„Ø§ØµØ·Ù†Ø§Ø¹ÙŠ ÙÙŠ Ø¯ÙˆØ±ÙŠØ©',
+                        desc: 'ÙˆØ­Ø´ Ù…Ø®ÙŠÙ Ø°Ùˆ ÙˆØ¬Ù‡ Ø£Ø¨ÙŠØ¶ ÙŠÙ‚ÙˆÙ… Ø¨Ø¯ÙˆØ±ÙŠØ© ÙÙŠ Ù…Ù…Ø±Ø§Øª Ø§Ù„Ù…ÙƒØªØ¨Ø© Ø¨ÙŠÙ†Ù…Ø§ ÙŠØ³ØªÙ‚Ø± ÙƒØªØ§Ø¨ Ø£Ø­Ù…Ø± Ø¹Ù„Ù‰ Ø§Ù„Ø·Ø§ÙˆÙ„Ø©.'
                     },
                     {
                         src: 'images/Projects/ScaryLibrary/screenshot3.webp',
-                        title: 'رعب المفاجأة في المكتبة',
-                        desc: 'اللحظة المرعبة عندما يمسك الوحش باللاعب عن قرب.'
+                        title: 'Ø±Ø¹Ø¨ Ø§Ù„Ù…ÙØ§Ø¬Ø£Ø© ÙÙŠ Ø§Ù„Ù…ÙƒØªØ¨Ø©',
+                        desc: 'Ø§Ù„Ù„Ø­Ø¸Ø© Ø§Ù„Ù…Ø±Ø¹Ø¨Ø© Ø¹Ù†Ø¯Ù…Ø§ ÙŠÙ…Ø³Ùƒ Ø§Ù„ÙˆØ­Ø´ Ø¨Ø§Ù„Ù„Ø§Ø¹Ø¨ Ø¹Ù† Ù‚Ø±Ø¨.'
                     }
                 ]
             }
@@ -681,18 +687,18 @@ function initProjectShowcase() {
                 ar: [
                     {
                         src: 'images/Projects/KnightWithGun/screenshot1.webp',
-                        title: 'القائمة الرئيسية للعبة',
-                        desc: 'واجهة البدء مع فارس مدرع بالكامل يحمل سلاحاً مكعباً أصفر متوهجاً.'
+                        title: 'Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© Ù„Ù„Ø¹Ø¨Ø©',
+                        desc: 'ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø¨Ø¯Ø¡ Ù…Ø¹ ÙØ§Ø±Ø³ Ù…Ø¯Ø±Ø¹ Ø¨Ø§Ù„ÙƒØ§Ù…Ù„ ÙŠØ­Ù…Ù„ Ø³Ù„Ø§Ø­Ø§Ù‹ Ù…ÙƒØ¹Ø¨Ø§Ù‹ Ø£ØµÙØ± Ù…ØªÙˆÙ‡Ø¬Ø§Ù‹.'
                     },
                     {
                         src: 'images/Projects/KnightWithGun/screenshot2.webp',
-                        title: 'ساحة قتال الجسر',
-                        desc: 'قتال أعداء أسطوانيين متوهجين باللون الأحمر على جسر حجري ضيق تحت سماء قرمذية.'
+                        title: 'Ø³Ø§Ø­Ø© Ù‚ØªØ§Ù„ Ø§Ù„Ø¬Ø³Ø±',
+                        desc: 'Ù‚ØªØ§Ù„ Ø£Ø¹Ø¯Ø§Ø¡ Ø£Ø³Ø·ÙˆØ§Ù†ÙŠÙŠÙ† Ù…ØªÙˆÙ‡Ø¬ÙŠÙ† Ø¨Ø§Ù„Ù„ÙˆÙ† Ø§Ù„Ø£Ø­Ù…Ø± Ø¹Ù„Ù‰ Ø¬Ø³Ø± Ø­Ø¬Ø±ÙŠ Ø¶ÙŠÙ‚ ØªØ­Øª Ø³Ù…Ø§Ø¡ Ù‚Ø±Ù…Ø°ÙŠØ©.'
                     },
                     {
                         src: 'images/Projects/KnightWithGun/screenshot3.webp',
-                        title: 'واجهة قائمة التوقف مؤقتاً',
-                        desc: 'واجهة توقف مؤقت كلاسيكية مع زري الاستئناف والخروج.'
+                        title: 'ÙˆØ§Ø¬Ù‡Ø© Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„ØªÙˆÙ‚Ù Ù…Ø¤Ù‚ØªØ§Ù‹',
+                        desc: 'ÙˆØ§Ø¬Ù‡Ø© ØªÙˆÙ‚Ù Ù…Ø¤Ù‚Øª ÙƒÙ„Ø§Ø³ÙŠÙƒÙŠØ© Ù…Ø¹ Ø²Ø±ÙŠ Ø§Ù„Ø§Ø³ØªØ¦Ù†Ø§Ù ÙˆØ§Ù„Ø®Ø±ÙˆØ¬.'
                     }
                 ]
             }
@@ -724,23 +730,23 @@ function initProjectShowcase() {
                 ar: [
                     {
                         src: 'images/Projects/TheHiddenKanz/screenshot1.webp',
-                        title: 'مشهد القائمة الرئيسية',
-                        desc: 'القائمة الرئيسية تستعرض مدخل مقبرة حجرية منحوتة وسط الكثبان الرملية الصحراوية.'
+                        title: 'Ù…Ø´Ù‡Ø¯ Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©',
+                        desc: 'Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© ØªØ³ØªØ¹Ø±Ø¶ Ù…Ø¯Ø®Ù„ Ù…Ù‚Ø¨Ø±Ø© Ø­Ø¬Ø±ÙŠØ© Ù…Ù†Ø­ÙˆØªØ© ÙˆØ³Ø· Ø§Ù„ÙƒØ«Ø¨Ø§Ù† Ø§Ù„Ø±Ù…Ù„ÙŠØ© Ø§Ù„ØµØ­Ø±Ø§ÙˆÙŠØ©.'
                     },
                     {
                         src: 'images/Projects/TheHiddenKanz/screenshot2.webp',
-                        title: 'عرض القتال من منظور الشخص الأول',
-                        desc: 'استكشاف ممر حجري مع حمل سيف ولهب سحري أخضر لمواجهة الأعداء من الهياكل العظمية.'
+                        title: 'Ø¹Ø±Ø¶ Ø§Ù„Ù‚ØªØ§Ù„ Ù…Ù† Ù…Ù†Ø¸ÙˆØ± Ø§Ù„Ø´Ø®Øµ Ø§Ù„Ø£ÙˆÙ„',
+                        desc: 'Ø§Ø³ØªÙƒØ´Ø§Ù Ù…Ù…Ø± Ø­Ø¬Ø±ÙŠ Ù…Ø¹ Ø­Ù…Ù„ Ø³ÙŠÙ ÙˆÙ„Ù‡Ø¨ Ø³Ø­Ø±ÙŠ Ø£Ø®Ø¶Ø± Ù„Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ù…Ù† Ø§Ù„Ù‡ÙŠØ§ÙƒÙ„ Ø§Ù„Ø¹Ø¸Ù…ÙŠØ©.'
                     },
                     {
                         src: 'images/Projects/TheHiddenKanz/screenshot3.webp',
-                        title: 'إلقاء القدرة السحرية',
-                        desc: 'مواجهة محارب هيكل عظمي أثناء الاستعداد لإلقاء تعويذة سحرية وردية.'
+                        title: 'Ø¥Ù„Ù‚Ø§Ø¡ Ø§Ù„Ù‚Ø¯Ø±Ø© Ø§Ù„Ø³Ø­Ø±ÙŠØ©',
+                        desc: 'Ù…ÙˆØ§Ø¬Ù‡Ø© Ù…Ø­Ø§Ø±Ø¨ Ù‡ÙŠÙƒÙ„ Ø¹Ø¸Ù…ÙŠ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ø§Ø³ØªØ¹Ø¯Ø§Ø¯ Ù„Ø¥Ù„Ù‚Ø§Ø¡ ØªØ¹ÙˆÙŠØ°Ø© Ø³Ø­Ø±ÙŠØ© ÙˆØ±Ø¯ÙŠØ©.'
                     },
                     {
                         src: 'images/Projects/TheHiddenKanz/screenshot4.webp',
-                        title: 'غرفة التماثيل',
-                        desc: 'غرفة فسيحة محاطة بتماثيل طويلة ذات قلنسوات، ممرات مقوسة، وأقفاص معلقة.'
+                        title: 'ØºØ±ÙØ© Ø§Ù„ØªÙ…Ø§Ø«ÙŠÙ„',
+                        desc: 'ØºØ±ÙØ© ÙØ³ÙŠØ­Ø© Ù…Ø­Ø§Ø·Ø© Ø¨ØªÙ…Ø§Ø«ÙŠÙ„ Ø·ÙˆÙŠÙ„Ø© Ø°Ø§Øª Ù‚Ù„Ù†Ø³ÙˆØ§ØªØŒ Ù…Ù…Ø±Ø§Øª Ù…Ù‚ÙˆØ³Ø©ØŒ ÙˆØ£Ù‚ÙØ§Øµ Ù…Ø¹Ù„Ù‚Ø©.'
                     }
                 ]
             }
@@ -787,38 +793,38 @@ function initProjectShowcase() {
                 ar: [
                     {
                         src: 'images/Projects/SyntaxStrike/screenshot1.webp',
-                        title: 'أنواع مختلفة من الأعداء أثناء القتال',
-                        desc: 'قتال فوري في المنشأة يظهر الروبوت اللاعب يقاتل أنواعاً متعددة من الأعداء (الروبوتات المطلقة للنار، العناكب الآلية، والرشاشات المثبتة) باستخدام السيف والدرع.'
+                        title: 'Ø£Ù†ÙˆØ§Ø¹ Ù…Ø®ØªÙ„ÙØ© Ù…Ù† Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ù‚ØªØ§Ù„',
+                        desc: 'Ù‚ØªØ§Ù„ ÙÙˆØ±ÙŠ ÙÙŠ Ø§Ù„Ù…Ù†Ø´Ø£Ø© ÙŠØ¸Ù‡Ø± Ø§Ù„Ø±ÙˆØ¨ÙˆØª Ø§Ù„Ù„Ø§Ø¹Ø¨ ÙŠÙ‚Ø§ØªÙ„ Ø£Ù†ÙˆØ§Ø¹Ø§Ù‹ Ù…ØªØ¹Ø¯Ø¯Ø© Ù…Ù† Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ (Ø§Ù„Ø±ÙˆØ¨ÙˆØªØ§Øª Ø§Ù„Ù…Ø·Ù„Ù‚Ø© Ù„Ù„Ù†Ø§Ø±ØŒ Ø§Ù„Ø¹Ù†Ø§ÙƒØ¨ Ø§Ù„Ø¢Ù„ÙŠØ©ØŒ ÙˆØ§Ù„Ø±Ø´Ø§Ø´Ø§Øª Ø§Ù„Ù…Ø«Ø¨ØªØ©) Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ø³ÙŠÙ ÙˆØ§Ù„Ø¯Ø±Ø¹.'
                     },
                     {
                         src: 'images/Projects/SyntaxStrike/screenshot2.webp',
-                        title: 'هجوم أعداء العنكبوت الآلي',
-                        desc: 'مواجهة العناكب الآلية السريعة والأعداء بعيدي المدى داخل منشأة المستودع. يمكن للأعداء بعيدي المدى إطلاق قذائف وتفجير أنفسهم إذا اقتربوا كثيراً.'
+                        title: 'Ù‡Ø¬ÙˆÙ… Ø£Ø¹Ø¯Ø§Ø¡ Ø§Ù„Ø¹Ù†ÙƒØ¨ÙˆØª Ø§Ù„Ø¢Ù„ÙŠ',
+                        desc: 'Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø¹Ù†Ø§ÙƒØ¨ Ø§Ù„Ø¢Ù„ÙŠØ© Ø§Ù„Ø³Ø±ÙŠØ¹Ø© ÙˆØ§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø¨Ø¹ÙŠØ¯ÙŠ Ø§Ù„Ù…Ø¯Ù‰ Ø¯Ø§Ø®Ù„ Ù…Ù†Ø´Ø£Ø© Ø§Ù„Ù…Ø³ØªÙˆØ¯Ø¹. ÙŠÙ…ÙƒÙ† Ù„Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø¨Ø¹ÙŠØ¯ÙŠ Ø§Ù„Ù…Ø¯Ù‰ Ø¥Ø·Ù„Ø§Ù‚ Ù‚Ø°Ø§Ø¦Ù ÙˆØªÙØ¬ÙŠØ± Ø£Ù†ÙØ³Ù‡Ù… Ø¥Ø°Ø§ Ø§Ù‚ØªØ±Ø¨ÙˆØ§ ÙƒØ«ÙŠØ±Ø§Ù‹.'
                     },
                     {
                         src: 'images/Projects/SyntaxStrike/screenshot3.webp',
-                        title: 'التقاط أداة الاختراق في البيئة',
-                        desc: 'تحديد موقع أداة الاختراق في المنشأة. يتيح الحصول على الأداة للاعب التفاعل مع المحطات واختراق الأعداء المعطلين لحل ألغاز البرمجة.'
+                        title: 'Ø§Ù„ØªÙ‚Ø§Ø· Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚ ÙÙŠ Ø§Ù„Ø¨ÙŠØ¦Ø©',
+                        desc: 'ØªØ­Ø¯ÙŠØ¯ Ù…ÙˆÙ‚Ø¹ Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚ ÙÙŠ Ø§Ù„Ù…Ù†Ø´Ø£Ø©. ÙŠØªÙŠØ­ Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø§Ù„Ø£Ø¯Ø§Ø© Ù„Ù„Ø§Ø¹Ø¨ Ø§Ù„ØªÙØ§Ø¹Ù„ Ù…Ø¹ Ø§Ù„Ù…Ø­Ø·Ø§Øª ÙˆØ§Ø®ØªØ±Ø§Ù‚ Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø§Ù„Ù…Ø¹Ø·Ù„ÙŠÙ† Ù„Ø­Ù„ Ø£Ù„ØºØ§Ø² Ø§Ù„Ø¨Ø±Ù…Ø¬Ø©.'
                     },
                     {
                         src: 'images/Projects/SyntaxStrike/screenshot4.webp',
-                        title: 'إشعار الحصول على أداة الاختراق',
-                        desc: 'إشعار يظهر على الشاشة عند التقاط أداة الاختراق، مما يجهز الطالب لاختراق الأعداء وفتح الأبواب المؤمنة.'
+                        title: 'Ø¥Ø´Ø¹Ø§Ø± Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚',
+                        desc: 'Ø¥Ø´Ø¹Ø§Ø± ÙŠØ¸Ù‡Ø± Ø¹Ù„Ù‰ Ø§Ù„Ø´Ø§Ø´Ø© Ø¹Ù†Ø¯ Ø§Ù„ØªÙ‚Ø§Ø· Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚ØŒ Ù…Ù…Ø§ ÙŠØ¬Ù‡Ø² Ø§Ù„Ø·Ø§Ù„Ø¨ Ù„Ø§Ø®ØªØ±Ø§Ù‚ Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ ÙˆÙØªØ­ Ø§Ù„Ø£Ø¨ÙˆØ§Ø¨ Ø§Ù„Ù…Ø¤Ù…Ù†Ø©.'
                     },
                     {
                         src: 'images/Projects/SyntaxStrike/screenshot5.webp',
-                        title: 'خطر المياه المكهربة',
-                        desc: 'تخطي المخاطر البيئية. يجب على الطالب تجنب البرك المكهربة أو استخدام وحدة تحكم قريبة لتعطيل الكهرباء قبل العبور.'
+                        title: 'Ø®Ø·Ø± Ø§Ù„Ù…ÙŠØ§Ù‡ Ø§Ù„Ù…ÙƒÙ‡Ø±Ø¨Ø©',
+                        desc: 'ØªØ®Ø·ÙŠ Ø§Ù„Ù…Ø®Ø§Ø·Ø± Ø§Ù„Ø¨ÙŠØ¦ÙŠØ©. ÙŠØ¬Ø¨ Ø¹Ù„Ù‰ Ø§Ù„Ø·Ø§Ù„Ø¨ ØªØ¬Ù†Ø¨ Ø§Ù„Ø¨Ø±Ùƒ Ø§Ù„Ù…ÙƒÙ‡Ø±Ø¨Ø© Ø£Ùˆ Ø§Ø³ØªØ®Ø¯Ø§Ù… ÙˆØ­Ø¯Ø© ØªØ­ÙƒÙ… Ù‚Ø±ÙŠØ¨Ø© Ù„ØªØ¹Ø·ÙŠÙ„ Ø§Ù„ÙƒÙ‡Ø±Ø¨Ø§Ø¡ Ù‚Ø¨Ù„ Ø§Ù„Ø¹Ø¨ÙˆØ±.'
                     },
                     {
                         src: 'images/Projects/SyntaxStrike/screenshot6.webp',
-                        title: 'مواجهة الزعيم النهائي',
-                        desc: 'المواجهة الأخيرة مع الروبوت الزعيم. يجب على اللاعب تفادي الموجات الصادمة وهجمات الدهس، وتقليل صحة الزعيم إلى الصفر، وحل لغز برمجي صعب للفوز.'
+                        title: 'Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø²Ø¹ÙŠÙ… Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ',
+                        desc: 'Ø§Ù„Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø£Ø®ÙŠØ±Ø© Ù…Ø¹ Ø§Ù„Ø±ÙˆØ¨ÙˆØª Ø§Ù„Ø²Ø¹ÙŠÙ…. ÙŠØ¬Ø¨ Ø¹Ù„Ù‰ Ø§Ù„Ù„Ø§Ø¹Ø¨ ØªÙØ§Ø¯ÙŠ Ø§Ù„Ù…ÙˆØ¬Ø§Øª Ø§Ù„ØµØ§Ø¯Ù…Ø© ÙˆÙ‡Ø¬Ù…Ø§Øª Ø§Ù„Ø¯Ù‡Ø³ØŒ ÙˆØªÙ‚Ù„ÙŠÙ„ ØµØ­Ø© Ø§Ù„Ø²Ø¹ÙŠÙ… Ø¥Ù„Ù‰ Ø§Ù„ØµÙØ±ØŒ ÙˆØ­Ù„ Ù„ØºØ² Ø¨Ø±Ù…Ø¬ÙŠ ØµØ¹Ø¨ Ù„Ù„ÙÙˆØ².'
                     },
                     {
                         src: 'images/Projects/SyntaxStrike/screenshot7.webp',
-                        title: 'مشهد نتيجة إكمال المرحلة',
-                        desc: 'لوحة إكمال المرحلة التي تتبع إحصائيات اللاعب بما في ذلك الأعداء المهزومين، ودقة حل الألغاز البرمجية، والمكافآت الزمنية، والنتيجة النهائية.'
+                        title: 'Ù…Ø´Ù‡Ø¯ Ù†ØªÙŠØ¬Ø© Ø¥ÙƒÙ…Ø§Ù„ Ø§Ù„Ù…Ø±Ø­Ù„Ø©',
+                        desc: 'Ù„ÙˆØ­Ø© Ø¥ÙƒÙ…Ø§Ù„ Ø§Ù„Ù…Ø±Ø­Ù„Ø© Ø§Ù„ØªÙŠ ØªØªØ¨Ø¹ Ø¥Ø­ØµØ§Ø¦ÙŠØ§Øª Ø§Ù„Ù„Ø§Ø¹Ø¨ Ø¨Ù…Ø§ ÙÙŠ Ø°Ù„Ùƒ Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø§Ù„Ù…Ù‡Ø²ÙˆÙ…ÙŠÙ†ØŒ ÙˆØ¯Ù‚Ø© Ø­Ù„ Ø§Ù„Ø£Ù„ØºØ§Ø² Ø§Ù„Ø¨Ø±Ù…Ø¬ÙŠØ©ØŒ ÙˆØ§Ù„Ù…ÙƒØ§ÙØ¢Øª Ø§Ù„Ø²Ù…Ù†ÙŠØ©ØŒ ÙˆØ§Ù„Ù†ØªÙŠØ¬Ø© Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠØ©.'
                     }
                 ]
             }
@@ -907,14 +913,14 @@ function initProjectShowcase() {
 
         // Reset label defaults in case they were modified by achievements
         if (subtitleElem) subtitleElem.style.display = 'none';
-        if (tagsLabel) tagsLabel.textContent = isArabic ? 'التقنيات المستخدمة' : 'TECH STACK';
-        if (teamLabel) teamLabel.textContent = isArabic ? 'فريق التطوير' : 'DEVELOPMENT TEAM';
+        if (tagsLabel) tagsLabel.textContent = isArabic ? 'Ø§Ù„ØªÙ‚Ù†ÙŠØ§Øª Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…Ø©' : 'TECH STACK';
+        if (teamLabel) teamLabel.textContent = isArabic ? 'ÙØ±ÙŠÙ‚ Ø§Ù„ØªØ·ÙˆÙŠØ±' : 'DEVELOPMENT TEAM';
 
         if (isAchievement) {
             // Scrape achievement details
             const titleText = card.querySelector('.achievement-title').textContent.trim();
             const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
-            modalTitleElem.textContent = isArabic ? `حالة النظام: إنجاز_${sysStatusName}.EXE` : `SYSTEM STATUS: ACHIEVEMENT_${sysStatusName}.EXE`;
+            modalTitleElem.textContent = isArabic ? `Ø­Ø§Ù„Ø© Ø§Ù„Ù†Ø¸Ø§Ù…: Ø¥Ù†Ø¬Ø§Ø²_${sysStatusName}.EXE` : `SYSTEM STATUS: ACHIEVEMENT_${sysStatusName}.EXE`;
 
             detailsTitle.textContent = titleText;
 
@@ -939,7 +945,7 @@ function initProjectShowcase() {
             detailsDesc.innerHTML = descHtml;
 
             // Populate tags (change label to TAGS)
-            if (tagsLabel) tagsLabel.textContent = isArabic ? 'الأوسمة' : 'TAGS';
+            if (tagsLabel) tagsLabel.textContent = isArabic ? 'Ø§Ù„Ø£ÙˆØ³Ù…Ø©' : 'TAGS';
             detailsTags.innerHTML = '';
             const tags = card.querySelectorAll('.achievement-tag');
             tags.forEach(tag => {
@@ -952,7 +958,7 @@ function initProjectShowcase() {
             // Populate team / mentor
             const teamElement = card.querySelector('.achievement-team');
             const mentorElement = card.querySelector('.achievement-mentor');
-            if (teamLabel) teamLabel.textContent = isArabic ? 'الفريق والموجهون' : 'TEAM & MENTORS';
+            if (teamLabel) teamLabel.textContent = isArabic ? 'Ø§Ù„ÙØ±ÙŠÙ‚ ÙˆØ§Ù„Ù…ÙˆØ¬Ù‡ÙˆÙ†' : 'TEAM & MENTORS';
             
             if (teamElement || mentorElement) {
                 detailsTeamContainer.className = 'ss-details-section achievement-team';
@@ -982,15 +988,15 @@ function initProjectShowcase() {
             if (mainImgEl) {
                 screenshotsList.push({
                     src: mainImgEl.src,
-                    title: isArabic ? 'الشهادة / الفعالية' : 'Certificate / Event',
+                    title: isArabic ? 'Ø§Ù„Ø´Ù‡Ø§Ø¯Ø© / Ø§Ù„ÙØ¹Ø§Ù„ÙŠØ©' : 'Certificate / Event',
                     desc: titleText
                 });
             }
             if (projImgEl) {
                 screenshotsList.push({
                     src: projImgEl.src,
-                    title: isArabic ? 'لقطة شاشة للمشروع' : 'Project Screenshot',
-                    desc: projTitleEl ? projTitleEl.textContent.trim() : (isArabic ? 'لقطة شاشة للمشروع' : 'Project Screenshot')
+                    title: isArabic ? 'Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø© Ù„Ù„Ù…Ø´Ø±ÙˆØ¹' : 'Project Screenshot',
+                    desc: projTitleEl ? projTitleEl.textContent.trim() : (isArabic ? 'Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø© Ù„Ù„Ù…Ø´Ø±ÙˆØ¹' : 'Project Screenshot')
                 });
             }
             
@@ -1015,7 +1021,7 @@ function initProjectShowcase() {
             
             // Format the SYSTEM STATUS text: uppercase with underscores
             const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
-            modalTitleElem.textContent = isArabic ? `حالة النظام: عرض_${sysStatusName}.EXE` : `SYSTEM STATUS: ${sysStatusName}_SHOWCASE.EXE`;
+            modalTitleElem.textContent = isArabic ? `Ø­Ø§Ù„Ø© Ø§Ù„Ù†Ø¸Ø§Ù…: Ø¹Ø±Ø¶_${sysStatusName}.EXE` : `SYSTEM STATUS: ${sysStatusName}_SHOWCASE.EXE`;
 
             // Populate scraped details
             detailsTitle.textContent = titleText;
@@ -1185,297 +1191,6 @@ function initProjectShowcase() {
         }
     });
 }
-
-/**
- * Static Translations for elements with data-translate attribute
- */
-const staticTranslations = {
-    en: {
-        'nav_home': 'Home',
-        'nav_about': 'About',
-        'nav_projects': 'Projects',
-        'nav_experience': 'Experience',
-        'nav_skills': 'Skills',
-        'nav_education': 'Education',
-        'nav_certifications': 'Certifications',
-        'nav_achievements': 'Achievements',
-        'nav_contact': 'Contact',
-        'nav_cv_label': 'CV',
-        'nav_pdf_label': 'PDF',
-        'nav_theme_label': 'Theme',
-        'nav_lang_label': 'العربية',
-        'game_title': "TURKI'S BATTLE GAME",
-        'game_btn_mobile': 'Mobile',
-        'game_btn_exit': 'EXIT',
-        'game_btn_restart': 'RESTART',
-        'game_info_move': '[A/D] Move',
-        'game_info_jump': '[W/Space] Jump',
-        'game_info_attack': '[J] Attack',
-        'game_info_block': '[K] Block',
-        'game_info_exit': '[ESC] Exit',
-        'hero_name': 'Turki Alshaalan',
-        'hero_title': 'IT Student | Game Developer | Unity & C# Programmer',
-        'hero_btn_projects': 'View Projects',
-        'hero_btn_contact': 'Contact Me',
-        'about_title': 'About Me',
-        'about_p1': 'I\'m an IT student at <strong>Imam Muhammad ibn Saud Islamic University</strong> with over 1 year of experience in <strong>Unity</strong> and <strong>C#</strong> programming. My focus lies in creating engaging 3D gameplay systems, intelligent AI behaviors, and challenging puzzle mechanics.',
-        'about_p2': 'I work with <strong>Blender</strong> for 3D modeling and asset creation, allowing me to bring my game concepts to life from prototype to polished experience. I\'m passionate about game feel, immersion, and creating memorable player experiences.',
-        'about_p3': 'As a collaborative team member, I\'ve contributed to various game projects, combining technical skills with creative problem-solving to deliver engaging interactive experiences.',
-        'about_exp_label': 'Year Experience',
-        'about_proj_label': 'Completed Projects',
-        'about_gpa_label': 'GPA',
-        'about_cert_label': 'Certifications',
-        'about_skills_label': 'Skills Categories',
-        'about_ach_label': 'Achievements',
-        'nav_cv_tooltip': 'Download CV',
-        'nav_pdf_tooltip': 'Export PDF',
-        'nav_theme_tooltip': 'Toggle Theme',
-        'nav_lang_tooltip': 'Language',
-    },
-    ar: {
-        'nav_home': 'الرئيسية',
-        'nav_about': 'نبذة عني',
-        'nav_projects': 'المشاريع',
-        'nav_experience': 'الخبرة',
-        'nav_skills': 'المهارات',
-        'nav_education': 'التعليم',
-        'nav_certifications': 'الشهادات',
-        'nav_achievements': 'الإنجازات',
-        'nav_contact': 'اتصل بي',
-        'nav_cv_label': 'السيرة الذاتية',
-        'nav_pdf_label': 'تحميل PDF',
-        'nav_theme_label': 'المظهر',
-        'nav_lang_label': 'English',
-        'game_title': 'لعبة قتال تركي',
-        'game_btn_mobile': 'جوال',
-        'game_btn_exit': 'خروج',
-        'game_btn_restart': 'إعادة تشغيل',
-        'game_info_move': '[A/D] تحرك',
-        'game_info_jump': '[W/Space] قفز',
-        'game_info_attack': '[J] هجوم',
-        'game_info_block': '[K] دفاع/صد',
-        'game_info_exit': '[ESC] خروج',
-        'hero_name': 'تركي الشعلان',
-        'hero_title': 'طالب تقنية معلومات | مطور ألعاب | مبرمج Unity و C#',
-        'hero_btn_projects': 'عرض المشاريع',
-        'hero_btn_contact': 'تواصل معي',
-        'about_title': 'نبذة عني',
-        'about_p1': 'أنا طالب تقنية معلومات في <strong>جامعة الإمام محمد بن سعود الإسلامية</strong> ولدي خبرة تزيد عن سنة في برمجة <strong>Unity</strong> و <strong>C#</strong>. يركز اهتمامي على إنشاء أنظمة لعب ثلاثية الأبعاد تفاعلية، وسلوكيات ذكاء اصطناعي ذكية، وميكانيكيات ألغاز مليئة بالتحدي.',
-        'about_p2': 'أعمل على برنامج <strong>Blender</strong> للنمذجة ثلاثية الأبعاد وتصميم الأصول، مما يتيح لي تحويل أفكار الألعاب إلى واقع من النماذج الأولية إلى التجارب المصقولة. أنا شغوف بشعور اللعبة، والانغماس، وخلق تجارب لا تُنسى للاعبين.',
-        'about_p3': 'كعضو متعاون في الفريق، ساهمت في العديد من مشاريع الألعاب، وجمعت بين المهارات التقنية وحل المشكلات الإبداعي لتقديم تجارب تفاعلية جذابة.',
-        'about_exp_label': 'سنة+ خبرة',
-        'about_proj_label': 'مشاريع مكتملة',
-        'about_gpa_label': 'المعدل',
-        'about_cert_label': 'شهادات معتمدة',
-        'about_skills_label': 'مجالات مهارات',
-        'about_ach_label': 'إنجازات',
-        'nav_cv_tooltip': 'تحميل السيرة الذاتية',
-        'nav_pdf_tooltip': 'تصدير PDF',
-        'nav_theme_tooltip': 'تغيير المظهر',
-        'nav_lang_tooltip': 'لغة',
-    }
-};
-
-/**
- * Content term translations for selector-based dynamic translation
- */
-const termTranslations = {
-    "Projects": "المشاريع",
-    "A collection of my work across different domains": "مجموعة من أعمالي في مجالات مختلفة",
-    "Game Development": "تطوير الألعاب",
-    "Games and interactive experiences I've built": "الألعاب والتجارب التفاعلية التي قمت ببنائها",
-    "Professional Work": "العمل المهني",
-    "Industry projects in AI, web development, and more": "مشاريع صناعية في الذكاء الاصطناعي وتطوير الويب وغيرها",
-    "University Projects": "المشاريع الجامعية",
-    "Academic projects and coursework": "مشاريع أكاديمية ومقررات دراسية",
-    
-    // Project Cards Details
-    "Dungeon Puzzle": "Dungeon Puzzle",
-    "A puzzle-based gameplay experience where players navigate through dangerous dungeons, avoiding death traps and overcoming environmental challenges to reach the exit.": "تجربة لعب تعتمد على الألغاز حيث يتنقل اللاعبون عبر دهاليز خطيرة، متجنبين فخاخ الموت ومتغلبين على التحديات البيئية للوصول إلى المخرج.",
-    "View Project →": "عرض المشروع ←",
-    "View Gallery →": "عرض المعرض ←",
-    "Team Members:": "أعضاء الفريق:",
-    
-    "The Scary Library": "The Scary Library",
-    "A horror game developed during a Game Jam featuring an AI enemy that hunts the player. Solve book-based puzzles using 5 books to escape the haunted library.": "لعبة رعب تم تطويرها خلال هكاثون ألعاب (Game Jam) تتميز بعدو ذكاء اصطناعي يطارد اللاعب. قم بحل الألغاز المعتمدة على الكتب باستخدام 5 كتب للهروب من المكتبة المسكونة.",
-    
-    "Knight With a Gun": "Knight With a Gun",
-    "Face hordes of enemies as a Knight using your own gun. Survive the endless horde in this action-packed survival game.": "واجه جحافل الأعداء بصفتك فارساً يستخدم مسدسك الخاص. انجُ من الحشود اللانهائية في لعبة البقاء المليئة بالحركة هذه.",
-    
-    "The Hidden Kanz": "The Hidden Kanz",
-    "A combat-based dungeon crawler where players fight waves of skeleton AI enemies using sword combat and magic abilities to survive and clear the dungeon.": "لعبة استكشاف دهاليز قتالية حيث يقاتل اللاعبون موجات من الهياكل العظمية التي تعمل بالذكاء الاصطناعي باستخدام قتال السيوف والقدرات السحرية للنجاة وتطهير الدهليز.",
-    
-    "Syntax Strike": "Syntax Strike",
-    "A 3D educational action-RPG built in Unity where players master coding by solving Java puzzles. Features compiler-integrated combat mechanics, dynamic quest lines, and a custom evaluation companion. Turki engineered the C# game systems, player state controllers, parser integration, and enemy AI combat patterns.": "لعبة تقمص أدوار قتالية تعليمية ثلاثية الأبعاد مبنية في Unity حيث يتقن اللاعبون البرمجة عن طريق حل ألغاز Java. تتميز بميكانيكيات قتال متكاملة مع المترجم (Compiler)، ومهام ديناميكية، ورفيق تقييم مخصص. هندس تركي أنظمة لعبة C#، ومتحكمات حالة اللاعب، وتكامل المحلل (Parser)، وأنماط قتال الأعداء بالذكاء الاصطناعي.",
-    "View Gallery & Specs →": "عرض المعرض والمواصفات ←",
-
-    "DocuMind": "DocuMind",
-    "An open-source system for summarizing Arabic PDF documents using local LLMs and a simple Streamlit interface. A valuable learning project that helped understand how document summarization systems work in practice, from extraction to clustering and final generation.": "نظام مفتوح المصدر لتلخيص مستندات PDF العربية باستخدام Local LLMs وواجهة Streamlit مبسطة. مشروع تعليمي قيم ساعد في فهم كيفية عمل أنظمة تلخيص المستندات عملياً، بدءاً من الاستخراج إلى التجميع والتوليد النهائي.",
-
-    "Restaurant Ordering System": "Restaurant Ordering System",
-    "A Java-based restaurant ordering application featuring a tree-structured menu, drink vending machine with stack-based inventory, and order queue management system.": "تطبيق طلبات مطاعم مبني بلغة Java يتميز بقائمة طعام ذات هيكل شجري، وآلة بيع مشروبات بنظام مخزون يعتمد على المكدس (Stack)، ونظام إدارة طابور الطلبات.",
-
-    "Recipe Hub": "Recipe Hub",
-    "A web-based recipe management application built with PHP, MySQL, HTML, CSS, and JavaScript. Features include browsing recipes, search functionality, categories, favorites, and an admin panel for managing recipes.": "تطبيق ويب لإدارة وصفات الطعام مبني باستخدام PHP و MySQL و HTML و CSS و JavaScript. تشمل الميزات تصفح الوصفات، وخاصية البحث، والتصنيفات، والمفضلة، ولوحة تحكم للمسؤول لإدارة الوصفات.",
-    "Web Systems Team:": "فريق أنظمة الويب:",
-    "Architecture Team:": "فريق معمارية البرمجيات:",
-
-    "SecureCheck": "SecureCheck",
-    "A web-based data breach awareness platform that helps users check if their passwords and email addresses have been compromised in data breaches. This project demonstrates ethical security tool development using k-Anonymity model for privacy-preserving password checking.": "منصة ويب للتوعية بانتهاكات البيانات تساعد المستخدمين على التحقق مما إذا كانت كلمات المرور وعناوين بريدهم الإلكتروني قد تم اختراقها في تسريبات البيانات. يوضح هذا المشروع تطوير أدوات أمان أخلاقية باستخدام نموذج k-Anonymity لفحص كلمات المرور مع الحفاظ على الخصوصية.",
-
-    "Smart Campus Services": "Smart Campus Services",
-    "A comprehensive Android application designed to provide campus services to students, including announcements, product browsing, shopping cart functionality, and contact features. Built using Java with SQLite for local data storage.": "تطبيق Android شامل مصمم لتقديم خدمات الحرم الجامعي للطلاب، بما في ذلك الإعلانات، وتصفح المنتجات، وعربة التسوق، وميزات الاتصال. تم بناؤه باستخدام Java مع SQLite لتخزين البيانات محلياً.",
-
-    "Graduation Project": "Graduation Project",
-    "A senior graduation project (IT492) investigating game-based learning effectiveness. Designed to assess the pedagogical impact of interactive coding puzzles (Parsons Problems) in reducing learning barriers for CS students. Evaluated using structured player feedback and learning-gain metrics. Abdulaziz led agile coordination and stakeholder reporting, Turki directed implementation logic, and Saud managed levels and user testing.": "مشروع تخرج للسنوات النهائية (IT492) يبحث في فعالية التعلم القائم على الألعاب. صُمم لتقييم الأثر التربوي لألغاز البرمجة التفاعلية (Parsons Problems) في تقليل حواجز التعلم لطلاب علوم الحاسب. تم تقييمه باستخدام تعليقات اللاعبين المنظمة ومقاييس اكتساب المعرفة. قاد عبد العزيز التنسيق المرن وإعداد التقارير لأصحاب المصلحة، ووجه تركي منطق التنفيذ، وأدار سعود المراحل واختبار المستخدمين.",
-
-    // Skills
-    "Skills": "المهارات",
-    "Core Skills": "المهارات الأساسية",
-    "Problem Solving": "حل المشكلات",
-    "Team Problem Solving": "حل المشكلات الجماعي",
-    "Teamwork": "العمل الجماعي",
-    "Self Learning": "التعلم الذاتي",
-    "Collaboration": "التعاون",
-    "Project Management": "إدارة المشاريع",
-    "Game Programming": "برمجة الألعاب",
-    "Game Design": "تصميم الألعاب",
-    "Game Mechanics": "ميكانيكيات الألعاب",
-    "Game AI": "الذكاء الاصطناعي للألعاب",
-    "Unity": "Unity",
-    "3D & Visual Creation": "التصميم ثلاثي الأبعاد والإنتاج المرئي",
-    "3D Modeling": "النمذجة ثلاثية الأبعاد",
-    "3D Rendering": "الرندر ثلاثي الأبعاد",
-    "Programming & Web Development": "البرمجة وتطوير الويب",
-    "Artificial Intelligence": "الذكاء الاصطناعي",
-    "Artificial Intelligence (AI)": "الذكاء الاصطناعي (AI)",
-    "Generative AI": "الذكاء الاصطناعي التوليدي",
-    "Large Language Models (LLM)": "النماذج اللغوية الكبيرة (LLMs)",
-    "Vibe Coding": "البرمجة بالإلهام (Vibe Coding)",
-    "Technical & Conceptual": "المفاهيم والتقنيات",
-    "Software Development": "تطوير البرمجيات",
-    "Web Development": "تطوير الويب",
-    "Web Design": "تصميم الويب",
-    "Architecture": "معمارية البرمجيات",
-    "Human Computer Interaction": "التفاعل بين الإنسان والحاسوب",
-    "Programming Languages": "لغات البرمجة",
-    "MVC": "نمط (MVC)",
-
-    // Experience
-    "Experience": "الخبرة",
-    "Team Member": "عضو فريق",
-    "Enjaz Club - Game Development Section": "نادي إنجاز - قسم تطوير الألعاب",
-    "Collaborated with a team of developers on game projects, focusing on gameplay logic. Contributed to building engaging interactive experiences through efficient code and creative problem-solving.": "تعاونت مع فريق من المطورين في مشاريع الألعاب، مع التركيز على منطق اللعب. ساهمت في بناء تجارب تفاعلية جذابة من خلال كود فعال وحل إبداعي للمشكلات.",
-    "2024 - 2025": "٢٠٢٤ - ٢٠٢٥",
-
-    // Education
-    "Education": "التعليم",
-    "Bachelor's in Information Technology": "بكالوريوس في تقنية المعلومات",
-    "Imam Muhammad ibn Saud Islamic University": "جامعة الإمام محمد بن سعود الإسلامية",
-    "Dec 2022 - Ongoing": "ديسمبر ٢٠٢٢ - مستمر",
-    "Grade: 4.11": "المعدل: ٤.١١ من ٥",
-    "Activities and Societies:": "الأنشطة والجمعيات:",
-    "Enjaz Club - Game Development Club": "نادي إنجاز - نادي تطوير الألعاب",
-    "Game Design and Development Bootcamp": "معسكر تصميم وتطوير الألعاب",
-    "Tuwaiq Academy": "أكاديمية طويق",
-    "Completed": "مكتمل",
-    "Field: Game Design & Development": "المجال: تصميم وتطوير الألعاب",
-    "Complete C# Unity Game Developer 3D": "Complete C# Unity Game Developer 3D",
-    "Udemy": "Udemy",
-    "Jan 2025": "يناير ٢٠٢٥",
-    "Length: 57.5 total hours": "المدة: ٥٧.٥ ساعة إجمالاً",
-    "Unity Game Development Courses": "Unity Game Development Courses",
-    "GameDev.tv": "GameDev.tv",
-    "2024 - Ongoing": "٢٠٢٤ - مستمر",
-    "Tracks: Shader Graph, Multiplayer, Turn-Based Strategy, Cutscenes, 3D Developer": "Tracks: Shader Graph, Multiplayer, Turn-Based Strategy, Cutscenes, 3D Developer",
-
-    // Certifications
-    "Certifications": "الشهادات",
-    "Complete C# Unity Game Developer 3D (Updated To Unity 6).": "Complete C# Unity Game Developer 3D (Updated To Unity 6).",
-    "By Gamedev.tv · on Udemy": "By Gamedev.tv · on Udemy",
-    "Game Design and Development": "Game Design and Development",
-    "by Tuwaiq Academy": "by Tuwaiq Academy",
-    "Introduction to Blender": "Introduction to Blender",
-    "By Imam Mohammad Ibn Saud Islamic University (IMSIU)": "By Imam Mohammad Ibn Saud Islamic University (IMSIU)",
-    "Game Design Between Imagination and Reality": "Game Design Between Imagination and Reality",
-    "by Digital Attaa Initiative": "by Digital Attaa Initiative",
-    "Unity Essentials Pathway": "Unity Essentials Pathway",
-    "by Unity": "by Unity",
-    "Game design and development with Unity and generative AI tools": "Game design and development with Unity and generative AI tools",
-    "Jobs in game development": "Jobs in game development",
-    "3D Game Developer Bootcamp": "3D Game Developer Bootcamp",
-    "Imam Mohammad Ibn Saud Islamic University (IMSIU)": "جامعة الإمام محمد بن سعود الإسلامية",
-    "View": "عرض",
-
-    // Achievements
-    "Achievements": "الإنجازات",
-    "1st Place Winner - PwC Middle East Hackathon": "المركز الأول - هكاثون PwC الشرق الأوسط",
-    "Issuer: PwC Middle East": "الجهة المانحة: PwC الشرق الأوسط",
-    "Date: 7 February 2026": "التاريخ: ٧ فبراير ٢٠٢٦",
-    "Project: TourLens": "المشروع: TourLens",
-    "An AR glasses solution that serves as a hands-free indoor tour guide, overlaying real-time visualizations to enhance visitor experiences at events and cultural sites in Riyadh.": "حل نظارات الواقع المعزز (AR) الذي يعمل كمرشد سياحي داخلي بدون استخدام اليدين، حيث يقوم بتركيب مرئيات فورية لتحسين تجربة الزوار في الفعاليات والمواقع الثقافية في الرياض.",
-    "Mentor:": "الموجه/المرشد:",
-    "Majed Alghamdi": "ماجد الغامدي",
-    
-    "1st Place Winner - Enjaz Game Jam": "المركز الأول - هكاثون ألعاب إنجاز",
-    "Issuer: Enjaz Club": "الجهة المانحة: نادي إنجاز",
-    "Date: 19 November 2024": "التاريخ: ١٩ نوفمبر ٢٠٢٤",
-    "Game: The Scary Library": "اللعبة: The Scary Library",
-    "A horror game where players solve book puzzles to escape a haunted library while being hunted by an AI enemy.": "لعبة رعب حيث يحل اللاعبون ألغاز الكتب للهروب من مكتبة مسكونة بينما يطاردهم عدو ذكاء اصطناعي.",
-    
-    // Contact
-    "Get In Touch": "تواصل معي",
-    "Email": "البريد الإلكتروني",
-    "Phone": "الهاتف",
-    "Location": "الموقع",
-    "LinkedIn": "لينكدإن",
-    "GitHub": "قيت هب",
-    "Riyadh, Saudi Arabia": "الرياض، المملكة العربية السعودية",
-    "Download CV": "تحميل السيرة الذاتية",
-
-    // Footer
-    "Designed & Built by Turki Alshaalan": "تصميم وبناء تركي الشعلان",
-    "© 2026. All rights reserved.": "© ٢٠٢٦. جميع الحقوق محفوظة.",
-
-    // General Words & Team roles
-    "Saud AlFawzan": "سعود الفوزان",
-    "Fahad AlGhamdi": "فهد الغامدي",
-    "Turki AlShaalan": "تركي الشعلان",
-    "Abdulrahman AlFifi": "عبد الرحمن الفيفي",
-    "Anas AlHakami": "أنس الحكمي",
-    "Turki Alshaalan": "تركي الشعلان",
-    "Abdulaziz Almusayli": "عبد العزيز المسيلي",
-    "Fahad Alghamdi": "فهد الغامدي",
-    "Abdulrahman Raed": "عبد الرحمن رائد",
-    "Nawaf Almeshal": "نواف المشعل",
-    "Yunus Demirboga": "يونس ديميربوغا",
-    "Sema Bairakdar": "سيما بيرقدار",
-    "Leen Al Harbi": "لين الحربي",
-    "Amal Alhemali": "أمل الهمالي",
-    "Muzun AlHallabi": "مزن الحلابي",
-    "Turki Almufarrej": "تركي المفرج",
-    "Mohammed Ababotain": "محمد ابابطين",
-    "Omar Alshuger": "عمر الشقير",
-    "Alwaleed Alhamdan": "الوليد الحمدان",
-    "Tariq Alharbi": "طارق الحربي",
-    "Meshari Alhussainan": "مشاري الحسينان",
-    "Abdulrahman Alsalehi": "عبد الرحمن الصالحي",
-    "Ahmed AlAsmari": "أحمد الأسمري",
-    "Mushari Hussainan": "مشاري الحسينان",
-    "Mohammed AlGhweiri": "محمد الغويري",
-
-    "Game/Level Design, Assets": "تصميم الألعاب/المراحل، الأصول",
-    "Game/Level Design": "تصميم الألعاب/المراحل",
-    "Game Programmer": "مبرمج ألعاب",
-    "3D Modeler": "نمذجة ثلاثية الأبعاد",
-    "Developer": "مطور",
-    "Architect": "معماري",
-    "Level Designer": "مصمم المراحل",
-    "Project Coordinator": "منسق المشروع",
-    "Showcase": "عرض",
-    "Showcase →": "عرض ←",
-    "→": "←"
-};
 
 /**
  * Language Switcher - English / Arabic Translation Engine
