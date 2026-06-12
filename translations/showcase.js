@@ -12,6 +12,7 @@
 // them up by their rendered text.
 export const en = {
     modal: {
+        description: 'DESCRIPTION',
         tech_stack: 'TECH STACK',
         development_team: 'DEVELOPMENT TEAM',
         tags: 'TAGS',
@@ -61,6 +62,7 @@ export const en = {
 // ARABIC TEXT — proper, readable Arabic for each EN string above.
 export const ar = {
     modal: {
+        description: 'الوصف',
         tech_stack: 'التقنيات المستخدمة',
         development_team: 'فريق التطوير',
         tags: 'الأوسمة',
