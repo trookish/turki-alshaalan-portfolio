@@ -3,6 +3,8 @@
 // Game Juice / Game Feel Edition
 // ========================================
 
+import { en as gameEn, ar as gameAr } from './translations/game.js';
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -10,24 +12,7 @@ const ctx = canvas.getContext('2d');
 function getGameText(enText) {
     const isArabic = document.documentElement.lang === 'ar';
     if (!isArabic) return enText;
-    
-    const gameTranslations = {
-        'PLAYER': 'اللاعب',
-        'BOSS': 'الزعيم',
-        'SHIELD': 'الدرع',
-        'BROKEN': 'مكسور',
-        'GO!': 'انطلق!',
-        'GAME OVER': 'انتهت اللعبة',
-        'Press R to Restart': 'اضغط R لإعادة التشغيل',
-        'VICTORY!': 'انتصار!',
-        'Press R to Play Again': 'اضغط R للعب مجدداً',
-        'SHIELD BREAK!': 'انكسار الدرع!',
-        'BLOCKED': 'مصدود',
-        'BLOCK': 'صد',
-        'ENRAGED!': 'غاضب!'
-    };
-    
-    return gameTranslations[enText] || enText;
+    return gameAr[enText] || enText;
 }
 
 function getGameFont(baseSize, isBold = false) {

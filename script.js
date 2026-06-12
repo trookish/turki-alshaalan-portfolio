@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Turki Alshaalan Portfolio Website
  * Interactive functionality and animations
  */
@@ -6,8 +6,18 @@
 import { en as enStatic } from './translations/en.js';
 import { ar as arStatic } from './translations/ar.js';
 import { termTranslations } from './translations/dynamic.js';
+import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js';
 
 const staticTranslations = { en: enStatic, ar: arStatic };
+const showcase = { en: showcaseEn, ar: showcaseAr };
+
+/**
+ * Get the localized showcase strings for the current language.
+ * Falls back to English if a key is missing in the requested language.
+ */
+function getShowcase(lang) {
+    return showcase[lang] || showcase.en;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all functionality
@@ -558,278 +568,6 @@ function initProjectShowcase() {
     let currentIndex = 0;
     let screenshotsList = [];
 
-    const projectData = {
-        'dungeon-puzzle': {
-            screenshots: {
-                en: [
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot1.webp',
-                        title: 'Start Room',
-                        desc: 'The initial room featuring a wooden table, chairs, paintings, and locked iron gates.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot2.webp',
-                        title: 'Dungeon Corridors',
-                        desc: 'Navigating hallways with cells, chains, and a wall sign pointing to the Key Room.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot3.webp',
-                        title: 'Torture Chamber',
-                        desc: 'A large room containing torture devices, executioner blocks, wooden horses, hanging cages, and iron maidens.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot4.webp',
-                        title: 'The Armory',
-                        desc: 'A room with racks of swords and shields, candle chandeliers, and a hanging red banner.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot5.webp',
-                        title: 'Lava Trap Room',
-                        desc: 'Crossing a narrow stone bridge over boiling lava while dodging giant swinging blades.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot6.webp',
-                        title: 'Treasure Corner',
-                        desc: 'A corner housing ancient wooden chests.'
-                    }
-                ],
-                ar: [
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot1.webp',
-                        title: 'ØºØ±ÙØ© Ø§Ù„Ø¨Ø¯Ø§ÙŠØ©',
-                        desc: 'Ø§Ù„ØºØ±ÙØ© Ø§Ù„Ø£ÙˆÙ„ÙŠØ© Ø§Ù„ØªÙŠ ØªØ¶Ù… Ø·Ø§ÙˆÙ„Ø© Ø®Ø´Ø¨ÙŠØ©ØŒ ÙƒØ±Ø§Ø³ÙŠØŒ Ù„ÙˆØ­Ø§ØªØŒ ÙˆØ¨ÙˆØ§Ø¨Ø§Øª Ø­Ø¯ÙŠØ¯ÙŠØ© Ù…ØºÙ„Ù‚Ø©.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot2.webp',
-                        title: 'Ù…Ù…Ø±Ø§Øª Ø§Ù„Ø³Ø¬Ù†',
-                        desc: 'Ø§Ù„ØªÙ†Ù‚Ù„ Ø¹Ø¨Ø± Ø§Ù„Ù…Ù…Ø±Ø§Øª Ø§Ù„ØªÙŠ ØªØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ Ø²Ù†Ø§Ø²ÙŠÙ†ØŒ Ø³Ù„Ø§Ø³Ù„ØŒ ÙˆÙ„ÙˆØ­Ø© Ø­Ø§Ø¦Ø· ØªØ´ÙŠØ± Ø¥Ù„Ù‰ ØºØ±ÙØ© Ø§Ù„Ù…ÙØªØ§Ø­.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot3.webp',
-                        title: 'ØºØ±ÙØ© Ø§Ù„ØªØ¹Ø°ÙŠØ¨',
-                        desc: 'ØºØ±ÙØ© ÙˆØ§Ø³Ø¹Ø© ØªØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ Ø£Ø¯ÙˆØ§Øª ØªØ¹Ø°ÙŠØ¨ØŒ ÙƒØªÙ„ Ø¥Ø¹Ø¯Ø§Ù…ØŒ Ø£Ø­ØµÙ†Ø© Ø®Ø´Ø¨ÙŠØ©ØŒ Ø£Ù‚ÙØ§Øµ Ù…Ø¹Ù„Ù‚Ø©ØŒ ÙˆØªØ§Ø¨ÙˆØª Ø­Ø¯ÙŠØ¯ÙŠ (Iron Maidens).'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot4.webp',
-                        title: 'Ù…Ø³ØªÙˆØ¯Ø¹ Ø§Ù„Ø£Ø³Ù„Ø­Ø©',
-                        desc: 'ØºØ±ÙØ© ØªØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ Ø±ÙÙˆÙ Ù„Ù„Ø³ÙŠÙˆÙ ÙˆØ§Ù„Ø¯Ø±ÙˆØ¹ØŒ Ø«Ø±ÙŠØ§Øª Ø´Ù…ÙˆØ¹ØŒ ÙˆØ±Ø§ÙŠØ© Ø­Ù…Ø±Ø§Ø¡ Ù…Ø¹Ù„Ù‚Ø©.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot5.webp',
-                        title: 'ØºØ±ÙØ© ÙØ® Ø§Ù„Ø­Ù…Ù…',
-                        desc: 'Ø¹Ø¨ÙˆØ± Ø¬Ø³Ø± Ø­Ø¬Ø±ÙŠ Ø¶ÙŠÙ‚ ÙÙˆÙ‚ Ø­Ù…Ù… Ø¨Ø±ÙƒØ§Ù†ÙŠØ© Ù…ØºÙ„ÙŠØ© Ù…Ø¹ ØªÙØ§Ø¯ÙŠ Ø´ÙØ±Ø§Øª Ø¶Ø®Ù…Ø© Ù…ØªØ£Ø±Ø¬Ø­Ø©.'
-                    },
-                    {
-                        src: 'images/Projects/DungeonPuzzle/screenshot6.webp',
-                        title: 'Ø±ÙƒÙ† Ø§Ù„ÙƒÙ†Ø²',
-                        desc: 'Ø±ÙƒÙ† ÙŠØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ ØµÙ†Ø§Ø¯ÙŠÙ‚ Ø®Ø´Ø¨ÙŠØ© Ø£Ø«Ø±ÙŠØ©.'
-                    }
-                ]
-            }
-        },
-        'scary-library': {
-            screenshots: {
-                en: [
-                    {
-                        src: 'images/Projects/ScaryLibrary/screenshot1.webp',
-                        title: 'The Book Puzzle Shelf',
-                        desc: 'A stone wall shelf with slots for 5 books, instructing the player to place them in order.'
-                    },
-                    {
-                        src: 'images/Projects/ScaryLibrary/screenshot2.webp',
-                        title: 'AI Monster Patrolling',
-                        desc: 'Creepy white-faced monster patrolling the library corridors as a red book sits on a table.'
-                    },
-                    {
-                        src: 'images/Projects/ScaryLibrary/screenshot3.webp',
-                        title: 'Library Jumpscare',
-                        desc: 'Horrifying moment the player is caught close-up by the monster.'
-                    }
-                ],
-                ar: [
-                    {
-                        src: 'images/Projects/ScaryLibrary/screenshot1.webp',
-                        title: 'Ø±Ù Ù„ØºØ² Ø§Ù„ÙƒØªØ¨',
-                        desc: 'Ø±Ù Ø­Ø§Ø¦Ø·ÙŠ Ø­Ø¬Ø±ÙŠ Ù…Ø¹ ÙØªØ­Ø§Øª Ù„Ø®Ù…Ø³Ø© ÙƒØªØ¨ØŒ ÙŠÙˆØ¬Ù‡ Ø§Ù„Ù„Ø§Ø¹Ø¨ Ù„ØªØ±ØªÙŠØ¨Ù‡Ø§ Ø¨Ø´ÙƒÙ„ ØµØ­ÙŠØ­.'
-                    },
-                    {
-                        src: 'images/Projects/ScaryLibrary/screenshot2.webp',
-                        title: 'ÙˆØ­Ø´ Ø§Ù„Ø°ÙƒØ§Ø¡ Ø§Ù„Ø§ØµØ·Ù†Ø§Ø¹ÙŠ ÙÙŠ Ø¯ÙˆØ±ÙŠØ©',
-                        desc: 'ÙˆØ­Ø´ Ù…Ø®ÙŠÙ Ø°Ùˆ ÙˆØ¬Ù‡ Ø£Ø¨ÙŠØ¶ ÙŠÙ‚ÙˆÙ… Ø¨Ø¯ÙˆØ±ÙŠØ© ÙÙŠ Ù…Ù…Ø±Ø§Øª Ø§Ù„Ù…ÙƒØªØ¨Ø© Ø¨ÙŠÙ†Ù…Ø§ ÙŠØ³ØªÙ‚Ø± ÙƒØªØ§Ø¨ Ø£Ø­Ù…Ø± Ø¹Ù„Ù‰ Ø§Ù„Ø·Ø§ÙˆÙ„Ø©.'
-                    },
-                    {
-                        src: 'images/Projects/ScaryLibrary/screenshot3.webp',
-                        title: 'Ø±Ø¹Ø¨ Ø§Ù„Ù…ÙØ§Ø¬Ø£Ø© ÙÙŠ Ø§Ù„Ù…ÙƒØªØ¨Ø©',
-                        desc: 'Ø§Ù„Ù„Ø­Ø¸Ø© Ø§Ù„Ù…Ø±Ø¹Ø¨Ø© Ø¹Ù†Ø¯Ù…Ø§ ÙŠÙ…Ø³Ùƒ Ø§Ù„ÙˆØ­Ø´ Ø¨Ø§Ù„Ù„Ø§Ø¹Ø¨ Ø¹Ù† Ù‚Ø±Ø¨.'
-                    }
-                ]
-            }
-        },
-        'knight-with-gun': {
-            screenshots: {
-                en: [
-                    {
-                        src: 'images/Projects/KnightWithGun/screenshot1.webp',
-                        title: 'Game Main Menu',
-                        desc: 'Start interface with a fully armored knight holding a glowing yellow cube weapon.'
-                    },
-                    {
-                        src: 'images/Projects/KnightWithGun/screenshot2.webp',
-                        title: 'Bridge Combat Arena',
-                        desc: 'Fighting glowing red cylinder enemies on a narrow stone bridge under a crimson sky.'
-                    },
-                    {
-                        src: 'images/Projects/KnightWithGun/screenshot3.webp',
-                        title: 'Pause Menu Interface',
-                        desc: 'Retro-style pause overlay with Resume and Quit buttons.'
-                    }
-                ],
-                ar: [
-                    {
-                        src: 'images/Projects/KnightWithGun/screenshot1.webp',
-                        title: 'Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© Ù„Ù„Ø¹Ø¨Ø©',
-                        desc: 'ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø¨Ø¯Ø¡ Ù…Ø¹ ÙØ§Ø±Ø³ Ù…Ø¯Ø±Ø¹ Ø¨Ø§Ù„ÙƒØ§Ù…Ù„ ÙŠØ­Ù…Ù„ Ø³Ù„Ø§Ø­Ø§Ù‹ Ù…ÙƒØ¹Ø¨Ø§Ù‹ Ø£ØµÙØ± Ù…ØªÙˆÙ‡Ø¬Ø§Ù‹.'
-                    },
-                    {
-                        src: 'images/Projects/KnightWithGun/screenshot2.webp',
-                        title: 'Ø³Ø§Ø­Ø© Ù‚ØªØ§Ù„ Ø§Ù„Ø¬Ø³Ø±',
-                        desc: 'Ù‚ØªØ§Ù„ Ø£Ø¹Ø¯Ø§Ø¡ Ø£Ø³Ø·ÙˆØ§Ù†ÙŠÙŠÙ† Ù…ØªÙˆÙ‡Ø¬ÙŠÙ† Ø¨Ø§Ù„Ù„ÙˆÙ† Ø§Ù„Ø£Ø­Ù…Ø± Ø¹Ù„Ù‰ Ø¬Ø³Ø± Ø­Ø¬Ø±ÙŠ Ø¶ÙŠÙ‚ ØªØ­Øª Ø³Ù…Ø§Ø¡ Ù‚Ø±Ù…Ø°ÙŠØ©.'
-                    },
-                    {
-                        src: 'images/Projects/KnightWithGun/screenshot3.webp',
-                        title: 'ÙˆØ§Ø¬Ù‡Ø© Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„ØªÙˆÙ‚Ù Ù…Ø¤Ù‚ØªØ§Ù‹',
-                        desc: 'ÙˆØ§Ø¬Ù‡Ø© ØªÙˆÙ‚Ù Ù…Ø¤Ù‚Øª ÙƒÙ„Ø§Ø³ÙŠÙƒÙŠØ© Ù…Ø¹ Ø²Ø±ÙŠ Ø§Ù„Ø§Ø³ØªØ¦Ù†Ø§Ù ÙˆØ§Ù„Ø®Ø±ÙˆØ¬.'
-                    }
-                ]
-            }
-        },
-        'the-hidden-kanz': {
-            screenshots: {
-                en: [
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot1.webp',
-                        title: 'Main Menu Scene',
-                        desc: 'Main menu showcasing a carved stone tomb entrance in desert sand dunes.'
-                    },
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot2.webp',
-                        title: 'First-Person Combat View',
-                        desc: 'Stone corridor exploration holding a sword and a green magical flame against skeleton enemies.'
-                    },
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot3.webp',
-                        title: 'Magic Ability Casting',
-                        desc: 'Engaging skeleton warrior while preparing to cast a pink magic spell.'
-                    },
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot4.webp',
-                        title: 'Statue Chamber',
-                        desc: 'Spacious room lined with tall hooded statues, archway tunnels, and hanging cages.'
-                    }
-                ],
-                ar: [
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot1.webp',
-                        title: 'Ù…Ø´Ù‡Ø¯ Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©',
-                        desc: 'Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© ØªØ³ØªØ¹Ø±Ø¶ Ù…Ø¯Ø®Ù„ Ù…Ù‚Ø¨Ø±Ø© Ø­Ø¬Ø±ÙŠØ© Ù…Ù†Ø­ÙˆØªØ© ÙˆØ³Ø· Ø§Ù„ÙƒØ«Ø¨Ø§Ù† Ø§Ù„Ø±Ù…Ù„ÙŠØ© Ø§Ù„ØµØ­Ø±Ø§ÙˆÙŠØ©.'
-                    },
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot2.webp',
-                        title: 'Ø¹Ø±Ø¶ Ø§Ù„Ù‚ØªØ§Ù„ Ù…Ù† Ù…Ù†Ø¸ÙˆØ± Ø§Ù„Ø´Ø®Øµ Ø§Ù„Ø£ÙˆÙ„',
-                        desc: 'Ø§Ø³ØªÙƒØ´Ø§Ù Ù…Ù…Ø± Ø­Ø¬Ø±ÙŠ Ù…Ø¹ Ø­Ù…Ù„ Ø³ÙŠÙ ÙˆÙ„Ù‡Ø¨ Ø³Ø­Ø±ÙŠ Ø£Ø®Ø¶Ø± Ù„Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ù…Ù† Ø§Ù„Ù‡ÙŠØ§ÙƒÙ„ Ø§Ù„Ø¹Ø¸Ù…ÙŠØ©.'
-                    },
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot3.webp',
-                        title: 'Ø¥Ù„Ù‚Ø§Ø¡ Ø§Ù„Ù‚Ø¯Ø±Ø© Ø§Ù„Ø³Ø­Ø±ÙŠØ©',
-                        desc: 'Ù…ÙˆØ§Ø¬Ù‡Ø© Ù…Ø­Ø§Ø±Ø¨ Ù‡ÙŠÙƒÙ„ Ø¹Ø¸Ù…ÙŠ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ø§Ø³ØªØ¹Ø¯Ø§Ø¯ Ù„Ø¥Ù„Ù‚Ø§Ø¡ ØªØ¹ÙˆÙŠØ°Ø© Ø³Ø­Ø±ÙŠØ© ÙˆØ±Ø¯ÙŠØ©.'
-                    },
-                    {
-                        src: 'images/Projects/TheHiddenKanz/screenshot4.webp',
-                        title: 'ØºØ±ÙØ© Ø§Ù„ØªÙ…Ø§Ø«ÙŠÙ„',
-                        desc: 'ØºØ±ÙØ© ÙØ³ÙŠØ­Ø© Ù…Ø­Ø§Ø·Ø© Ø¨ØªÙ…Ø§Ø«ÙŠÙ„ Ø·ÙˆÙŠÙ„Ø© Ø°Ø§Øª Ù‚Ù„Ù†Ø³ÙˆØ§ØªØŒ Ù…Ù…Ø±Ø§Øª Ù…Ù‚ÙˆØ³Ø©ØŒ ÙˆØ£Ù‚ÙØ§Øµ Ù…Ø¹Ù„Ù‚Ø©.'
-                    }
-                ]
-            }
-        },
-        'syntax-strike': {
-            screenshots: {
-                en: [
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot1.webp',
-                        title: 'Various Enemy Types in Combat',
-                        desc: 'Real-time combat in the facility showing the player robot fighting multiple enemy types (Shooter Robots, Spider Bots, and Turrets) using the sword and shield.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot2.webp',
-                        title: 'Spider Enemies Attacking',
-                        desc: 'Engaging fast Spider Bots and ranged enemies inside the warehouse facility. Ranged enemies can fire projectiles and self-destruct if they get too close.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot3.webp',
-                        title: 'Hacking Tool Pickup in the Environment',
-                        desc: 'Locating the Hacking Tool in the facility. Acquiring the tool allows the player to interact with terminals and hack disabled enemies to solve programming puzzles.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot4.webp',
-                        title: 'Hacking Tool Acquired Notification',
-                        desc: 'On-screen notification upon picking up the hacking tool, preparing the student to hack enemies and override secure doors.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot5.webp',
-                        title: 'Electrical Water Hazard',
-                        desc: 'Navigating environmental hazards. The student must avoid electrical pools or use a nearby control console to disable the hazard before traversing.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot6.webp',
-                        title: 'Final Boss Encounter',
-                        desc: 'The final encounter with the Boss robot. The player must dodge shockwaves and stomp attacks, reduce the Boss\'s health to zero, and solve a hard programming puzzle to win.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot7.webp',
-                        title: 'Level Completion Score Scene',
-                        desc: 'Level completion scoreboard tracking player statistics including enemies defeated, programming puzzle accuracy, time bonuses, and final score.'
-                    }
-                ],
-                ar: [
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot1.webp',
-                        title: 'Ø£Ù†ÙˆØ§Ø¹ Ù…Ø®ØªÙ„ÙØ© Ù…Ù† Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ù‚ØªØ§Ù„',
-                        desc: 'Ù‚ØªØ§Ù„ ÙÙˆØ±ÙŠ ÙÙŠ Ø§Ù„Ù…Ù†Ø´Ø£Ø© ÙŠØ¸Ù‡Ø± Ø§Ù„Ø±ÙˆØ¨ÙˆØª Ø§Ù„Ù„Ø§Ø¹Ø¨ ÙŠÙ‚Ø§ØªÙ„ Ø£Ù†ÙˆØ§Ø¹Ø§Ù‹ Ù…ØªØ¹Ø¯Ø¯Ø© Ù…Ù† Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ (Ø§Ù„Ø±ÙˆØ¨ÙˆØªØ§Øª Ø§Ù„Ù…Ø·Ù„Ù‚Ø© Ù„Ù„Ù†Ø§Ø±ØŒ Ø§Ù„Ø¹Ù†Ø§ÙƒØ¨ Ø§Ù„Ø¢Ù„ÙŠØ©ØŒ ÙˆØ§Ù„Ø±Ø´Ø§Ø´Ø§Øª Ø§Ù„Ù…Ø«Ø¨ØªØ©) Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ø³ÙŠÙ ÙˆØ§Ù„Ø¯Ø±Ø¹.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot2.webp',
-                        title: 'Ù‡Ø¬ÙˆÙ… Ø£Ø¹Ø¯Ø§Ø¡ Ø§Ù„Ø¹Ù†ÙƒØ¨ÙˆØª Ø§Ù„Ø¢Ù„ÙŠ',
-                        desc: 'Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø¹Ù†Ø§ÙƒØ¨ Ø§Ù„Ø¢Ù„ÙŠØ© Ø§Ù„Ø³Ø±ÙŠØ¹Ø© ÙˆØ§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø¨Ø¹ÙŠØ¯ÙŠ Ø§Ù„Ù…Ø¯Ù‰ Ø¯Ø§Ø®Ù„ Ù…Ù†Ø´Ø£Ø© Ø§Ù„Ù…Ø³ØªÙˆØ¯Ø¹. ÙŠÙ…ÙƒÙ† Ù„Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø¨Ø¹ÙŠØ¯ÙŠ Ø§Ù„Ù…Ø¯Ù‰ Ø¥Ø·Ù„Ø§Ù‚ Ù‚Ø°Ø§Ø¦Ù ÙˆØªÙØ¬ÙŠØ± Ø£Ù†ÙØ³Ù‡Ù… Ø¥Ø°Ø§ Ø§Ù‚ØªØ±Ø¨ÙˆØ§ ÙƒØ«ÙŠØ±Ø§Ù‹.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot3.webp',
-                        title: 'Ø§Ù„ØªÙ‚Ø§Ø· Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚ ÙÙŠ Ø§Ù„Ø¨ÙŠØ¦Ø©',
-                        desc: 'ØªØ­Ø¯ÙŠØ¯ Ù…ÙˆÙ‚Ø¹ Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚ ÙÙŠ Ø§Ù„Ù…Ù†Ø´Ø£Ø©. ÙŠØªÙŠØ­ Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø§Ù„Ø£Ø¯Ø§Ø© Ù„Ù„Ø§Ø¹Ø¨ Ø§Ù„ØªÙØ§Ø¹Ù„ Ù…Ø¹ Ø§Ù„Ù…Ø­Ø·Ø§Øª ÙˆØ§Ø®ØªØ±Ø§Ù‚ Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø§Ù„Ù…Ø¹Ø·Ù„ÙŠÙ† Ù„Ø­Ù„ Ø£Ù„ØºØ§Ø² Ø§Ù„Ø¨Ø±Ù…Ø¬Ø©.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot4.webp',
-                        title: 'Ø¥Ø´Ø¹Ø§Ø± Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚',
-                        desc: 'Ø¥Ø´Ø¹Ø§Ø± ÙŠØ¸Ù‡Ø± Ø¹Ù„Ù‰ Ø§Ù„Ø´Ø§Ø´Ø© Ø¹Ù†Ø¯ Ø§Ù„ØªÙ‚Ø§Ø· Ø£Ø¯Ø§Ø© Ø§Ù„Ø§Ø®ØªØ±Ø§Ù‚ØŒ Ù…Ù…Ø§ ÙŠØ¬Ù‡Ø² Ø§Ù„Ø·Ø§Ù„Ø¨ Ù„Ø§Ø®ØªØ±Ø§Ù‚ Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ ÙˆÙØªØ­ Ø§Ù„Ø£Ø¨ÙˆØ§Ø¨ Ø§Ù„Ù…Ø¤Ù…Ù†Ø©.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot5.webp',
-                        title: 'Ø®Ø·Ø± Ø§Ù„Ù…ÙŠØ§Ù‡ Ø§Ù„Ù…ÙƒÙ‡Ø±Ø¨Ø©',
-                        desc: 'ØªØ®Ø·ÙŠ Ø§Ù„Ù…Ø®Ø§Ø·Ø± Ø§Ù„Ø¨ÙŠØ¦ÙŠØ©. ÙŠØ¬Ø¨ Ø¹Ù„Ù‰ Ø§Ù„Ø·Ø§Ù„Ø¨ ØªØ¬Ù†Ø¨ Ø§Ù„Ø¨Ø±Ùƒ Ø§Ù„Ù…ÙƒÙ‡Ø±Ø¨Ø© Ø£Ùˆ Ø§Ø³ØªØ®Ø¯Ø§Ù… ÙˆØ­Ø¯Ø© ØªØ­ÙƒÙ… Ù‚Ø±ÙŠØ¨Ø© Ù„ØªØ¹Ø·ÙŠÙ„ Ø§Ù„ÙƒÙ‡Ø±Ø¨Ø§Ø¡ Ù‚Ø¨Ù„ Ø§Ù„Ø¹Ø¨ÙˆØ±.'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot6.webp',
-                        title: 'Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø²Ø¹ÙŠÙ… Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ',
-                        desc: 'Ø§Ù„Ù…ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ø£Ø®ÙŠØ±Ø© Ù…Ø¹ Ø§Ù„Ø±ÙˆØ¨ÙˆØª Ø§Ù„Ø²Ø¹ÙŠÙ…. ÙŠØ¬Ø¨ Ø¹Ù„Ù‰ Ø§Ù„Ù„Ø§Ø¹Ø¨ ØªÙØ§Ø¯ÙŠ Ø§Ù„Ù…ÙˆØ¬Ø§Øª Ø§Ù„ØµØ§Ø¯Ù…Ø© ÙˆÙ‡Ø¬Ù…Ø§Øª Ø§Ù„Ø¯Ù‡Ø³ØŒ ÙˆØªÙ‚Ù„ÙŠÙ„ ØµØ­Ø© Ø§Ù„Ø²Ø¹ÙŠÙ… Ø¥Ù„Ù‰ Ø§Ù„ØµÙØ±ØŒ ÙˆØ­Ù„ Ù„ØºØ² Ø¨Ø±Ù…Ø¬ÙŠ ØµØ¹Ø¨ Ù„Ù„ÙÙˆØ².'
-                    },
-                    {
-                        src: 'images/Projects/SyntaxStrike/screenshot7.webp',
-                        title: 'Ù…Ø´Ù‡Ø¯ Ù†ØªÙŠØ¬Ø© Ø¥ÙƒÙ…Ø§Ù„ Ø§Ù„Ù…Ø±Ø­Ù„Ø©',
-                        desc: 'Ù„ÙˆØ­Ø© Ø¥ÙƒÙ…Ø§Ù„ Ø§Ù„Ù…Ø±Ø­Ù„Ø© Ø§Ù„ØªÙŠ ØªØªØ¨Ø¹ Ø¥Ø­ØµØ§Ø¦ÙŠØ§Øª Ø§Ù„Ù„Ø§Ø¹Ø¨ Ø¨Ù…Ø§ ÙÙŠ Ø°Ù„Ùƒ Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ Ø§Ù„Ù…Ù‡Ø²ÙˆÙ…ÙŠÙ†ØŒ ÙˆØ¯Ù‚Ø© Ø­Ù„ Ø§Ù„Ø£Ù„ØºØ§Ø² Ø§Ù„Ø¨Ø±Ù…Ø¬ÙŠØ©ØŒ ÙˆØ§Ù„Ù…ÙƒØ§ÙØ¢Øª Ø§Ù„Ø²Ù…Ù†ÙŠØ©ØŒ ÙˆØ§Ù„Ù†ØªÙŠØ¬Ø© Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠØ©.'
-                    }
-                ]
-            }
-        }
-    };
 
     // Show screenshot by index
     function showScreenshot(index) {
@@ -910,17 +648,18 @@ function initProjectShowcase() {
 
         const currentLang = localStorage.getItem('lang') || 'en';
         const isArabic = currentLang === 'ar';
+        const s = getShowcase(currentLang).modal;
 
         // Reset label defaults in case they were modified by achievements
         if (subtitleElem) subtitleElem.style.display = 'none';
-        if (tagsLabel) tagsLabel.textContent = isArabic ? 'Ø§Ù„ØªÙ‚Ù†ÙŠØ§Øª Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…Ø©' : 'TECH STACK';
-        if (teamLabel) teamLabel.textContent = isArabic ? 'ÙØ±ÙŠÙ‚ Ø§Ù„ØªØ·ÙˆÙŠØ±' : 'DEVELOPMENT TEAM';
+        if (tagsLabel) tagsLabel.textContent = s.tech_stack;
+        if (teamLabel) teamLabel.textContent = s.development_team;
 
         if (isAchievement) {
             // Scrape achievement details
             const titleText = card.querySelector('.achievement-title').textContent.trim();
             const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
-            modalTitleElem.textContent = isArabic ? `Ø­Ø§Ù„Ø© Ø§Ù„Ù†Ø¸Ø§Ù…: Ø¥Ù†Ø¬Ø§Ø²_${sysStatusName}.EXE` : `SYSTEM STATUS: ACHIEVEMENT_${sysStatusName}.EXE`;
+            modalTitleElem.textContent = `${s.achievement_title_prefix}${sysStatusName}.EXE`;
 
             detailsTitle.textContent = titleText;
 
@@ -945,7 +684,7 @@ function initProjectShowcase() {
             detailsDesc.innerHTML = descHtml;
 
             // Populate tags (change label to TAGS)
-            if (tagsLabel) tagsLabel.textContent = isArabic ? 'Ø§Ù„Ø£ÙˆØ³Ù…Ø©' : 'TAGS';
+            if (tagsLabel) tagsLabel.textContent = s.tags;
             detailsTags.innerHTML = '';
             const tags = card.querySelectorAll('.achievement-tag');
             tags.forEach(tag => {
@@ -958,7 +697,7 @@ function initProjectShowcase() {
             // Populate team / mentor
             const teamElement = card.querySelector('.achievement-team');
             const mentorElement = card.querySelector('.achievement-mentor');
-            if (teamLabel) teamLabel.textContent = isArabic ? 'Ø§Ù„ÙØ±ÙŠÙ‚ ÙˆØ§Ù„Ù…ÙˆØ¬Ù‡ÙˆÙ†' : 'TEAM & MENTORS';
+            if (teamLabel) teamLabel.textContent = s.team_and_mentors;
             
             if (teamElement || mentorElement) {
                 detailsTeamContainer.className = 'ss-details-section achievement-team';
@@ -988,15 +727,15 @@ function initProjectShowcase() {
             if (mainImgEl) {
                 screenshotsList.push({
                     src: mainImgEl.src,
-                    title: isArabic ? 'Ø§Ù„Ø´Ù‡Ø§Ø¯Ø© / Ø§Ù„ÙØ¹Ø§Ù„ÙŠØ©' : 'Certificate / Event',
+                    title: isArabic ? s.certificate_event : 'Certificate / Event',
                     desc: titleText
                 });
             }
             if (projImgEl) {
                 screenshotsList.push({
                     src: projImgEl.src,
-                    title: isArabic ? 'Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø© Ù„Ù„Ù…Ø´Ø±ÙˆØ¹' : 'Project Screenshot',
-                    desc: projTitleEl ? projTitleEl.textContent.trim() : (isArabic ? 'Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø© Ù„Ù„Ù…Ø´Ø±ÙˆØ¹' : 'Project Screenshot')
+                    title: isArabic ? s.project_screenshot : 'Project Screenshot',
+                    desc: projTitleEl ? projTitleEl.textContent.trim() : (isArabic ? s.project_screenshot : 'Project Screenshot')
                 });
             }
             
@@ -1021,7 +760,7 @@ function initProjectShowcase() {
             
             // Format the SYSTEM STATUS text: uppercase with underscores
             const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
-            modalTitleElem.textContent = isArabic ? `Ø­Ø§Ù„Ø© Ø§Ù„Ù†Ø¸Ø§Ù…: Ø¹Ø±Ø¶_${sysStatusName}.EXE` : `SYSTEM STATUS: ${sysStatusName}_SHOWCASE.EXE`;
+            modalTitleElem.textContent = `${s.title_prefix}${sysStatusName}_SHOWCASE.EXE`;
 
             // Populate scraped details
             detailsTitle.textContent = titleText;
@@ -1060,9 +799,9 @@ function initProjectShowcase() {
             }
 
             // Determine screenshot list
-            const projectRecord = projectData[projectKey];
-            if (projectRecord && projectRecord.screenshots) {
-                screenshotsList = projectRecord.screenshots[currentLang] || projectRecord.screenshots['en'] || [];
+            const projectScreenshots = getShowcase(currentLang).projects[projectKey];
+            if (projectScreenshots) {
+                screenshotsList = projectScreenshots;
                 
                 // Show gallery layout elements
                 captionContainer.style.display = 'block';
