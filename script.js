@@ -1380,7 +1380,7 @@ const termTranslations = {
     "Tuwaiq Academy": "أكاديمية طويق",
     "Completed": "مكتمل",
     "Field: Game Design & Development": "المجال: تصميم وتطوير الألعاب",
-    "Complete C# Unity Game Developer 3D": "دورة مطوّل C# Unity Game Developer 3D",
+    "Complete C# Unity Game Developer 3D": "Complete C# Unity Game Developer 3D",
     "Udemy": "Udemy",
     "Jan 2025": "يناير ٢٠٢٥",
     "Length: 57.5 total hours": "المدة: ٥٧.٥ ساعة إجمالاً",
