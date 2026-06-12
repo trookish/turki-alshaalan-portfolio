@@ -1473,6 +1473,7 @@ const termTranslations = {
     "Level Designer": "مصمم المراحل",
     "Project Coordinator": "منسق المشروع",
     "Showcase": "عرض",
+    "Showcase →": "عرض ←",
     "→": "←"
 };
 
