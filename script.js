@@ -19,6 +19,17 @@ function getShowcase(lang) {
     return showcase[lang] || showcase.en;
 }
 
+/**
+ * Translate a dynamic term to the current language.
+ * Returns the AR version if a translation is defined, otherwise the
+ * original EN text. Used for content scraped from the DOM after the
+ * initial translation pass (e.g. project descriptions inside the
+ * showcase modal which is opened on demand).
+ */
+function localize(text) {
+    return termTranslations[text] || text;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all functionality
     initNavigation();
@@ -676,10 +687,10 @@ function initProjectShowcase() {
             const projDescEl = card.querySelector('.achievement-project .project-description');
             let descHtml = '';
             if (projTitleEl) {
-                descHtml += `<strong style="color: var(--accent-primary); font-family: var(--font-terminal);">${projTitleEl.textContent.trim()}</strong><br><br>`;
+                descHtml += `<strong style="color: var(--accent-primary); font-family: var(--font-terminal);">${localize(projTitleEl.textContent.trim())}</strong><br><br>`;
             }
             if (projDescEl) {
-                descHtml += projDescEl.textContent.trim();
+                descHtml += localize(projDescEl.textContent.trim());
             }
             detailsDesc.innerHTML = descHtml;
 
@@ -764,7 +775,7 @@ function initProjectShowcase() {
 
             // Populate scraped details
             detailsTitle.textContent = titleText;
-            detailsDesc.textContent = descText;
+            detailsDesc.textContent = localize(descText);
 
             // Populate tech tags
             detailsTags.innerHTML = '';
