@@ -2607,7 +2607,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 
 .education-card {
     max-width: 650px;
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
     display: flex;
     align-items: center;
     gap: 1.25rem;
@@ -2615,6 +2615,10 @@ section:nth-child(8) { animation-delay: 0.7s; }
     border: 3px solid var(--border-color);
     padding: 1.5rem;
     transition: all var(--transition-fast);
+}
+
+.education-card:last-of-type {
+    margin-bottom: 0;
 }
 
 .education-card:hover {
