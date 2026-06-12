@@ -1384,15 +1384,15 @@ const termTranslations = {
     "Udemy": "Udemy",
     "Jan 2025": "يناير ٢٠٢٥",
     "Length: 57.5 total hours": "المدة: ٥٧.٥ ساعة إجمالاً",
-    "Unity Game Development Courses": "دورات تطوير الألعاب بـ Unity",
+    "Unity Game Development Courses": "Unity Game Development Courses",
     "GameDev.tv": "GameDev.tv",
     "2024 - Ongoing": "٢٠٢٤ - مستمر",
-    "Tracks: Shader Graph, Multiplayer, Turn-Based Strategy, Cutscenes, 3D Developer": "المسارات: Shader Graph، Multiplayer، Turn-Based Strategy، Cutscenes، 3D Developer",
+    "Tracks: Shader Graph, Multiplayer, Turn-Based Strategy, Cutscenes, 3D Developer": "Tracks: Shader Graph, Multiplayer, Turn-Based Strategy, Cutscenes, 3D Developer",
 
     // Certifications
     "Certifications": "الشهادات",
     "Complete C# Unity Game Developer 3D (Updated To Unity 6).": "Complete C# Unity Game Developer 3D (Updated To Unity 6).",
-    "By Gamedev.tv · on Udemy": "بواسطة Gamedev.tv · على Udemy",
+    "By Gamedev.tv · on Udemy": "By Gamedev.tv · on Udemy",
     "Game Design and Development": "Game Design and Development",
     "by Tuwaiq Academy": "by Tuwaiq Academy",
     "Introduction to Blender": "Introduction to Blender",
