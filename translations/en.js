@@ -39,4 +39,6 @@ export const en = {
     'nav_pdf_tooltip': 'Export PDF',
     'nav_theme_tooltip': 'Toggle Theme',
     'nav_lang_tooltip': 'Language',
+    'edu_onsite_title': 'Onsite',
+    'edu_online_title': 'Online',
 };

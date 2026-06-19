@@ -2605,6 +2605,35 @@ section:nth-child(8) { animation-delay: 0.7s; }
     background: var(--bg-secondary);
 }
 
+.education-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.education-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.education-column-title {
+    text-align: center;
+    font-family: var(--font-pixel);
+    color: var(--accent-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 900px) {
+    .education-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
 .education-card {
     max-width: 650px;
     margin: 0 auto 1.5rem;

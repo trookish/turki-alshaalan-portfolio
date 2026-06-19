@@ -39,4 +39,6 @@ export const ar = {
     'nav_pdf_tooltip': 'تصدير PDF',
     'nav_theme_tooltip': 'تغيير المظهر',
     'nav_lang_tooltip': 'لغة',
+    'edu_onsite_title': 'حضوري',
+    'edu_online_title': 'عن بعد',
 };
