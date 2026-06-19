@@ -99,6 +99,8 @@ export const termTranslations = {
     "Grade: 4.11": "المعدل: ٤.١١ من ٥",
     "Activities and Societies:": "الأنشطة والجمعيات:",
     "Enjaz Club - Game Development Club": "نادي إنجاز - نادي تطوير الألعاب",
+    "On-Site": "حضوري",
+    "Online / Self-Learning": "عن بعد / تعليم ذاتي",
     "Game Design and Development Bootcamp": "معسكر تصميم وتطوير الألعاب",
     "Tuwaiq Academy": "أكاديمية طويق",
     "Completed": "مكتمل",
