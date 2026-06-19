@@ -27,8 +27,9 @@ export const termTranslations = {
     "The Hidden Kanz": "The Hidden Kanz",
     "A combat-based dungeon crawler where players fight waves of skeleton AI enemies using sword combat and magic abilities to survive and clear the dungeon.": "لعبة استكشاف دهاليز قتالية حيث يقاتل اللاعبون موجات من الهياكل العظمية التي تعمل بالذكاء الاصطناعي باستخدام قتال السيوف والقدرات السحرية للنجاة وتطهير الدهليز.",
 
-    "Syntax Strike": "Syntax Strike",
+    "Syntax Strike": "سنتاكس سترايك",
     "A 3D educational action-RPG built in Unity where players master coding by solving Java puzzles. Features compiler-integrated combat mechanics, dynamic quest lines, and a custom evaluation companion. Turki engineered the C# game systems, player state controllers, parser integration, and enemy AI combat patterns.": "لعبة تقمص أدوار قتالية تعليمية ثلاثية الأبعاد مبنية في Unity حيث يتقن اللاعبون البرمجة عن طريق حل ألغاز Java. تتميز بميكانيكيات قتال متكاملة مع المترجم (Compiler)، ومهام ديناميكية، ورفيق تقييم مخصص. هندس تركي أنظمة لعبة C#، ومتحكمات حالة اللاعب، وتكامل المحلل (Parser)، وأنماط قتال الأعداء بالذكاء الاصطناعي.",
+
     "View Gallery & Specs →": "عرض المعرض والمواصفات ←",
 
     "DocuMind": "DocuMind",
