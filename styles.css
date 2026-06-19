@@ -4100,7 +4100,7 @@ html[dir="rtl"] .nav-container {
         display: flex !important;
         flex-wrap: nowrap !important;
         justify-content: center !important;
-        gap: 1rem !important;
+        gap: 0.5rem !important;
         max-width: 100% !important;
         margin: 0 auto !important;
     }
@@ -4108,20 +4108,20 @@ html[dir="rtl"] .nav-container {
     .education-column {
         width: 50% !important;
         box-sizing: border-box !important;
-        padding: 1rem !important;
+        padding: 0.5rem !important;
         text-align: center !important;
     }
 
     .education-column-title {
         text-align: center !important;
-        margin-bottom: 0.75rem !important;
-        font-size: 1.1rem !important;
+        margin-bottom: 0.25rem !important;
+        font-size: 1rem !important;
     }
 
     .education-card {
         width: 100% !important;
-        padding: 0.75rem !important;
-        gap: 0.75rem !important;
+        padding: 0.4rem !important;
+        gap: 0.25rem !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -4129,8 +4129,8 @@ html[dir="rtl"] .nav-container {
     }
 
     .education-icon {
-        width: 40px !important;
-        height: 40px !important;
+        width: 25px !important;
+        height: 25px !important;
         flex-shrink: 0 !important;
         margin: 0 auto !important;
     }
@@ -4141,23 +4141,23 @@ html[dir="rtl"] .nav-container {
     }
 
     .education-degree {
-        font-size: 0.9rem !important;
-        margin-bottom: 0.15rem !important;
+        font-size: 0.85rem !important;
+        margin-bottom: 0.1rem !important;
     }
 
     .education-university {
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
         margin-bottom: 0.1rem !important;
     }
 
     .education-date,
     .education-grade,
     .education-status {
-        font-size: 0.75rem !important;
+        font-size: 0.7rem !important;
     }
 
     .education-activities {
-        margin-top: 0.2rem !important;
+        margin-top: 0.1rem !important;
     }
 
     .activities-title {
