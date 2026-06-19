@@ -517,19 +517,19 @@ function initAchievementExpand() {
 */
 
 // Certificate Modal Functions
-function openCertModal(imageSrc) {
+window.openCertModal = function(imageSrc) {
     const modal = document.getElementById('certModal');
     const modalImg = document.getElementById('certModalImage');
     modalImg.src = imageSrc;
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-}
+};
 
-function closeCertModal() {
+window.closeCertModal = function() {
     const modal = document.getElementById('certModal');
     modal.classList.remove('active');
     document.body.style.overflow = '';
-}
+};
 
 // Close modal on Escape key
 document.addEventListener('keydown', (e) => {
