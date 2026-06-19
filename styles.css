@@ -3656,7 +3656,6 @@ html[dir="rtl"] .nav-container {
     .cert-modal-overlay,
     .cert-modal-content,
     .certification-actions,
-    .certification-image,
     footer {
         display: none !important;
         visibility: hidden !important;
@@ -3764,29 +3763,28 @@ html[dir="rtl"] .nav-container {
         display: inline-block !important;
     }
 
-    /* ── Card base — all cards centered & avoid page-break ── */
+    /* ── Card base — all cards avoid page-break ── */
     .project-card,
     .certification-card,
     .education-card,
     .experience-card,
     .achievement-card {
-        width: calc(50% - 0.75rem) !important;
-        box-sizing: border-box !important;
         border: 1px solid var(--border-color) !important;
         background: var(--bg-card) !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
         margin-bottom: 0.75rem !important;
         text-align: center !important;
+        box-sizing: border-box !important;
     }
 
     /* =============================================
-       HERO SECTION — Centered column layout
+       HERO SECTION — Vertically centered on page
        ============================================= */
     .hero {
-        min-height: 90vh !important;
-        height: auto !important;
-        padding: 50px 20px !important;
+        min-height: 0 !important;
+        height: 100vh !important;
+        padding: 0 20px !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
         display: flex !important;
@@ -4100,87 +4098,94 @@ html[dir="rtl"] .nav-container {
        ============================================= */
     .education-columns {
         display: flex !important;
-        flex-wrap: wrap !important;
+        flex-wrap: nowrap !important;
         justify-content: center !important;
-        
-        gap: 1.25rem !important;
+        gap: 1rem !important;
         max-width: 100% !important;
         margin: 0 auto !important;
     }
 
     .education-column {
-        width: 100% !important;
+        width: 50% !important;
         box-sizing: border-box !important;
-        padding: 1.25rem !important;
+        padding: 1rem !important;
         text-align: center !important;
     }
 
     .education-column-title {
         text-align: center !important;
-        margin-bottom: 1rem !important;
+        margin-bottom: 0.75rem !important;
+        font-size: 1.1rem !important;
     }
 
     .education-card {
-        padding: 1rem !important;
-        gap: 1rem !important;
+        width: 100% !important;
+        padding: 0.75rem !important;
+        gap: 0.75rem !important;
         display: flex !important;
+        flex-direction: column !important;
         align-items: center !important;
-        text-align: left !important;
+        text-align: center !important;
     }
 
     .education-icon {
-        width: 45px !important;
-        height: 45px !important;
+        width: 40px !important;
+        height: 40px !important;
         flex-shrink: 0 !important;
+        margin: 0 auto !important;
+    }
+
+    .education-content {
+        width: 100% !important;
+        text-align: center !important;
     }
 
     .education-degree {
-        font-size: 1rem !important;
-        margin-bottom: 0.2rem !important;
+        font-size: 0.9rem !important;
+        margin-bottom: 0.15rem !important;
     }
 
     .education-university {
-        font-size: 0.9rem !important;
-        margin-bottom: 0.15rem !important;
+        font-size: 0.8rem !important;
+        margin-bottom: 0.1rem !important;
     }
 
     .education-date,
     .education-grade,
     .education-status {
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
     }
 
     .education-activities {
-        margin-top: 0.25rem !important;
+        margin-top: 0.2rem !important;
     }
 
     .activities-title {
-        font-size: 0.8rem !important;
-        margin-bottom: 0.1rem !important;
+        font-size: 0.75rem !important;
+        margin-bottom: 0.05rem !important;
     }
 
     .activities-text {
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
     }
 
     /* =============================================
-       CERTIFICATIONS SECTION — Centered 2-col grid
+       CERTIFICATIONS SECTION — Centered 2-col grid with images
        ============================================= */
     .certifications-grid {
         display: flex !important;
         flex-wrap: wrap !important;
         justify-content: center !important;
-        
-        gap: 0.75rem !important;
+        gap: 0.5rem !important;
         width: 100% !important;
         margin: 0 auto !important;
     }
 
     .certification-card {
-        width: calc(50% - 0.75rem) !important;
+        width: calc(50% - 0.5rem) !important;
         box-sizing: border-box !important;
-        padding: 0.75rem !important;
-        gap: 0.25rem !important;
+        padding: 0.4rem !important;
+        gap: 0.2rem !important;
         min-height: auto !important;
         display: flex !important;
         flex-direction: column !important;
@@ -4189,20 +4194,39 @@ html[dir="rtl"] .nav-container {
         text-align: center !important;
     }
 
-    .certification-info {
+    .certification-image {
+        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
+        max-height: 70px !important;
+        width: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
         padding: 0 !important;
+    }
+
+    .certification-image img {
+        width: 100% !important;
+        height: 70px !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .certification-info {
+        padding: 0.2rem 0 0 0 !important;
         text-align: center !important;
     }
 
     .certification-title {
-        font-size: 0.85rem !important;
-        margin-bottom: 0.2rem !important;
+        font-size: 0.7rem !important;
+        margin-bottom: 0.1rem !important;
         font-weight: 700 !important;
         text-align: center !important;
+        line-height: 1.2 !important;
     }
 
     .certification-issuer {
-        font-size: 0.75rem !important;
+        font-size: 0.65rem !important;
         text-align: center !important;
     }
 
@@ -4235,7 +4259,7 @@ html[dir="rtl"] .nav-container {
     }
 
     .achievement-image {
-        height: 120px !important;
+        height: 150px !important;
         margin: 0 auto !important;
     }
 
@@ -4246,58 +4270,27 @@ html[dir="rtl"] .nav-container {
         object-fit: cover !important;
     }
 
-    .achievement-card .achievement-details {
-        display: none !important;
-        margin-top: 0.5rem !important;
-        text-align: left !important;
-    }
-
-    .achievement-meta {
-        display: none !important;
-    }
-
     .achievement-title {
         font-size: 0.95rem !important;
+        margin-top: 0.5rem !important;
     }
 
-    .achievement-issuer,
-    .achievement-date {
-        font-size: 0.8rem !important;
-    }
-
-    .achievement-description {
-        font-size: 0.8rem !important;
-    }
-
-    .achievement-tags {
-        display: none !important;
-    }
-
-    .achievement-tag {
-        font-size: 0.7rem !important;
-    }
-
-    .achievement-project {
-        text-align: center !important;
-    }
-
-    .achievement-project-image {
-        max-width: 200px !important;
-        margin: 0.5rem auto !important;
-    }
-
+    /* Hide everything except image + title in achievements */
+    .achievement-card .achievement-details,
+    .achievement-meta,
+    .achievement-tags,
+    .achievement-project-image,
+    .achievement-description,
+    .achievement-project,
     .achievement-team,
-    .achievement-mentor {
-        text-align: center !important;
-    }
-
+    .achievement-mentor,
     .team-list {
-        list-style: none !important;
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
         padding: 0 !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 0.25rem 0.75rem !important;
     }
 
     /* =============================================
