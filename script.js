@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Turki Alshaalan Portfolio Website
  * Interactive functionality and animations
  */
@@ -27,7 +27,11 @@ function getShowcase(lang) {
  * showcase modal which is opened on demand).
  */
 function localize(text) {
-    return termTranslations[text] || text;
+    const currentLang = localStorage.getItem('lang') || 'en';
+    if (currentLang === 'ar') {
+        return termTranslations[text] || text;
+    }
+    return text;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -578,6 +582,8 @@ function initProjectShowcase() {
     let currentProject = '';
     let currentIndex = 0;
     let screenshotsList = [];
+    let currentCard = null;
+    let currentIsAchievement = false;
 
 
     // Show screenshot by index
@@ -654,8 +660,9 @@ function initProjectShowcase() {
     }
 
     // Modal Control Functions
-    function openModal(projectKey, card, isAchievement = false) {
-        currentProject = projectKey;
+    // Modal Control Functions
+    function populateModalContent() {
+        if (!currentCard) return;
 
         const currentLang = localStorage.getItem('lang') || 'en';
         const isArabic = currentLang === 'ar';
@@ -666,25 +673,25 @@ function initProjectShowcase() {
         if (tagsLabel) tagsLabel.textContent = s.tech_stack;
         if (teamLabel) teamLabel.textContent = s.development_team;
 
-        if (isAchievement) {
+        if (currentIsAchievement) {
             // Scrape achievement details
-            const titleText = card.querySelector('.achievement-title').textContent.trim();
+            const titleText = currentCard.querySelector('.achievement-title').textContent.trim();
             const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
             modalTitleElem.textContent = `${s.achievement_title_prefix}${sysStatusName}.EXE`;
 
             detailsTitle.textContent = titleText;
 
             // Populate subtitle: Issuer & Date
-            const issuerText = card.querySelector('.achievement-issuer') ? card.querySelector('.achievement-issuer').textContent.trim() : '';
-            const dateText = card.querySelector('.achievement-date') ? card.querySelector('.achievement-date').textContent.trim() : '';
+            const issuerText = currentCard.querySelector('.achievement-issuer') ? currentCard.querySelector('.achievement-issuer').textContent.trim() : '';
+            const dateText = currentCard.querySelector('.achievement-date') ? currentCard.querySelector('.achievement-date').textContent.trim() : '';
             if (subtitleElem) {
                 subtitleElem.style.display = 'block';
                 subtitleElem.textContent = `${issuerText} | ${dateText}`;
             }
 
             // Description: Project/Game name + description
-            const projTitleEl = card.querySelector('.achievement-project .project-title');
-            const projDescEl = card.querySelector('.achievement-project .project-description');
+            const projTitleEl = currentCard.querySelector('.achievement-project .project-title');
+            const projDescEl = currentCard.querySelector('.achievement-project .project-description');
             let descHtml = '';
             if (projTitleEl) {
                 descHtml += `<strong style="color: var(--accent-primary); font-family: var(--font-terminal);">${localize(projTitleEl.textContent.trim())}</strong><br><br>`;
@@ -697,7 +704,7 @@ function initProjectShowcase() {
             // Populate tags (change label to TAGS)
             if (tagsLabel) tagsLabel.textContent = s.tags;
             detailsTags.innerHTML = '';
-            const tags = card.querySelectorAll('.achievement-tag');
+            const tags = currentCard.querySelectorAll('.achievement-tag');
             tags.forEach(tag => {
                 const span = document.createElement('span');
                 span.className = 'tag';
@@ -706,8 +713,8 @@ function initProjectShowcase() {
             });
 
             // Populate team / mentor
-            const teamElement = card.querySelector('.achievement-team');
-            const mentorElement = card.querySelector('.achievement-mentor');
+            const teamElement = currentCard.querySelector('.achievement-team');
+            const mentorElement = currentCard.querySelector('.achievement-mentor');
             if (teamLabel) teamLabel.textContent = s.team_and_mentors;
             
             if (teamElement || mentorElement) {
@@ -731,8 +738,8 @@ function initProjectShowcase() {
             detailsLink.style.display = 'none';
 
             // Build screenshots list (cover image + optional project screenshot)
-            const mainImgEl = card.querySelector('.achievement-image img');
-            const projImgEl = card.querySelector('.achievement-project-image img');
+            const mainImgEl = currentCard.querySelector('.achievement-image img');
+            const projImgEl = currentCard.querySelector('.achievement-project-image img');
             
             screenshotsList = [];
             if (mainImgEl) {
@@ -766,8 +773,8 @@ function initProjectShowcase() {
             }
         } else {
             // Scrape details from DOM
-            const titleText = card.querySelector('.project-title').textContent.trim();
-            const descText = card.querySelector('.project-description').textContent.trim();
+            const titleText = currentCard.querySelector('.project-title').textContent.trim();
+            const descText = currentCard.querySelector('.project-description').textContent.trim();
             
             // Format the SYSTEM STATUS text: uppercase with underscores
             const sysStatusName = titleText.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_');
@@ -779,7 +786,7 @@ function initProjectShowcase() {
 
             // Populate tech tags
             detailsTags.innerHTML = '';
-            const tags = card.querySelectorAll('.project-tags .tag');
+            const tags = currentCard.querySelectorAll('.project-tags .tag');
             tags.forEach(tag => {
                 const span = document.createElement('span');
                 span.className = 'tag';
@@ -788,7 +795,7 @@ function initProjectShowcase() {
             });
 
             // Populate team members
-            const teamElement = card.querySelector('.project-team');
+            const teamElement = currentCard.querySelector('.project-team');
             if (teamElement) {
                 detailsTeamContainer.className = 'ss-details-section project-team';
                 detailsTeamContainer.style.display = 'block';
@@ -800,7 +807,7 @@ function initProjectShowcase() {
             }
 
             // Populate external link button
-            const externalLink = card.querySelector('a.project-link');
+            const externalLink = currentCard.querySelector('a.project-link');
             if (externalLink) {
                 detailsLink.style.display = 'inline-block';
                 detailsLink.href = externalLink.href;
@@ -810,7 +817,7 @@ function initProjectShowcase() {
             }
 
             // Determine screenshot list
-            const projectScreenshots = getShowcase(currentLang).projects[projectKey];
+            const projectScreenshots = getShowcase(currentLang).projects[currentProject];
             if (projectScreenshots) {
                 screenshotsList = projectScreenshots;
                 
@@ -825,7 +832,7 @@ function initProjectShowcase() {
                 }
             } else {
                 // No gallery data, fall back to cover image
-                const coverImg = card.querySelector('.project-image img');
+                const coverImg = currentCard.querySelector('.project-image img');
                 const coverSrc = coverImg ? coverImg.src : '';
                 
                 screenshotsList = [{
@@ -843,6 +850,14 @@ function initProjectShowcase() {
 
         // Populate thumbnails
         generateThumbnails();
+    }
+
+    function openModal(projectKey, card, isAchievement = false) {
+        currentProject = projectKey;
+        currentCard = card;
+        currentIsAchievement = isAchievement;
+
+        populateModalContent();
 
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
@@ -938,6 +953,14 @@ function initProjectShowcase() {
             } else if (e.key === 'ArrowRight') {
                 showScreenshot(currentIndex + 1);
             }
+        }
+    });
+
+    // Re-populate and update the modal content when language is switched
+    document.addEventListener('languageChanged', () => {
+        if (modal.classList.contains('active') && currentCard) {
+            populateModalContent();
+            showScreenshot(currentIndex);
         }
     });
 }
@@ -1094,5 +1117,8 @@ function initLanguageToggle() {
                 }
             });
         });
+
+        // Dispatch custom event so other components (like showcase modal) can update
+        document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
     }
 }

@@ -48,7 +48,7 @@ export const termTranslations = {
     "Smart Campus Services": "Smart Campus Services",
     "A comprehensive Android application designed to provide campus services to students, including announcements, product browsing, shopping cart functionality, and contact features. Built using Java with SQLite for local data storage.": "تطبيق Android شامل مصمم لتقديم خدمات الحرم الجامعي للطلاب، بما في ذلك الإعلانات، وتصفح المنتجات، وعربة التسوق، وميزات الاتصال. تم بناؤه باستخدام Java مع SQLite لتخزين البيانات محلياً.",
 
-    "Graduation Project": "Graduation Project",
+    "Graduation Project": "مشروع التخرج",
     "A senior graduation project (IT492) investigating game-based learning effectiveness. Designed to assess the pedagogical impact of interactive coding puzzles (Parsons Problems) in reducing learning barriers for CS students. Evaluated using structured player feedback and learning-gain metrics. Abdulaziz led agile coordination and stakeholder reporting, Turki directed implementation logic, and Saud managed levels and user testing.": "مشروع تخرج للسنوات النهائية (IT492) يبحث في فعالية التعلم القائم على الألعاب. صُمم لتقييم الأثر التربوي لألغاز البرمجة التفاعلية (Parsons Problems) في تقليل حواجز التعلم لطلاب علوم الحاسب. تم تقييمه باستخدام تعليقات اللاعبين المنظمة ومقاييس اكتساب المعرفة. قاد عبد العزيز التنسيق المرن وإعداد التقارير لأصحاب المصلحة، ووجه تركي منطق التنفيذ، وأدار سعود المراحل واختبار المستخدمين.",
 
     // Skills
