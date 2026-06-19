@@ -22,7 +22,7 @@ export const en = {
     'game_info_block': '[K] Block',
     'game_info_exit': '[ESC] Exit',
     'hero_name': 'Turki Alshaalan',
-    'hero_title': 'IT Student | Game Developer | Unity & C# Programmer',
+    'hero_title': 'IT Graduand at IMSIU | Game Developer | Game Designer & Programmer',
     'hero_btn_projects': 'View Projects',
     'hero_btn_contact': 'Contact Me',
     'about_title': 'About Me',

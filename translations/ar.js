@@ -22,7 +22,7 @@ export const ar = {
     'game_info_block': '[K] دفاع/صد',
     'game_info_exit': '[ESC] خروج',
     'hero_name': 'تركي الشعلان',
-    'hero_title': 'طالب تقنية معلومات | مطور ألعاب | مبرمج Unity و C#',
+    'hero_title': 'خريج تقنية معلومات من جامعة الإمام | مطور ألعاب | مصمم ومبرمج ألعاب',
     'hero_btn_projects': 'عرض المشاريع',
     'hero_btn_contact': 'تواصل معي',
     'about_title': 'نبذة عني',
