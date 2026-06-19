@@ -1022,868 +1022,6 @@ section:nth-child(8) { animation-delay: 0.7s; }
     visibility: visible;
 }
 
-/* Print Styles - For PDF Export */
-@media print {
-    /* ============================================
-       PDF EXPORT — Professional Centered Layout
-       Works for both LTR (English) & RTL (Arabic)
-       ============================================ */
-
-    /* Preserve colors and backgrounds */
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
-    }
-
-    /* Page setup */
-    @page {
-        margin: 1.2cm 1.5cm !important;
-        size: A4 !important;
-    }
-
-    /* ── Global resets ── */
-    body, html {
-        background: var(--bg-primary) !important;
-        color: var(--text-primary) !important;
-        font-size: 11pt !important;
-        line-height: 1.5 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* Kill all animations / transitions for crisp print */
-    *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-        opacity: 1 !important;
-        transform: none !important;
-    }
-
-    /* ── Hide non-essential / interactive elements ── */
-    .navbar,
-    .sound-toggle,
-    .theme-toggle,
-    .lang-toggle,
-    .pdf-export,
-    .cv-download-nav,
-    .cv-download,
-    .play-icon-wrapper,
-    .hamburger,
-    .scroll-indicator,
-    .game-modal,
-    .showcase-btn,
-    .showcase-trigger,
-    .section-linkedin-btn,
-    .hero-buttons,
-    .expand-btn,
-    .cert-modal,
-    .cert-modal-overlay,
-    .cert-modal-content,
-    .certification-actions,
-    .certification-image,
-    footer {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* ── Container — full-width centered ── */
-    .container {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-        padding: 0 10px !important;
-        box-sizing: border-box !important;
-        text-align: center !important;
-    }
-
-    /* ── Sections ── */
-    section {
-        page-break-before: always !important;
-        page-break-inside: auto !important;
-        break-inside: auto !important;
-        padding: 25px 0 !important;
-        margin: 0 !important;
-        display: block !important;
-        text-align: center !important;
-        opacity: 1 !important;
-        transform: none !important;
-    }
-
-    section:first-of-type {
-        page-break-before: avoid !important;
-    }
-
-    /* Project categories — each on new page */
-    .project-category + .project-category {
-        page-break-before: always !important;
-        break-before: always !important;
-    }
-
-    /* ── Section Titles — always centered ── */
-    .section-title {
-        display: block !important;
-        width: auto !important;
-        max-width: 100% !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        left: auto !important;
-        right: auto !important;
-        position: relative !important;
-        transform: none !important;
-        text-align: center !important;
-        color: var(--accent-primary) !important;
-        border-bottom: 2px solid var(--accent-primary) !important;
-        padding-bottom: 0.5rem !important;
-        margin-bottom: 1.5rem !important;
-        font-size: 1.4rem !important;
-    }
-
-    .section-title::after {
-        display: none !important;
-    }
-
-    .section-subtitle {
-        text-align: center !important;
-        font-size: 0.95rem !important;
-        margin-bottom: 1.5rem !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        max-width: 80% !important;
-    }
-
-    .category-title {
-        text-align: center !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-
-    /* ── Typography ── */
-    h1, h2, h3, h4, h5, h6 {
-        color: var(--text-primary) !important;
-        page-break-after: avoid !important;
-        break-after: avoid !important;
-    }
-
-    a {
-        text-decoration: none !important;
-        color: inherit !important;
-    }
-
-    img {
-        max-width: 100% !important;
-        height: auto !important;
-    }
-
-    /* ── Preserve tag styling ── */
-    .tag {
-        background: var(--bg-tertiary) !important;
-        color: var(--text-secondary) !important;
-        border: 1px solid var(--border-color) !important;
-        font-size: 0.75rem !important;
-        padding: 0.15rem 0.5rem !important;
-        display: inline-block !important;
-    }
-
-    /* ── Card base — all cards centered & avoid page-break ── */
-    .project-card,
-    .certification-card,
-    .education-card,
-    .experience-card,
-    .achievement-card {
-        border: 1px solid var(--border-color) !important;
-        background: var(--bg-card) !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        margin-bottom: 0.75rem !important;
-        text-align: center !important;
-    }
-
-    /* =============================================
-       HERO SECTION — Centered column layout
-       ============================================= */
-    .hero {
-        min-height: auto !important;
-        height: auto !important;
-        padding: 50px 20px !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: var(--bg-secondary) !important;
-        text-align: center !important;
-    }
-
-    .hero-background {
-        display: block !important;
-    }
-
-    .hero-background::before {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
-    }
-
-    .hero-content {
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 20px !important;
-        width: 100% !important;
-        text-align: center !important;
-    }
-
-    .hero-image-container {
-        width: 130px !important;
-        height: 130px !important;
-        margin: 0 auto !important;
-    }
-
-    .hero-text {
-        text-align: center !important;
-        width: 100% !important;
-    }
-
-    .hero-name {
-        font-size: 1.8rem !important;
-        margin-bottom: 0.5rem !important;
-        color: var(--text-primary) !important;
-        text-align: center !important;
-    }
-
-    .hero-title {
-        font-size: 1rem !important;
-        margin-bottom: 0 !important;
-        color: var(--text-primary) !important;
-        text-align: center !important;
-    }
-
-    .hero-tagline {
-        color: var(--text-primary) !important;
-        text-align: center !important;
-    }
-
-    /* =============================================
-       ABOUT SECTION — Centered with image on top
-       ============================================= */
-    .about-content {
-        gap: 1.5rem !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-    }
-
-    .about-top {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 1.25rem !important;
-        width: 100% !important;
-        text-align: center !important;
-    }
-
-    .about-image-link {
-        display: block !important;
-        margin: 0 auto !important;
-        text-align: center !important;
-    }
-
-    .about-image-container {
-        width: 120px !important;
-        height: 120px !important;
-        margin: 0 auto !important;
-    }
-
-    .about-image {
-        width: 120px !important;
-        height: 120px !important;
-    }
-
-    .about-text {
-        text-align: center !important;
-        max-width: 90% !important;
-        margin: 0 auto !important;
-    }
-
-    .about-text p {
-        font-size: 0.95rem !important;
-        margin-bottom: 0.75rem !important;
-        text-align: center !important;
-    }
-
-    /* About highlights — centered grid */
-    .about-highlights {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 0.75rem !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 auto !important;
-    }
-
-    .highlight-item {
-        padding: 0.6rem 0.4rem !important;
-        text-align: center !important;
-        min-width: auto !important;
-        min-height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-
-    .highlight-number {
-        font-size: 1.4rem !important;
-        color: var(--accent-primary) !important;
-    }
-
-    .highlight-label {
-        font-size: 0.75rem !important;
-    }
-
-    .highlight-icon {
-        display: none !important;
-    }
-
-    /* =============================================
-       PROJECTS SECTION — Centered 2-column grid
-       ============================================= */
-    .projects-grid {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1rem !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-    }
-
-    .project-card {
-        text-align: left !important;
-    }
-
-    .project-image {
-        height: 110px !important;
-    }
-
-    .project-content {
-        padding: 0.75rem !important;
-    }
-
-    .project-title {
-        font-size: 1rem !important;
-        margin-bottom: 0.35rem !important;
-    }
-
-    .project-description {
-        font-size: 0.85rem !important;
-        margin-bottom: 0.5rem !important;
-        line-height: 1.4 !important;
-    }
-
-    .project-tags {
-        gap: 0.3rem !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-    }
-
-    /* =============================================
-       SKILLS SECTION — Centered rows
-       ============================================= */
-    .skill-row {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 1.25rem !important;
-        padding: 0.6rem 0 !important;
-        margin-bottom: 0 !important;
-        border-bottom: 1px solid var(--border-color) !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        text-align: left !important;
-    }
-
-    .skill-row:last-child {
-        border-bottom: none !important;
-    }
-
-    .skill-label {
-        min-width: 130px !important;
-        width: 130px !important;
-        flex-shrink: 0 !important;
-        text-align: right !important;
-        padding-top: 0 !important;
-    }
-
-    .skill-category-name {
-        font-family: var(--font-body) !important;
-        font-size: 0.85rem !important;
-        color: var(--accent-primary) !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-    }
-
-    .skill-tags {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 0.35rem !important;
-        flex: 1 !important;
-    }
-
-    /* =============================================
-       EXPERIENCE SECTION — Centered card
-       ============================================= */
-    .experience-card {
-        display: flex !important;
-        align-items: center !important;
-        gap: 1.25rem !important;
-        max-width: 600px !important;
-        margin: 0 auto !important;
-        padding: 1.25rem !important;
-        text-align: left !important;
-    }
-
-    .experience-icon {
-        width: 50px !important;
-        height: 50px !important;
-        flex-shrink: 0 !important;
-    }
-
-    .experience-logo {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    .experience-title {
-        font-size: 1.05rem !important;
-        margin-bottom: 0.2rem !important;
-    }
-
-    .experience-organization {
-        font-size: 0.9rem !important;
-        margin-bottom: 0.4rem !important;
-    }
-
-    .experience-description {
-        font-size: 0.85rem !important;
-        line-height: 1.5 !important;
-        margin-bottom: 0.4rem !important;
-    }
-
-    .experience-date {
-        font-size: 0.8rem !important;
-    }
-
-    /* Timeline (if used) */
-    .timeline {
-        padding-left: 1.5rem !important;
-        max-width: 600px !important;
-        margin: 0 auto !important;
-    }
-
-    .timeline-item {
-        padding-left: 1rem !important;
-        margin-bottom: 1rem !important;
-    }
-
-    .timeline-title {
-        font-size: 1.05rem !important;
-        margin-bottom: 0.25rem !important;
-    }
-
-    .timeline-organization {
-        font-size: 0.9rem !important;
-        margin-bottom: 0.4rem !important;
-    }
-
-    .timeline-description {
-        font-size: 0.85rem !important;
-        margin-bottom: 0.4rem !important;
-    }
-
-    .timeline-date {
-        font-size: 0.8rem !important;
-    }
-
-    /* =============================================
-       EDUCATION SECTION — Centered 2-column grid
-       ============================================= */
-    .education-columns {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 1.25rem !important;
-        max-width: 100% !important;
-        margin: 0 auto !important;
-    }
-
-    .education-column {
-        padding: 1.25rem !important;
-        text-align: center !important;
-    }
-
-    .education-column-title {
-        text-align: center !important;
-        margin-bottom: 1rem !important;
-    }
-
-    .education-card {
-        padding: 1rem !important;
-        gap: 1rem !important;
-        display: flex !important;
-        align-items: center !important;
-        text-align: left !important;
-    }
-
-    .education-icon {
-        width: 45px !important;
-        height: 45px !important;
-        flex-shrink: 0 !important;
-    }
-
-    .education-degree {
-        font-size: 1rem !important;
-        margin-bottom: 0.2rem !important;
-    }
-
-    .education-university {
-        font-size: 0.9rem !important;
-        margin-bottom: 0.15rem !important;
-    }
-
-    .education-date,
-    .education-grade,
-    .education-status {
-        font-size: 0.8rem !important;
-    }
-
-    .education-activities {
-        margin-top: 0.25rem !important;
-    }
-
-    .activities-title {
-        font-size: 0.8rem !important;
-        margin-bottom: 0.1rem !important;
-    }
-
-    .activities-text {
-        font-size: 0.8rem !important;
-    }
-
-    /* =============================================
-       CERTIFICATIONS SECTION — Centered 2-col grid
-       ============================================= */
-    .certifications-grid {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.75rem !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-    }
-
-    .certification-card {
-        padding: 0.75rem !important;
-        gap: 0.25rem !important;
-        min-height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-    }
-
-    .certification-info {
-        padding: 0 !important;
-        text-align: center !important;
-    }
-
-    .certification-title {
-        font-size: 0.85rem !important;
-        margin-bottom: 0.2rem !important;
-        font-weight: 700 !important;
-        text-align: center !important;
-    }
-
-    .certification-issuer {
-        font-size: 0.75rem !important;
-        text-align: center !important;
-    }
-
-    /* =============================================
-       ACHIEVEMENTS SECTION — Centered 2-col grid
-       ============================================= */
-    .achievements-grid {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1rem !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-    }
-
-    .achievement-card {
-        padding: 1rem !important;
-        min-height: auto !important;
-    }
-
-    .achievement-header {
-        text-align: center !important;
-    }
-
-    .achievement-header-content {
-        text-align: center !important;
-    }
-
-    .achievement-image {
-        height: 120px !important;
-        margin: 0 auto !important;
-    }
-
-    .achievement-image img {
-        display: block !important;
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-    }
-
-    .achievement-card .achievement-details {
-        display: block !important;
-        margin-top: 0.5rem !important;
-        text-align: left !important;
-    }
-
-    .achievement-meta {
-        text-align: center !important;
-        margin-top: 0.25rem !important;
-    }
-
-    .achievement-title {
-        font-size: 0.95rem !important;
-    }
-
-    .achievement-issuer,
-    .achievement-date {
-        font-size: 0.8rem !important;
-    }
-
-    .achievement-description {
-        font-size: 0.8rem !important;
-    }
-
-    .achievement-tags {
-        gap: 0.25rem !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-    }
-
-    .achievement-tag {
-        font-size: 0.7rem !important;
-    }
-
-    .achievement-project {
-        text-align: center !important;
-    }
-
-    .achievement-project-image {
-        max-width: 200px !important;
-        margin: 0.5rem auto !important;
-    }
-
-    .achievement-team,
-    .achievement-mentor {
-        text-align: center !important;
-    }
-
-    .team-list {
-        list-style: none !important;
-        padding: 0 !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 0.25rem 0.75rem !important;
-    }
-
-    /* =============================================
-       CONTACT SECTION — Centered
-       ============================================= */
-    .contact-content {
-        max-width: 500px !important;
-        margin: 0 auto !important;
-        text-align: center !important;
-    }
-
-    .contact-info {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 0.75rem !important;
-    }
-
-    .contact-item {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 0.75rem !important;
-    }
-
-    .contact-icon {
-        width: 32px !important;
-        height: 32px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        flex-shrink: 0 !important;
-    }
-
-    .contact-icon svg {
-        width: 18px !important;
-        height: 18px !important;
-    }
-
-    .contact-details {
-        text-align: left !important;
-    }
-
-    .contact-label {
-        font-size: 0.75rem !important;
-        margin-bottom: 0.1rem !important;
-        display: block !important;
-    }
-
-    .contact-value {
-        font-size: 0.9rem !important;
-        color: var(--accent-primary) !important;
-    }
-
-    /* =============================================
-       SKILL PROGRESS BARS (if present)
-       ============================================= */
-    .skill-progress {
-        width: var(--progress) !important;
-    }
-
-    /* =============================================
-       RTL PRINT OVERRIDES (Arabic)
-       ============================================= */
-    html[dir="rtl"] .container {
-        text-align: center !important;
-    }
-
-    html[dir="rtl"] section {
-        text-align: center !important;
-    }
-
-    html[dir="rtl"] .hero-content,
-    html[dir="rtl"] .hero-text,
-    html[dir="rtl"] .hero-name,
-    html[dir="rtl"] .hero-title,
-    html[dir="rtl"] .hero-tagline {
-        text-align: center !important;
-    }
-
-    html[dir="rtl"] .about-top,
-    html[dir="rtl"] .about-text,
-    html[dir="rtl"] .about-text p {
-        text-align: center !important;
-    }
-
-    html[dir="rtl"] .section-title {
-        text-align: center !important;
-        left: auto !important;
-        right: auto !important;
-        transform: none !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-
-    html[dir="rtl"] .section-title::after {
-        display: none !important;
-    }
-
-    html[dir="rtl"] .section-subtitle {
-        text-align: center !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-
-    html[dir="rtl"] .skill-row {
-        flex-direction: row-reverse !important;
-        text-align: right !important;
-    }
-
-    html[dir="rtl"] .skill-label {
-        text-align: left !important;
-    }
-
-    html[dir="rtl"] .skill-tags {
-        justify-content: flex-end !important;
-    }
-
-    html[dir="rtl"] .experience-card {
-        flex-direction: row-reverse !important;
-        text-align: right !important;
-    }
-
-    html[dir="rtl"] .education-card {
-        flex-direction: row-reverse !important;
-        text-align: right !important;
-    }
-
-    html[dir="rtl"] .contact-item {
-        flex-direction: row-reverse !important;
-    }
-
-    html[dir="rtl"] .contact-details {
-        text-align: right !important;
-    }
-
-    html[dir="rtl"] .project-card {
-        text-align: right !important;
-    }
-
-    html[dir="rtl"] .achievement-card .achievement-details {
-        text-align: right !important;
-    }
-
-    html[dir="rtl"] .certification-card,
-    html[dir="rtl"] .certification-info,
-    html[dir="rtl"] .certification-title,
-    html[dir="rtl"] .certification-issuer {
-        text-align: center !important;
-    }
-
-    html[dir="rtl"] .achievement-tags {
-        justify-content: center !important;
-    }
-
-    html[dir="rtl"] .team-list {
-        justify-content: center !important;
-    }
-
-    /* Keep navbar hidden in RTL print too */
-    html[dir="rtl"] .navbar {
-        display: none !important;
-    }
-
-    html[dir="rtl"] .timeline {
-        padding-left: 0 !important;
-        padding-right: 1.5rem !important;
-    }
-
-    html[dir="rtl"] .timeline-item {
-        padding-left: 0 !important;
-        padding-right: 1rem !important;
-    }
-
-    html[dir="rtl"] .timeline::before {
-        left: auto !important;
-        right: 3px !important;
-    }
-}
 
 /* Sound Toggle - Fixed bottom right, always visible */
 .sound-toggle {
@@ -4455,5 +3593,893 @@ html[dir="rtl"] .nav-container {
         direction: rtl !important;
         text-align: right !important;
         align-items: flex-start !important;
+    }
+}
+
+
+/* Print Styles - For PDF Export */
+@media print {
+    /* ============================================
+       PDF EXPORT — Professional Centered Layout
+       Works for both LTR (English) & RTL (Arabic)
+       ============================================ */
+
+    /* Preserve colors and backgrounds */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* Page setup */
+    @page {
+        margin: 1.2cm 1.5cm !important;
+        size: A4 !important;
+    }
+
+    /* ── Global resets ── */
+    body, html {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        font-size: 11pt !important;
+        line-height: 1.5 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Kill all animations / transitions for crisp print */
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    /* ── Hide non-essential / interactive elements ── */
+    .navbar,
+    .sound-toggle,
+    .theme-toggle,
+    .lang-toggle,
+    .pdf-export,
+    .cv-download-nav,
+    .cv-download,
+    .play-icon-wrapper,
+    .hamburger,
+    .scroll-indicator,
+    .game-modal,
+    .showcase-btn,
+    .showcase-trigger,
+    .section-linkedin-btn,
+    .hero-buttons,
+    .expand-btn,
+    .cert-modal,
+    .cert-modal-overlay,
+    .cert-modal-content,
+    .certification-actions,
+    .certification-image,
+    footer {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* ── Container — full-width centered ── */
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 10px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+    }
+
+    /* ── Sections ── */
+    section {
+        page-break-before: always !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+        padding: 25px 0 !important;
+        margin: 0 !important;
+        display: block !important;
+        text-align: center !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    section:first-of-type {
+        page-break-before: avoid !important;
+    }
+
+    /* Project categories — each on new page */
+    .project-category + .project-category {
+        page-break-before: always !important;
+        break-before: always !important;
+    }
+
+    /* ── Section Titles — always centered ── */
+    .section-title {
+        display: block !important;
+        width: auto !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        left: auto !important;
+        right: auto !important;
+        position: relative !important;
+        transform: none !important;
+        text-align: center !important;
+        color: var(--accent-primary) !important;
+        border-bottom: 2px solid var(--accent-primary) !important;
+        padding-bottom: 0.5rem !important;
+        margin-bottom: 1.5rem !important;
+        font-size: 1.4rem !important;
+    }
+
+    .section-title::after {
+        display: none !important;
+    }
+
+    .section-subtitle {
+        text-align: center !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 1.5rem !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 80% !important;
+    }
+
+    .category-title {
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* ── Typography ── */
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--text-primary) !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+    }
+
+    a {
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* ── Preserve tag styling ── */
+    .tag {
+        background: var(--bg-tertiary) !important;
+        color: var(--text-secondary) !important;
+        border: 1px solid var(--border-color) !important;
+        font-size: 0.75rem !important;
+        padding: 0.15rem 0.5rem !important;
+        display: inline-block !important;
+    }
+
+    /* ── Card base — all cards centered & avoid page-break ── */
+    .project-card,
+    .certification-card,
+    .education-card,
+    .experience-card,
+    .achievement-card {
+        width: calc(50% - 0.75rem) !important;
+        box-sizing: border-box !important;
+        border: 1px solid var(--border-color) !important;
+        background: var(--bg-card) !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin-bottom: 0.75rem !important;
+        text-align: center !important;
+    }
+
+    /* =============================================
+       HERO SECTION — Centered column layout
+       ============================================= */
+    .hero {
+        min-height: auto !important;
+        height: auto !important;
+        padding: 50px 20px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: var(--bg-secondary) !important;
+        text-align: center !important;
+    }
+
+    .hero-background {
+        display: block !important;
+    }
+
+    .hero-background::before {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    .hero-content {
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 20px !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .hero-image-container {
+        width: 130px !important;
+        height: 130px !important;
+        margin: 0 auto !important;
+    }
+
+    .hero-text {
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .hero-name {
+        font-size: 1.8rem !important;
+        margin-bottom: 0.5rem !important;
+        color: var(--text-primary) !important;
+        text-align: center !important;
+    }
+
+    .hero-title {
+        font-size: 1rem !important;
+        margin-bottom: 0 !important;
+        color: var(--text-primary) !important;
+        text-align: center !important;
+    }
+
+    .hero-tagline {
+        color: var(--text-primary) !important;
+        text-align: center !important;
+    }
+
+    /* =============================================
+       ABOUT SECTION — Centered with image on top
+       ============================================= */
+    .about-content {
+        gap: 1.5rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .about-top {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1.25rem !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .about-image-link {
+        display: block !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+    }
+
+    .about-image-container {
+        width: 120px !important;
+        height: 120px !important;
+        margin: 0 auto !important;
+    }
+
+    .about-image {
+        width: 120px !important;
+        height: 120px !important;
+    }
+
+    .about-text {
+        text-align: center !important;
+        max-width: 90% !important;
+        margin: 0 auto !important;
+    }
+
+    .about-text p {
+        font-size: 0.95rem !important;
+        margin-bottom: 0.75rem !important;
+        text-align: center !important;
+    }
+
+    /* About highlights — centered grid */
+    .about-highlights {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        
+        gap: 0.75rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .highlight-item {
+        width: calc(33.333% - 0.6rem) !important;
+        box-sizing: border-box !important;
+        padding: 0.6rem 0.4rem !important;
+        text-align: center !important;
+        min-width: auto !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .highlight-number {
+        font-size: 1.4rem !important;
+        color: var(--accent-primary) !important;
+    }
+
+    .highlight-label {
+        font-size: 0.75rem !important;
+    }
+
+    .highlight-icon {
+        display: none !important;
+    }
+
+    /* =============================================
+       PROJECTS SECTION — Centered 2-column grid
+       ============================================= */
+    .projects-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        
+        gap: 1rem !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .project-card {
+        width: calc(50% - 0.75rem) !important;
+        box-sizing: border-box !important;
+        text-align: left !important;
+    }
+
+    .project-image {
+        height: 110px !important;
+    }
+
+    .project-content {
+        padding: 0.75rem !important;
+    }
+
+    .project-title {
+        font-size: 1rem !important;
+        margin-bottom: 0.35rem !important;
+    }
+
+    .project-description {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.5rem !important;
+        line-height: 1.4 !important;
+    }
+
+    .project-tags {
+        gap: 0.3rem !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* =============================================
+       SKILLS SECTION — Centered rows
+       ============================================= */
+    .skill-row {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 1.25rem !important;
+        padding: 0.6rem 0 !important;
+        margin-bottom: 0 !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        text-align: left !important;
+    }
+
+    .skill-row:last-child {
+        border-bottom: none !important;
+    }
+
+    .skill-label {
+        min-width: 130px !important;
+        width: 130px !important;
+        flex-shrink: 0 !important;
+        text-align: right !important;
+        padding-top: 0 !important;
+    }
+
+    .skill-category-name {
+        font-family: var(--font-body) !important;
+        font-size: 0.85rem !important;
+        color: var(--accent-primary) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+    }
+
+    .skill-tags {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.35rem !important;
+        flex: 1 !important;
+    }
+
+    /* =============================================
+       EXPERIENCE SECTION — Centered card
+       ============================================= */
+    .experience-card {
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.25rem !important;
+        max-width: 600px !important;
+        margin: 0 auto !important;
+        padding: 1.25rem !important;
+        text-align: left !important;
+    }
+
+    .experience-icon {
+        width: 50px !important;
+        height: 50px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .experience-logo {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .experience-title {
+        font-size: 1.05rem !important;
+        margin-bottom: 0.2rem !important;
+    }
+
+    .experience-organization {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.4rem !important;
+    }
+
+    .experience-description {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 0.4rem !important;
+    }
+
+    .experience-date {
+        font-size: 0.8rem !important;
+    }
+
+    /* Timeline (if used) */
+    .timeline {
+        padding-left: 1.5rem !important;
+        max-width: 600px !important;
+        margin: 0 auto !important;
+    }
+
+    .timeline-item {
+        padding-left: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .timeline-title {
+        font-size: 1.05rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+
+    .timeline-organization {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.4rem !important;
+    }
+
+    .timeline-description {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.4rem !important;
+    }
+
+    .timeline-date {
+        font-size: 0.8rem !important;
+    }
+
+    /* =============================================
+       EDUCATION SECTION — Centered 2-column grid
+       ============================================= */
+    .education-columns {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        
+        gap: 1.25rem !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .education-column {
+        width: calc(50% - 0.75rem) !important;
+        box-sizing: border-box !important;
+        padding: 1.25rem !important;
+        text-align: center !important;
+    }
+
+    .education-column-title {
+        text-align: center !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .education-card {
+        padding: 1rem !important;
+        gap: 1rem !important;
+        display: flex !important;
+        align-items: center !important;
+        text-align: left !important;
+    }
+
+    .education-icon {
+        width: 45px !important;
+        height: 45px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .education-degree {
+        font-size: 1rem !important;
+        margin-bottom: 0.2rem !important;
+    }
+
+    .education-university {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.15rem !important;
+    }
+
+    .education-date,
+    .education-grade,
+    .education-status {
+        font-size: 0.8rem !important;
+    }
+
+    .education-activities {
+        margin-top: 0.25rem !important;
+    }
+
+    .activities-title {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+
+    .activities-text {
+        font-size: 0.8rem !important;
+    }
+
+    /* =============================================
+       CERTIFICATIONS SECTION — Centered 2-col grid
+       ============================================= */
+    .certifications-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        
+        gap: 0.75rem !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .certification-card {
+        width: calc(50% - 0.75rem) !important;
+        box-sizing: border-box !important;
+        padding: 0.75rem !important;
+        gap: 0.25rem !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    .certification-info {
+        padding: 0 !important;
+        text-align: center !important;
+    }
+
+    .certification-title {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.2rem !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+    }
+
+    .certification-issuer {
+        font-size: 0.75rem !important;
+        text-align: center !important;
+    }
+
+    /* =============================================
+       ACHIEVEMENTS SECTION — Centered 2-col grid
+       ============================================= */
+    .achievements-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        
+        gap: 1rem !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .achievement-card {
+        width: calc(50% - 0.75rem) !important;
+        box-sizing: border-box !important;
+        padding: 1rem !important;
+        min-height: auto !important;
+    }
+
+    .achievement-header {
+        text-align: center !important;
+    }
+
+    .achievement-header-content {
+        text-align: center !important;
+    }
+
+    .achievement-image {
+        height: 120px !important;
+        margin: 0 auto !important;
+    }
+
+    .achievement-image img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .achievement-card .achievement-details {
+        display: block !important;
+        margin-top: 0.5rem !important;
+        text-align: left !important;
+    }
+
+    .achievement-meta {
+        text-align: center !important;
+        margin-top: 0.25rem !important;
+    }
+
+    .achievement-title {
+        font-size: 0.95rem !important;
+    }
+
+    .achievement-issuer,
+    .achievement-date {
+        font-size: 0.8rem !important;
+    }
+
+    .achievement-description {
+        font-size: 0.8rem !important;
+    }
+
+    .achievement-tags {
+        gap: 0.25rem !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+
+    .achievement-tag {
+        font-size: 0.7rem !important;
+    }
+
+    .achievement-project {
+        text-align: center !important;
+    }
+
+    .achievement-project-image {
+        max-width: 200px !important;
+        margin: 0.5rem auto !important;
+    }
+
+    .achievement-team,
+    .achievement-mentor {
+        text-align: center !important;
+    }
+
+    .team-list {
+        list-style: none !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 0.25rem 0.75rem !important;
+    }
+
+    /* =============================================
+       CONTACT SECTION — Centered
+       ============================================= */
+    .contact-content {
+        max-width: 500px !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+    }
+
+    .contact-info {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+    }
+
+    .contact-item {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.75rem !important;
+    }
+
+    .contact-icon {
+        width: 32px !important;
+        height: 32px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .contact-icon svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .contact-details {
+        text-align: left !important;
+    }
+
+    .contact-label {
+        font-size: 0.75rem !important;
+        margin-bottom: 0.1rem !important;
+        display: block !important;
+    }
+
+    .contact-value {
+        font-size: 0.9rem !important;
+        color: var(--accent-primary) !important;
+    }
+
+    /* =============================================
+       SKILL PROGRESS BARS (if present)
+       ============================================= */
+    .skill-progress {
+        width: var(--progress) !important;
+    }
+
+    /* =============================================
+       RTL PRINT OVERRIDES (Arabic)
+       ============================================= */
+    html[dir="rtl"] .container {
+        text-align: center !important;
+    }
+
+    html[dir="rtl"] section {
+        text-align: center !important;
+    }
+
+    html[dir="rtl"] .hero-content,
+    html[dir="rtl"] .hero-text,
+    html[dir="rtl"] .hero-name,
+    html[dir="rtl"] .hero-title,
+    html[dir="rtl"] .hero-tagline {
+        text-align: center !important;
+    }
+
+    html[dir="rtl"] .about-top,
+    html[dir="rtl"] .about-text,
+    html[dir="rtl"] .about-text p {
+        text-align: center !important;
+    }
+
+    html[dir="rtl"] .section-title {
+        text-align: center !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    html[dir="rtl"] .section-title::after {
+        display: none !important;
+    }
+
+    html[dir="rtl"] .section-subtitle {
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    html[dir="rtl"] .skill-row {
+        flex-direction: row-reverse !important;
+        text-align: right !important;
+    }
+
+    html[dir="rtl"] .skill-label {
+        text-align: left !important;
+    }
+
+    html[dir="rtl"] .skill-tags {
+        justify-content: flex-end !important;
+    }
+
+    html[dir="rtl"] .experience-card {
+        flex-direction: row-reverse !important;
+        text-align: right !important;
+    }
+
+    html[dir="rtl"] .education-card {
+        flex-direction: row-reverse !important;
+        text-align: right !important;
+    }
+
+    html[dir="rtl"] .contact-item {
+        flex-direction: row-reverse !important;
+    }
+
+    html[dir="rtl"] .contact-details {
+        text-align: right !important;
+    }
+
+    html[dir="rtl"] .project-card {
+        width: calc(50% - 0.75rem) !important;
+        box-sizing: border-box !important;
+        text-align: right !important;
+    }
+
+    html[dir="rtl"] .achievement-card .achievement-details {
+        text-align: right !important;
+    }
+
+    html[dir="rtl"] .certification-card,
+    html[dir="rtl"] .certification-info,
+    html[dir="rtl"] .certification-title,
+    html[dir="rtl"] .certification-issuer {
+        text-align: center !important;
+    }
+
+    html[dir="rtl"] .achievement-tags {
+        justify-content: center !important;
+    }
+
+    html[dir="rtl"] .team-list {
+        justify-content: center !important;
+    }
+
+    /* Keep navbar hidden in RTL print too */
+    html[dir="rtl"] .navbar {
+        display: none !important;
+    }
+
+    html[dir="rtl"] .timeline {
+        padding-left: 0 !important;
+        padding-right: 1.5rem !important;
+    }
+
+    html[dir="rtl"] .timeline-item {
+        padding-left: 0 !important;
+        padding-right: 1rem !important;
+    }
+
+    html[dir="rtl"] .timeline::before {
+        left: auto !important;
+        right: 3px !important;
     }
 }
