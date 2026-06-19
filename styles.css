@@ -2616,6 +2616,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
 .education-column {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
 }
 
 .education-column-title {
@@ -2635,19 +2636,17 @@ section:nth-child(8) { animation-delay: 0.7s; }
 }
 
 .education-card {
-    max-width: 650px;
-    margin: 0 auto 1.5rem;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     display: flex;
     align-items: center;
+    flex: 1;
     gap: 1.25rem;
     background: var(--bg-card);
     border: 3px solid var(--border-color);
     padding: 1.5rem;
     transition: all var(--transition-fast);
-}
-
-.education-card:last-of-type {
-    margin-bottom: 0;
 }
 
 .education-card:hover {
