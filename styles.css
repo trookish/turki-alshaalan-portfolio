@@ -3784,7 +3784,7 @@ html[dir="rtl"] .nav-container {
        HERO SECTION — Centered column layout
        ============================================= */
     .hero {
-        min-height: auto !important;
+        min-height: 90vh !important;
         height: auto !important;
         padding: 50px 20px !important;
         page-break-inside: avoid !important;
@@ -4109,7 +4109,7 @@ html[dir="rtl"] .nav-container {
     }
 
     .education-column {
-        width: calc(50% - 0.75rem) !important;
+        width: 100% !important;
         box-sizing: border-box !important;
         padding: 1.25rem !important;
         text-align: center !important;
@@ -4247,14 +4247,13 @@ html[dir="rtl"] .nav-container {
     }
 
     .achievement-card .achievement-details {
-        display: block !important;
+        display: none !important;
         margin-top: 0.5rem !important;
         text-align: left !important;
     }
 
     .achievement-meta {
-        text-align: center !important;
-        margin-top: 0.25rem !important;
+        display: none !important;
     }
 
     .achievement-title {
@@ -4271,10 +4270,7 @@ html[dir="rtl"] .nav-container {
     }
 
     .achievement-tags {
-        gap: 0.25rem !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
+        display: none !important;
     }
 
     .achievement-tag {
