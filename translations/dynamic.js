@@ -155,6 +155,7 @@ export const termTranslations = {
     "Location": "الموقع",
     "LinkedIn": "لينكدإن",
     "GitHub": "قيت هب",
+    "itch.io": "إيتش.أيو",
     "Riyadh, Saudi Arabia": "الرياض، المملكة العربية السعودية",
     "Download CV": "تحميل السيرة الذاتية",
 
