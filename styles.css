@@ -2284,6 +2284,14 @@ section:nth-child(8) { animation-delay: 0.7s; }
     letter-spacing: 0.5px;
 }
 
+.certification-date {
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-top: 0.15rem;
+}
+
 .certification-actions {
     display: flex;
     gap: 0.5rem;
@@ -4231,6 +4239,11 @@ html[dir="rtl"] .nav-container {
         text-align: center !important;
     }
 
+    .certification-date {
+        font-size: 0.65rem !important;
+        text-align: center !important;
+    }
+
     /* =============================================
        ACHIEVEMENTS SECTION — Centered 2-col grid
        ============================================= */
@@ -4441,7 +4454,8 @@ html[dir="rtl"] .nav-container {
     html[dir="rtl"] .certification-card,
     html[dir="rtl"] .certification-info,
     html[dir="rtl"] .certification-title,
-    html[dir="rtl"] .certification-issuer {
+    html[dir="rtl"] .certification-issuer,
+    html[dir="rtl"] .certification-date {
         text-align: center !important;
     }
 

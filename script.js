@@ -1035,7 +1035,7 @@ function initLanguageToggle() {
             // Education cards
             '.education-degree', '.education-university', '.education-date', '.education-grade', '.activities-title', '.activities-text',
             // Certifications
-            '.certification-title', '.certification-issuer',
+            '.certification-title', '.certification-issuer', '.certification-date',
             // Achievements
             '.achievement-title', '.achievement-issuer', '.achievement-date', '.achievement-project .project-title', '.achievement-project .project-description',
             '.achievement-team .team-title', '.achievement-team .team-name', '.achievement-team .team-role', '.achievement-mentor .mentor-title', '.achievement-mentor .mentor-name', '.achievement-mentor .team-name',

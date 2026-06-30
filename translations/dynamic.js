@@ -131,6 +131,12 @@ export const termTranslations = {
     "3D Game Developer Bootcamp": "3D Game Developer Bootcamp",
     "Imam Mohammad Ibn Saud Islamic University (IMSIU)": "جامعة الإمام محمد بن سعود الإسلامية",
     "View": "عرض",
+    "Issued Jan 2025": "أُصدرت يناير ٢٠٢٥",
+    "Issued Sep 2025": "أُصدرت سبتمبر ٢٠٢٥",
+    "Issued Dec 2024": "أُصدرت ديسمبر ٢٠٢٤",
+    "Issued Nov 2024": "أُصدرت نوفمبر ٢٠٢٤",
+    "Issued Oct 2024": "أُصدرت أكتوبر ٢٠٢٤",
+    "Issued Jun 2026": "أُصدرت يونيو ٢٠٢٦",
 
     // Achievements
     "Achievements": "الإنجازات",
