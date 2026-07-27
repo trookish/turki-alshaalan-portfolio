@@ -3,7 +3,7 @@
 // Game Juice / Game Feel Edition
 // ========================================
 
-import { en as gameEn, ar as gameAr } from './translations/game.js';
+import { en as gameEn, ar as gameAr } from './translations/game.js?v=2';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
