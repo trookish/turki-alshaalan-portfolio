@@ -23,6 +23,7 @@ export const en = {
     'game_info_exit': '[ESC] Exit',
     'hero_name': 'Turki Alshaalan',
     'hero_title': 'IT Graduand at IMSIU | Game Developer | Game Designer & Programmer',
+    'hero_tagline': 'I build games that feel great to play — from rough idea to shipped product.',
     'hero_btn_projects': 'View Projects',
     'hero_btn_contact': 'Contact Me',
     'about_title': 'About Me',

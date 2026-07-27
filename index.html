@@ -5,12 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turki Alshaalan | Game Developer & Unity Programmer</title>
-    <meta name="description" content="Portfolio of Turki Alshaalan - IT Student, Game Developer, Unity & C# Programmer">
+    <meta name="description" content="Portfolio of Turki Alshaalan - IT Graduand at IMSIU, Game Developer, Unity & C# Programmer. Playable projects, shipped games, and a built-in battle minigame.">
+    <meta name="author" content="Turki Alshaalan">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="canonical" href="https://trookish.github.io/turki-alshaalan-portfolio/">
+    <link rel="icon" type="image/webp" href="images/Game/Play.webp">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Turki Alshaalan | Game Developer & Unity Programmer">
+    <meta property="og:description" content="Portfolio of Turki Alshaalan - IT Graduand at IMSIU, Game Developer, Unity & C# Programmer.">
+    <meta property="og:url" content="https://trookish.github.io/turki-alshaalan-portfolio/">
+    <meta property="og:image" content="https://trookish.github.io/turki-alshaalan-portfolio/images/Background/Background.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Turki Alshaalan | Game Developer & Unity Programmer">
+    <meta name="twitter:description" content="Portfolio of Turki Alshaalan - IT Graduand at IMSIU, Game Developer, Unity & C# Programmer.">
+    <meta name="twitter:image" content="https://trookish.github.io/turki-alshaalan-portfolio/images/Background/Background.webp">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Turki Alshaalan",
+        "url": "https://trookish.github.io/turki-alshaalan-portfolio/",
+        "email": "mailto:trookishgamedev@gmail.com",
+        "jobTitle": "Game Developer",
+        "address": { "@type": "PostalAddress", "addressLocality": "Riyadh", "addressCountry": "SA" },
+        "sameAs": [
+            "https://linkedin.com/in/turki-alshaalan",
+            "https://github.com/trookish",
+            "https://trookish.itch.io"
+        ]
+    }
+    </script>
+
+    <link rel="preload" as="image" href="images/Background/Background.webp">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Handjet:wght@400;500;600;700&family=Cairo:wght@400;600;700&family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Handjet:wght@400;700&family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;600;700&display=swap"
         rel="stylesheet">
 </head>
 
@@ -97,7 +131,7 @@
                         <span class="lang-divider">/</span>
                         <span class="lang-code ar">AR</span>
                     </button>
-                    <span class="nav-btn-label" id="langToggleLabel" data-translate="nav_lang_label">Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©</span>
+                    <span class="nav-btn-label" id="langToggleLabel" data-translate="nav_lang_label">العربية</span>
                 </div>
                 <div class="hamburger" id="hamburger">
                     <span></span>
@@ -116,7 +150,7 @@
                 <span class="game-title" data-translate="game_title">TURKI'S BATTLE GAME</span>
                 <div class="game-header-controls">
                     <button class="control-toggle" id="controlToggle" title="Toggle Mobile Controls">
-                        <span class="toggle-icon">ðŸ“±</span>
+                        <span class="toggle-icon">📱</span>
                         <span class="toggle-text" data-translate="game_btn_mobile">Mobile</span>
                     </button>
                     <button class="game-close" id="gameClose">&times;</button>
@@ -176,6 +210,7 @@
             <div class="hero-text">
                 <h1 class="hero-name" data-translate="hero_name">Turki Alshaalan</h1>
                 <h2 class="hero-title" data-translate="hero_title">IT Graduand at IMSIU | Game Developer | Game Designer & Programmer</h2>
+                <p class="hero-tagline" data-translate="hero_tagline">I build games that feel great to play — from rough idea to shipped product.</p>
                 <div class="hero-buttons">
                     <a href="#projects" class="btn btn-primary" data-translate="hero_btn_projects">View Projects</a>
                     <a href="#contact" class="btn btn-secondary" data-translate="hero_btn_contact">Contact Me</a>
@@ -198,7 +233,7 @@
                     <a href="https://linkedin.com/in/turki-alshaalan" target="_blank" rel="noopener noreferrer"
                         class="hero-image-link about-image-link">
                         <div class="hero-image-container about-image-container">
-                            <img src="images/PFP/profile.webp" alt="Turki Alshaalan" class="hero-image about-image">
+                            <img loading="lazy" decoding="async" src="images/PFP/profile.webp" alt="Turki Alshaalan" class="hero-image about-image">
                             <div class="hero-image-frame"></div>
                         </div>
                     </a>
@@ -269,7 +304,7 @@
                     <div class="project-card" data-project="dungeon-puzzle">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/DungeonPuzzle.webp" alt="Dungeon Puzzle Gameplay"
+                                <img loading="lazy" decoding="async" src="images/Projects/DungeonPuzzle.webp" alt="Dungeon Puzzle Gameplay"
                                     class="project-img">
                             </div>
                             <h3 class="project-title">Dungeon Puzzle</h3>
@@ -302,7 +337,7 @@
                                             Design</span></li>
                                 </ul>
                             </div>
-                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <div class="project-actions">
                                 <a href="https://trookish.itch.io/dungeon-puzzle" target="_blank" class="project-link">View Project →</a>
                                 <button class="project-link showcase-trigger" data-project="dungeon-puzzle">View Gallery →</button>
                             </div>
@@ -313,7 +348,7 @@
                     <div class="project-card" data-project="scary-library">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/ScaryLibrary.webp" alt="The Scary Library Gameplay"
+                                <img loading="lazy" decoding="async" src="images/Projects/ScaryLibrary.webp" alt="The Scary Library Gameplay"
                                     class="project-img">
                             </div>
                             <h3 class="project-title">The Scary Library</h3>
@@ -332,7 +367,7 @@
                                 <span class="tag">AI</span>
                                 <span class="tag">Game Jam</span>
                             </div>
-                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <div class="project-actions">
                                 <a href="https://trookish.itch.io/scary-library" target="_blank" class="project-link">View Project →</a>
                                 <button class="project-link showcase-trigger" data-project="scary-library">View Gallery →</button>
                             </div>
@@ -343,7 +378,7 @@
                     <div class="project-card" data-project="knight-with-gun">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/KnightwithGun.webp"
+                                <img loading="lazy" decoding="async" src="images/Projects/KnightwithGun.webp"
                                     alt="Knight With a Gun on the Run! Gameplay" class="project-img">
                             </div>
                             <h3 class="project-title">Knight With a Gun</h3>
@@ -360,7 +395,7 @@
                                 <span class="tag">Survival</span>
                                 <span class="tag">Endless</span>
                             </div>
-                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <div class="project-actions">
                                 <a href="https://trookish.itch.io/tuwaiq-game-turki-alshalaan" target="_blank" class="project-link">View Project →</a>
                                 <button class="project-link showcase-trigger" data-project="knight-with-gun">View Gallery →</button>
                             </div>
@@ -371,7 +406,7 @@
                     <div class="project-card" data-project="the-hidden-kanz">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/TheHiddenKanz.webp" alt="The Hidden Kanz Gameplay"
+                                <img loading="lazy" decoding="async" src="images/Projects/TheHiddenKanz.webp" alt="The Hidden Kanz Gameplay"
                                     class="project-img">
                             </div>
                             <h3 class="project-title">The Hidden Kanz</h3>
@@ -398,7 +433,7 @@
                                             Programmer</span></li>
                                 </ul>
                             </div>
-                            <div class="project-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <div class="project-actions">
                                 <a href="https://s3-od.itch.io/the-hidden-kanz" target="_blank" class="project-link">View Project →</a>
                                 <button class="project-link showcase-trigger" data-project="the-hidden-kanz">View Gallery →</button>
                             </div>
@@ -409,7 +444,7 @@
                     <div class="project-card" data-project="syntax-strike">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/SyntaxStrike.webp" alt="Syntax Strike" class="project-img project-img-contain">
+                                <img loading="lazy" decoding="async" src="images/Projects/SyntaxStrike.webp" alt="Syntax Strike" class="project-img project-img-contain">
                             </div>
                             <h3 class="project-title">Syntax Strike</h3>
                             <span class="showcase-btn">Showcase &rarr;</span>
@@ -450,7 +485,7 @@
                     <div class="project-card" data-project="documind">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/documind.webp" alt="DocuMind Project" class="project-img">
+                                <img loading="lazy" decoding="async" src="images/Projects/documind.webp" alt="DocuMind Project" class="project-img">
                             </div>
                             <h3 class="project-title">DocuMind</h3>
                             <span class="showcase-btn">Showcase &rarr;</span>
@@ -492,7 +527,7 @@
                     <div class="project-card" data-project="restaurant-ordering">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/Restaurant Ordering System.webp"
+                                <img loading="lazy" decoding="async" src="images/Projects/Restaurant Ordering System.webp"
                                     alt="Restaurant Ordering System">
                             </div>
                             <h3 class="project-title">Restaurant Ordering System</h3>
@@ -532,7 +567,7 @@
                     <div class="project-card" data-project="recipe-hub">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/RecipeHub.webp" alt="Recipe Hub" class="project-img">
+                                <img loading="lazy" decoding="async" src="images/Projects/RecipeHub.webp" alt="Recipe Hub" class="project-img">
                             </div>
                             <h3 class="project-title">Recipe Hub</h3>
                             <span class="showcase-btn">Showcase &rarr;</span>
@@ -581,7 +616,7 @@
                     <div class="project-card" data-project="secure-check">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/SecureCheck.webp" alt="SecureCheck" class="project-img">
+                                <img loading="lazy" decoding="async" src="images/Projects/SecureCheck.webp" alt="SecureCheck" class="project-img">
                             </div>
                             <h3 class="project-title">SecureCheck</h3>
                             <span class="showcase-btn">Showcase &rarr;</span>
@@ -620,7 +655,7 @@
                     <div class="project-card" data-project="smart-campus">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/SmartCampusServices.webp" alt="Smart Campus Services"
+                                <img loading="lazy" decoding="async" src="images/Projects/SmartCampusServices.webp" alt="Smart Campus Services"
                                     class="project-img">
                             </div>
                             <h3 class="project-title">Smart Campus Services</h3>
@@ -660,7 +695,7 @@
                     <div class="project-card" data-project="syntax-strike">
                         <div class="project-header">
                             <div class="project-image">
-                                <img src="images/Projects/SyntaxStrike.webp"
+                                <img loading="lazy" decoding="async" src="images/Projects/SyntaxStrike.webp"
                                     alt="IT492 - Gamified Programming Learning Environment" class="project-img project-img-contain">
                             </div>
                             <h3 class="project-title">Graduation Project</h3>
@@ -699,9 +734,10 @@
     <section class="experience" id="experience">
         <div class="container">
             <h2 class="section-title">Experience</h2>
+            <p class="section-subtitle">Where I've contributed and grown</p>
             <div class="experience-card">
                 <div class="experience-icon">
-                    <img src="images/Logos/EnjazLogo.webp" alt="Enjaz Logo" class="experience-logo">
+                    <img loading="lazy" decoding="async" src="images/Logos/EnjazLogo.webp" alt="Enjaz Logo" class="experience-logo">
                 </div>
                 <div class="experience-details">
                     <h3 class="experience-title">Team Member</h3>
@@ -725,6 +761,7 @@
     <section class="skills" id="skills">
         <div class="container">
             <h2 class="section-title">Skills</h2>
+            <p class="section-subtitle">Technologies and disciplines I work with</p>
 
             <!-- Core Skills -->
             <div class="skill-row">
@@ -833,12 +870,13 @@
     <section class="education" id="education">
         <div class="container">
             <h2 class="section-title">Education</h2>
+            <p class="section-subtitle">My academic journey and continuous learning</p>
             <div class="education-columns">
                 <div class="education-column">
                     <h3 class="education-column-title" data-translate="edu_onsite_title">Onsite</h3>
                     <div class="education-card">
                         <div class="education-icon">
-                            <img src="images/Logos/LogoI_of_Imam_Mohammad_Ibn_Saud_Islamic_University.webp" alt="IMSIU Logo"
+                            <img loading="lazy" decoding="async" src="images/Logos/LogoI_of_Imam_Mohammad_Ibn_Saud_Islamic_University.webp" alt="IMSIU Logo"
                                 class="education-logo">
                         </div>
                         <div class="education-content">
@@ -854,7 +892,7 @@
                     </div>
                     <div class="education-card">
                         <div class="education-icon">
-                            <img src="images/Logos/tuwaiqacademy_logo.webp" alt="Tuwaiq Academy Logo" class="education-logo">
+                            <img loading="lazy" decoding="async" src="images/Logos/tuwaiqacademy_logo.webp" alt="Tuwaiq Academy Logo" class="education-logo">
                         </div>
                         <div class="education-content">
                             <h3 class="education-degree">Game Design and Development Bootcamp</h3>
@@ -869,7 +907,7 @@
                     <h3 class="education-column-title" data-translate="edu_online_title">Online</h3>
                     <div class="education-card">
                         <div class="education-icon">
-                            <img src="images/Logos/Udemy.webp" alt="Udemy Logo" class="education-logo">
+                            <img loading="lazy" decoding="async" src="images/Logos/Udemy.webp" alt="Udemy Logo" class="education-logo">
                         </div>
                         <div class="education-content">
                             <h3 class="education-degree">Complete C# Unity Game Developer 3D</h3>
@@ -880,7 +918,7 @@
                     </div>
                     <div class="education-card">
                         <div class="education-icon">
-                            <img src="images/Logos/gamedevtv.webp" alt="GameDev.tv Logo" class="education-logo">
+                            <img loading="lazy" decoding="async" src="images/Logos/gamedevtv.webp" alt="GameDev.tv Logo" class="education-logo">
                         </div>
                         <div class="education-content">
                             <h3 class="education-degree">Unity Game Development Courses</h3>
@@ -906,10 +944,11 @@
     <section class="certifications" id="certifications">
         <div class="container">
             <h2 class="section-title">Certifications</h2>
+            <p class="section-subtitle">Credentials that back my expertise</p>
             <div class="certifications-grid">
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Complete Csharp Unity Game Developer 3D.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/Complete Csharp Unity Game Developer 3D.webp"
                             alt="Complete C# Unity Game Developer Certificate">
                     </div>
                     <div class="certification-info">
@@ -931,7 +970,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Game Design and Development.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/Game Design and Development.webp"
                             alt="Game Design and Development Certificate">
                     </div>
                     <div class="certification-info">
@@ -953,7 +992,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Introduction to Blender.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/Introduction to Blender.webp"
                             alt="Introduction to Blender Certificate">
                     </div>
                     <div class="certification-info">
@@ -975,7 +1014,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Game Design Between Imagination and Reality.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/Game Design Between Imagination and Reality.webp"
                             alt="Game Design Between Imagination and Reality Certificate">
                     </div>
                     <div class="certification-info">
@@ -997,7 +1036,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Unity Essentials.webp" alt="Unity Essentials Pathway Certificate">
+                        <img loading="lazy" decoding="async" src="images/Certficates/Unity Essentials.webp" alt="Unity Essentials Pathway Certificate">
                     </div>
                     <div class="certification-info">
                         <h3 class="certification-title">Unity Essentials Pathway</h3>
@@ -1018,7 +1057,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Game design and development with Unity and generative AI tools.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/Game design and development with Unity and generative AI tools.webp"
                             alt="Game design and development with Unity and generative AI tools Certificate">
                     </div>
                     <div class="certification-info">
@@ -1041,7 +1080,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Jobs in game development.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/Jobs in game development.webp"
                             alt="Jobs in game development Certificate">
                     </div>
                     <div class="certification-info">
@@ -1063,7 +1102,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/3D Game Developer Bootcamp.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/3D Game Developer Bootcamp.webp"
                             alt="3D Game Developer Bootcamp Certificate">
                     </div>
                     <div class="certification-info">
@@ -1085,7 +1124,7 @@
                 </div>
                 <div class="certification-card">
                     <div class="certification-image">
-                        <img src="images/Certficates/Mckinsey.org Forward Program Certificate.webp"
+                        <img loading="lazy" decoding="async" src="images/Certficates/Mckinsey.org Forward Program Certificate.webp"
                             alt="McKinsey.org Forward Program Certificate">
                     </div>
                     <div class="certification-info">
@@ -1130,11 +1169,12 @@
     <section class="achievements" id="achievements">
         <div class="container">
             <h2 class="section-title">Achievements</h2>
+            <p class="section-subtitle">Recognition from competitions and events</p>
             <div class="achievements-grid">
                 <div class="achievement-card" tabindex="0" role="button" aria-label="Showcase PwC Middle East Hackathon Achievement">
                     <div class="achievement-header">
                         <div class="achievement-image">
-                            <img src="images/Achievement/PWCachievements.webp" alt="PwC Hackathon Achievement">
+                            <img loading="lazy" decoding="async" src="images/Achievement/PWCachievements.webp" alt="PwC Hackathon Achievement">
                         </div>
                         <div class="achievement-header-content">
                             <h3 class="achievement-title">1st Place Winner - PwC Middle East Hackathon</h3>
@@ -1183,7 +1223,7 @@
                 <div class="achievement-card" tabindex="0" role="button" aria-label="Showcase Enjaz Game Jam Achievement">
                     <div class="achievement-header">
                         <div class="achievement-image">
-                            <img src="images/Achievement/EnjazGameJam.webp" alt="Enjaz Game Jam Achievement">
+                            <img loading="lazy" decoding="async" src="images/Achievement/EnjazGameJam.webp" alt="Enjaz Game Jam Achievement">
                         </div>
                         <div class="achievement-header-content">
                             <h3 class="achievement-title">1st Place Winner - Enjaz Game Jam</h3>
@@ -1198,7 +1238,7 @@
                         <div class="achievement-project">
                             <p class="project-title">Game: The Scary Library</p>
                             <div class="achievement-project-image">
-                                <img src="images/Projects/ScaryLibrary.webp" alt="The Scary Library Game">
+                                <img loading="lazy" decoding="async" src="images/Projects/ScaryLibrary.webp" alt="The Scary Library Game">
                             </div>
                             <p class="project-description">A horror game where players solve book puzzles to escape
                                 a haunted library while being hunted by an AI enemy.</p>
@@ -1220,6 +1260,7 @@
     <section class="contact" id="contact">
         <div class="container">
             <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Have a project in mind or just want to talk games? Reach out.</p>
             <div class="contact-content">
                 <div class="contact-info">
                     <div class="contact-item">
@@ -1329,7 +1370,7 @@
     <footer class="footer">
         <div class="container">
             <p class="footer-text">Designed & Built by Turki Alshaalan</p>
-            <p class="footer-copyright">&copy; 2026. All rights reserved.</p>
+            <p class="footer-copyright">&copy; <span id="footerYear">2026</span>. All rights reserved.</p>
         </div>
     </footer>
 
@@ -1358,7 +1399,7 @@
                             <div class="ss-gallery-main">
                                 <button class="ss-nav-arrow prev-arrow" aria-label="Previous image">&lt;</button>
                                 <div class="ss-image-wrapper">
-                                    <img id="showcase-main-image" src="" alt="Gameplay Screenshot">
+                                    <img loading="lazy" decoding="async" id="showcase-main-image" src="" alt="Gameplay Screenshot">
                                 </div>
                                 <button class="ss-nav-arrow next-arrow" aria-label="Next image">&gt;</button>
                             </div>
@@ -1381,7 +1422,7 @@
                     <!-- Right Column: Details -->
                     <div class="ss-col-details">
                         <h3 id="showcase-details-title" class="ss-details-title">Project Title</h3>
-                        <div id="showcase-details-subtitle" class="ss-details-subtitle" style="display: none; font-family: var(--font-terminal); font-size: 0.75rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;"></div>
+                        <div id="showcase-details-subtitle" class="ss-details-subtitle"></div>
                         
                         <div class="ss-details-section">
                             <h4 class="ss-section-label">DESCRIPTION</h4>
@@ -1409,8 +1450,7 @@
         </div>
     </div>
 
-    <script type="module" src="script.js?v=2"></script>
-    <script type="module" src="game.js"></script>
+    <script type="module" src="script.js?v=3"></script>
 </body>
 
 </html>

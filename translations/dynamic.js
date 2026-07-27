@@ -54,6 +54,7 @@ export const termTranslations = {
 
     // Skills
     "Skills": "المهارات",
+    "Technologies and disciplines I work with": "التقنيات والمجالات التي أعمل بها",
     "Core Skills": "المهارات الأساسية",
     "Problem Solving": "حل المشكلات",
     "Team Problem Solving": "حل المشكلات الجماعي",
@@ -86,6 +87,7 @@ export const termTranslations = {
 
     // Experience
     "Experience": "الخبرة",
+    "Where I've contributed and grown": "أين ساهمت وتطورت",
     "Team Member": "عضو فريق",
     "Enjaz Club - Game Development Section": "نادي إنجاز - قسم تطوير الألعاب",
     "Collaborated with a team of developers on game projects, focusing on gameplay logic. Contributed to building engaging interactive experiences through efficient code and creative problem-solving.": "تعاونت مع فريق من المطورين في مشاريع الألعاب، مع التركيز على منطق اللعب. ساهمت في بناء تجارب تفاعلية جذابة من خلال كود فعال وحل إبداعي للمشكلات.",
@@ -93,6 +95,7 @@ export const termTranslations = {
 
     // Education
     "Education": "التعليم",
+    "My academic journey and continuous learning": "مسيرتي الأكاديمية وتعلمي المستمر",
     "Bachelor's in Information Technology": "بكالوريوس في تقنية المعلومات",
     "Imam Muhammad ibn Saud Islamic University": "جامعة الإمام محمد بن سعود الإسلامية",
     "Dec 2022 - Jul 2026": "ديسمبر ٢٠٢٢ - يوليو ٢٠٢٦",
@@ -116,6 +119,7 @@ export const termTranslations = {
 
     // Certifications
     "Certifications": "الشهادات",
+    "Credentials that back my expertise": "شهادات تدعم خبرتي",
     "Complete C# Unity Game Developer 3D (Updated To Unity 6).": "Complete C# Unity Game Developer 3D (Updated To Unity 6).",
     "By Gamedev.tv · on Udemy": "By Gamedev.tv · on Udemy",
     "Game Design and Development": "Game Design and Development",
@@ -140,6 +144,7 @@ export const termTranslations = {
 
     // Achievements
     "Achievements": "الإنجازات",
+    "Recognition from competitions and events": "تكريمات من مسابقات وفعاليات",
     "1st Place Winner - PwC Middle East Hackathon": "المركز الأول - هكاثون PwC الشرق الأوسط",
     "Issuer: PwC Middle East": "الجهة المانحة: PwC الشرق الأوسط",
     "Date: 7 February 2026": "التاريخ: ٧ فبراير ٢٠٢٦",
@@ -156,6 +161,7 @@ export const termTranslations = {
 
     // Contact
     "Get In Touch": "تواصل معي",
+    "Have a project in mind or just want to talk games? Reach out.": "عندك مشروع في بالك أو تريد فقط الحديث عن الألعاب؟ تواصل معي.",
     "Email": "البريد الإلكتروني",
     "Phone": "الهاتف",
     "Location": "الموقع",

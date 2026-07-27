@@ -47,9 +47,57 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initParallax();
     initPdfExport();
+    initGameLazyLoad();
+    initFooterYear();
     // initAchievementExpand(); // Retired in favor of unified showcase popup
     initProjectShowcase();
 });
+
+/**
+ * Footer Year - Keep the copyright year current.
+ * Re-runs on language change because the translation engine rewrites
+ * the footer HTML when switching to/from Arabic.
+ */
+function initFooterYear() {
+    const update = () => {
+        const span = document.getElementById('footerYear');
+        if (span) span.textContent = new Date().getFullYear();
+    };
+    update();
+    document.addEventListener('languageChanged', update);
+}
+
+/**
+ * Game Lazy Load - Defer loading the ~72KB game module until the user
+ * actually clicks the play icon. game.js binds its own openGame handler
+ * to the button on import; the first click loads it, then re-dispatches
+ * the click so the game opens immediately after load.
+ */
+function initGameLazyLoad() {
+    const playBtn = document.getElementById('playGameBtn');
+    if (!playBtn) return;
+
+    let gameLoaded = false;
+    let gameLoading = false;
+
+    playBtn.addEventListener('click', (e) => {
+        if (gameLoaded) return; // game.js's own handler takes it from here
+        e.preventDefault();
+        if (gameLoading) return;
+        gameLoading = true;
+
+        import('./game.js?v=2')
+            .then(() => {
+                gameLoaded = true;
+                gameLoading = false;
+                playBtn.click(); // trigger game.js's own openGame handler
+            })
+            .catch((err) => {
+                gameLoading = false;
+                console.error('Failed to load game module:', err);
+            });
+    });
+}
 
 /**
  * Navigation - Sticky navbar with scroll effects
@@ -239,49 +287,31 @@ function initSoundToggle() {
 
 /**
  * Hover Sounds - Play sound on hover (excluding game elements)
+ * Uses one delegated listener instead of hundreds of per-element listeners.
  */
+const UI_SOUND_SELECTORS = 'a, button, input, select, textarea, ' +
+    '.project-card, .education-card, .certification-card, .contact-item, ' +
+    '.experience-card, .achievement-card, .hero-image, .highlight-item';
+
+function isGameElement(el) {
+    return !!(el.closest('.game-modal') ||
+        el.closest('.mobile-controls') ||
+        el.closest('#gameModal'));
+}
+
 function initHoverSounds() {
-    // Create hover sound
     const hoverSound = new Audio('Sounds/Normal/Hover.wav');
     hoverSound.volume = 0.3;
 
-    // Function to add hover listener to element
-    const addHoverListener = (element) => {
-        // Skip game-related elements
-        if (element.closest('.game-modal') ||
-            element.closest('.mobile-controls') ||
-            element.closest('#gameModal')) {
-            return;
+    document.addEventListener('mouseover', (e) => {
+        const el = e.target.closest(UI_SOUND_SELECTORS);
+        if (!el || isGameElement(el)) return;
+        // Only fire when the pointer enters the element from outside it
+        if (e.relatedTarget && el.contains(e.relatedTarget)) return;
+        if (localStorage.getItem('sound') !== 'false') {
+            hoverSound.currentTime = 0;
+            hoverSound.play().catch(() => { });
         }
-
-        element.addEventListener('mouseenter', () => {
-            // Check if sound is enabled
-            if (localStorage.getItem('sound') !== 'false') {
-                hoverSound.currentTime = 0;
-                hoverSound.play().catch(() => { });
-            }
-        });
-    };
-
-    // All hoverable elements on the page (blocks only - no text)
-    const hoverableSelectors = [
-        'a', 'button', 'input', 'select', 'textarea',
-        '.nav-link', '.nav-logo', '.play-icon',
-        '.project-card',
-        '.skill-category',
-        '.education-card',
-        '.certification-card',
-        '.contact-item',
-        '.experience-card',
-        '.theme-toggle', '.sound-toggle', '.hamburger',
-        '.social-link',
-        '.hero-image',
-        '.highlight-item'
-    ];
-
-    // Apply to all selectors
-    hoverableSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(addHoverListener);
     });
 }
 
@@ -289,46 +319,16 @@ function initHoverSounds() {
  * Click Sounds - Play sound on click (excluding game elements)
  */
 function initClickSounds() {
-    // Create click sound
     const clickSound = new Audio('Sounds/Normal/Click.wav');
     clickSound.volume = 0.4;
 
-    // Function to add click listener to element
-    const addClickListener = (element) => {
-        // Skip game-related elements
-        if (element.closest('.game-modal') ||
-            element.closest('.mobile-controls') ||
-            element.closest('#gameModal')) {
-            return;
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest(UI_SOUND_SELECTORS);
+        if (!el || isGameElement(el)) return;
+        if (localStorage.getItem('sound') !== 'false') {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => { });
         }
-
-        element.addEventListener('click', () => {
-            // Check if sound is enabled
-            if (localStorage.getItem('sound') !== 'false') {
-                clickSound.currentTime = 0;
-                clickSound.play().catch(() => { });
-            }
-        });
-    };
-
-    // All clickable elements on the page
-    const clickableSelectors = [
-        'a', 'button', 'input', 'select', 'textarea',
-        '.nav-link', '.nav-logo', '.play-icon',
-        '.project-card', '.project-image',
-        '.education-card',
-        '.certification-card',
-        '.contact-item',
-        '.experience-card',
-        '.theme-toggle', '.sound-toggle', '.hamburger',
-        '.social-link',
-        '.hero-image',
-        '.highlight-item'
-    ];
-
-    // Apply to all selectors
-    clickableSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(addClickListener);
     });
 }
 
@@ -424,10 +424,11 @@ function initSmoothScroll() {
                 const headerOffset = 80;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
                 window.scrollTo({
                     top: offsetPosition,
-                    behavior: 'smooth'
+                    behavior: reducedMotion ? 'auto' : 'smooth'
                 });
             }
         });
@@ -440,7 +441,7 @@ function initSmoothScroll() {
 function initParallax() {
     const heroBackground = document.querySelector('.hero-background');
 
-    if (heroBackground) {
+    if (heroBackground && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         let parallaxTicking = false;
         window.addEventListener('scroll', () => {
             if (!parallaxTicking) {
@@ -568,11 +569,7 @@ function initProjectShowcase() {
     const detailsTags = document.getElementById('showcase-details-tags');
     const teamLabel = document.getElementById('showcase-details-team-label');
 
-    // Pre-instantiated shared sounds for performance
-    const hoverSound = new Audio('Sounds/Normal/Hover.wav');
-    hoverSound.volume = 0.3;
-    const clickSound = new Audio('Sounds/Normal/Click.wav');
-    clickSound.volume = 0.4;
+    // Pre-instantiated shared sound for modal open
     const openSound = new Audio('Sounds/Game/windowopen.wav');
     openSound.volume = 0.3;
     const detailsTeamContainer = document.getElementById('showcase-details-team-container');
@@ -640,20 +637,8 @@ function initProjectShowcase() {
             btn.appendChild(img);
             thumbnailsGrid.appendChild(btn);
 
-            // Use pre-instantiated hover sound
-            btn.addEventListener('mouseenter', () => {
-                if (localStorage.getItem('sound') !== 'false') {
-                    hoverSound.currentTime = 0;
-                    hoverSound.play().catch(() => {});
-                }
-            });
-
-            // Use pre-instantiated click sound
+            // Hover/click sounds are handled by the delegated UI sound listeners
             btn.addEventListener('click', () => {
-                if (localStorage.getItem('sound') !== 'false') {
-                    clickSound.currentTime = 0;
-                    clickSound.play().catch(() => {});
-                }
                 showScreenshot(index);
             });
         });
