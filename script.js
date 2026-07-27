@@ -86,7 +86,7 @@ function initGameLazyLoad() {
         if (gameLoading) return;
         gameLoading = true;
 
-        import('./game.js?v=2')
+        import('./game.js?v=3')
             .then(() => {
                 gameLoaded = true;
                 gameLoading = false;

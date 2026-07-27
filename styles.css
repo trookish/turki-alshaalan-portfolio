@@ -499,162 +499,335 @@ section:nth-child(8) { animation-delay: 0.7s; }
     box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
 }
 
-.movement-controls {
+/* Souls Mobile Controls - Virtual Joystick (Left) */
+.souls-controls-row {
+    align-items: center;
+    gap: 8px;
+}
+
+.joystick-zone {
     pointer-events: auto;
-    position: relative;
-    width: 180px;
-    height: 90px;
-}
-
-.dpad-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.dpad-btn {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid rgba(74, 222, 128, 0.8);
-    background: rgba(74, 222, 128, 0.4);
-    color: var(--text-primary);
-    font-size: 1.4rem;
-    cursor: pointer;
+    width: 150px;
+    height: 130px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.1s ease;
-    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+    flex-shrink: 0;
+}
+
+.joystick-base {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid rgba(74, 222, 128, 0.5);
+    background: rgba(20, 26, 22, 0.6);
+}
+
+.joystick-knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(74, 222, 128, 0.55);
+    border: 3px solid rgba(74, 222, 128, 0.9);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* Souls Action Buttons (Right) */
+.souls-action-btns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
     pointer-events: auto;
+    flex: 1;
+    max-width: 230px;
+}
+
+.souls-btn {
+    min-width: 62px;
+    height: 46px;
+    border-radius: 8px;
+    border: 2px solid;
+    font-family: var(--font-terminal);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    cursor: pointer;
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.1s ease;
 }
 
-.dpad-btn:active,
-.dpad-btn.active {
+.souls-btn:active,
+.souls-btn.active {
+    transform: scale(0.93);
+}
+
+.atk-btn {
+    background: rgba(185, 28, 28, 0.35);
+    border-color: rgba(239, 68, 68, 0.8);
+    color: #ef4444;
+}
+
+.atk-btn:active,
+.atk-btn.active {
+    background: rgba(239, 68, 68, 0.7);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.55);
+    color: #fff;
+}
+
+.roll-btn {
+    background: rgba(29, 78, 216, 0.3);
+    border-color: rgba(59, 130, 246, 0.8);
+    color: #3b82f6;
+}
+
+.roll-btn:active,
+.roll-btn.active {
+    background: rgba(59, 130, 246, 0.75);
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.55);
+    color: #fff;
+}
+
+.block-btn {
+    background: rgba(180, 83, 9, 0.3);
+    border-color: rgba(251, 191, 36, 0.8);
+    color: #fbbf24;
+}
+
+.block-btn:active,
+.block-btn.active {
+    background: rgba(251, 191, 36, 0.7);
+    box-shadow: 0 0 16px rgba(251, 191, 36, 0.55);
+    color: #1a1a1a;
+}
+
+.heal-btn {
+    background: rgba(21, 101, 52, 0.35);
+    border-color: rgba(74, 222, 128, 0.8);
+    color: #4ade80;
+}
+
+.heal-btn:active,
+.heal-btn.active {
     background: rgba(74, 222, 128, 0.7);
+    box-shadow: 0 0 16px rgba(74, 222, 128, 0.55);
+    color: #1a1a1a;
 }
 
-.dpad-left:active,
-.dpad-left.active {
-    background: rgba(74, 222, 128, 0.7);
-    box-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+.lock-btn {
+    background: rgba(88, 28, 135, 0.3);
+    border-color: rgba(168, 85, 247, 0.75);
+    color: #c084fc;
 }
 
-.dpad-right:active,
-.dpad-right.active {
-    background: rgba(74, 222, 128, 0.7);
-    box-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+.lock-btn:active,
+.lock-btn.active {
+    background: rgba(168, 85, 247, 0.7);
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.55);
+    color: #fff;
 }
 
-.dpad-btn img,
-.arrow-icon {
-    width: 45px;
-    height: 45px;
-    max-width: 45px;
-    max-height: 45px;
-}
-
-.dpad-left .arrow-icon {
-    transform: rotate(-90deg);
-}
-
-.dpad-right .arrow-icon {
-    transform: rotate(90deg);
-}
-
-.jump-btn .arrow-icon {
-    transform: rotate(0deg);
-}
-
-.dpad-left {
-    bottom: 0;
+/* ========================================
+   Souls Game HUD (DOM overlay on canvas)
+   ======================================== */
+.game-hud {
+    position: absolute;
     left: 0;
-    transform: none;
+    right: 0;
+    top: 0;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+    font-family: var(--font-terminal);
 }
 
-.dpad-right {
-    bottom: 0;
-    left: 95px;
-    transform: none;
-}
-
-/* Action Controls */
-.action-controls {
+.hud-player {
+    position: absolute;
+    top: 12px;
+    left: 12px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    pointer-events: auto;
+    gap: 6px;
 }
 
-.action-btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid;
-    background: rgba(20, 20, 30, 0.85);
-    cursor: pointer;
-    pointer-events: auto;
-    touch-action: manipulation;
+.hud-bar {
+    height: 12px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 2px solid rgba(64, 64, 64, 0.9);
+    box-sizing: content-box;
+}
 
+.hud-hp {
+    width: min(300px, 42vw);
+}
+
+.hud-stamina {
+    height: 9px;
+    width: min(240px, 36vw);
+}
+
+.hud-bar-fill {
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    transition: transform 0.12s linear;
+}
+
+html[dir="rtl"] .hud-bar-fill {
+    transform-origin: right center;
+}
+
+.hud-hp .hud-bar-fill {
+    background: #b91c1c;
+}
+
+.hud-stamina .hud-bar-fill {
+    background: #22c55e;
+}
+
+.hud-estus {
+    display: flex;
+    gap: 5px;
+    margin-top: 2px;
+}
+
+.estus-pip {
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(251, 191, 36, 0.5);
+}
+
+.estus-pip.full {
+    background: #f59e0b;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.hud-boss {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(620px, 72%);
+    display: none;
+}
+
+.hud-boss.visible {
+    display: block;
+}
+
+.hud-boss-name {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    color: #fca5a5;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+}
+
+.hud-boss-hp {
+    width: 100%;
+    height: 10px;
+}
+
+.hud-boss-hp .hud-bar-fill {
+    background: #dc2626;
+}
+
+.hud-center {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.1s ease;
-    -webkit-tap-highlight-color: transparent;
+    text-align: center;
 }
 
-.action-btn img {
-    width: 35px;
-    max-width: 35px;
-    height: 35px;
+.hud-center-text {
+    font-family: var(--font-pixel);
+    font-size: clamp(1.3rem, 5vw, 2.4rem);
+    color: #e8e8e8;
+    letter-spacing: 6px;
+    line-height: 1.6;
+    text-shadow: 0 0 18px rgba(0, 0, 0, 0.9), 4px 4px 0 rgba(0, 0, 0, 0.6);
+    animation: hudCenterIn 0.35s steps(5) both;
 }
 
-.action-btn:active,
-.action-btn.active {
-    transform: scale(0.92);
+.hud-center-text.bad {
+    color: #ef4444;
 }
 
-.attack-btn {
-    border-color: rgba(239, 68, 68, 0.7);
-    background: rgba(185, 28, 28, 0.3);
+.hud-center-text.good {
+    color: #4ade80;
 }
 
-.attack-btn:active,
-.attack-btn.active {
-    background: rgba(239, 68, 68, 0.7);
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+.hud-center-text.count {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
 }
 
-.shield-btn {
-    border-color: rgba(251, 191, 36, 0.7);
-    background: rgba(180, 83, 9, 0.3);
+.hud-sub {
+    font-family: var(--font-terminal);
+    font-size: clamp(0.85rem, 2.5vw, 1.15rem);
+    color: #b0b0b0;
+    letter-spacing: 2px;
+    margin-top: 1.2rem;
 }
 
-.shield-btn:active,
-.shield-btn.active {
-    background: rgba(251, 191, 36, 0.7);
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+@keyframes hudCenterIn {
+    from { opacity: 0; transform: scale(1.3); }
+    to { opacity: 1; transform: scale(1); }
 }
 
-.jump-btn {
-    border-color: rgba(59, 130, 246, 0.7);
-    background: rgba(29, 78, 216, 0.3);
+.hud-flash {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
 }
 
-.jump-btn:active,
-.jump-btn.active {
-    background: rgba(59, 130, 246, 0.8);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+.hud-flash.on {
+    opacity: 1;
+    transition: none;
 }
 
-.jump-btn img,
-.jump-btn .arrow-icon {
-    width: 35px;
-    height: 35px;
-    max-width: 35px;
-    max-height: 35px;
+.hud-numbers {
+    position: absolute;
+    inset: 0;
+}
+
+.dmg-num {
+    position: absolute;
+    font-family: var(--font-terminal);
+    font-size: 1.3rem;
+    color: #fde047;
+    text-shadow: 2px 2px 0 #000;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+}
+
+.dmg-num.on {
+    animation: dmgFloat 0.8s ease-out both;
+}
+
+.dmg-num.bad {
+    color: #ef4444;
+}
+
+.dmg-num.crit {
+    font-size: 1.8rem;
+    color: #fbbf24;
+}
+
+@keyframes dmgFloat {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - 46px)) scale(0.9); }
 }
 
 /* Only show on mobile devices (touch + small screen) */
@@ -709,47 +882,29 @@ section:nth-child(8) { animation-delay: 0.7s; }
         padding: 8px 12px;
     }
 
-    .movement-controls {
-        width: 130px;
-        height: 65px;
+    .joystick-zone {
+        width: 125px;
+        height: 110px;
     }
 
-    .dpad-btn {
-        width: 58px;
-        height: 58px;
+    .joystick-base {
+        width: 95px;
+        height: 95px;
     }
 
-    .dpad-btn img,
-    .arrow-icon {
-        width: 32px;
-        height: 32px;
-        max-width: 32px;
-        max-height: 32px;
+    .joystick-knob {
+        width: 42px;
+        height: 42px;
     }
 
-    .dpad-left {
-        bottom: 0;
-        left: 0;
-    }
-
-    .dpad-right {
-        bottom: 0;
-        left: 70px;
-    }
-
-    .action-controls {
+    .souls-action-btns {
         gap: 6px;
     }
 
-    .action-btn {
-        width: 48px;
-        height: 48px;
-    }
-
-    .action-btn img {
-        width: 26px;
-        max-width: 26px;
-        height: 26px;
+    .souls-btn {
+        min-width: 54px;
+        height: 42px;
+        font-size: 0.72rem;
     }
 
     .system-btn {
@@ -782,41 +937,29 @@ section:nth-child(8) { animation-delay: 0.7s; }
         padding: 6px 10px;
     }
 
-    .movement-controls {
-        width: 120px;
-        height: 60px;
+    .joystick-zone {
+        width: 110px;
+        height: 100px;
     }
 
-    .dpad-btn {
-        width: 54px;
-        height: 54px;
+    .joystick-base {
+        width: 85px;
+        height: 85px;
     }
 
-    .dpad-btn img,
-    .arrow-icon {
-        width: 30px;
-        height: 30px;
-        max-width: 30px;
-        max-height: 30px;
+    .joystick-knob {
+        width: 38px;
+        height: 38px;
     }
 
-    .dpad-right {
-        left: 65px;
-    }
-
-    .action-controls {
+    .souls-action-btns {
         gap: 5px;
     }
 
-    .action-btn {
-        width: 44px;
-        height: 44px;
-    }
-
-    .action-btn img {
-        width: 24px;
-        max-width: 24px;
-        height: 24px;
+    .souls-btn {
+        min-width: 48px;
+        height: 38px;
+        font-size: 0.65rem;
     }
 
     .system-btn {

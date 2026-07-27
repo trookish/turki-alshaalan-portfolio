@@ -16,6 +16,14 @@ export const en = {
     'BLOCKED': 'BLOCKED',
     'BLOCK': 'BLOCK',
     'ENRAGED!': 'ENRAGED!',
+    // Souls-like edition
+    'DARK KNIGHT': 'DARK KNIGHT',
+    'YOU DIED': 'YOU DIED',
+    'PARRY!': 'PARRY!',
+    'RIPOSTE!': 'RIPOSTE!',
+    'GUARD BREAK!': 'GUARD BREAK!',
+    'Mobile': 'Mobile',
+    'Desktop': 'Desktop',
 };
 
 export const ar = {
@@ -32,4 +40,12 @@ export const ar = {
     'BLOCKED': 'مصدود',
     'BLOCK': 'صد',
     'ENRAGED!': 'غاضب!',
+    // Souls-like edition
+    'DARK KNIGHT': 'الفارس المظلم',
+    'YOU DIED': 'لقد مت',
+    'PARRY!': 'صدّ!',
+    'RIPOSTE!': 'هجوم مرتد!',
+    'GUARD BREAK!': 'كسر الدفاع!',
+    'Mobile': 'جوال',
+    'Desktop': 'كمبيوتر',
 };

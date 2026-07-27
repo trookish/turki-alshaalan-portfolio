@@ -157,7 +157,7 @@
                 </div>
             </div>
             <canvas id="gameCanvas" width="800" height="500"></canvas>
-            <!-- Mobile Touch Controls - Game Boy Style -->
+            <!-- Mobile Touch Controls - Souls Layout (joystick + actions) -->
             <div class="mobile-controls" id="mobileControls">
                 <!-- System Buttons (Exit/Restart) -->
                 <div class="game-btn-row">
@@ -167,37 +167,30 @@
                     </div>
                 </div>
                 <!-- Game Controls Row -->
-                <div class="game-btn-row">
-                    <!-- Movement Controls (Left Side) -->
-                    <div class="movement-controls">
-                        <div class="dpad-container">
-                            <button class="dpad-btn dpad-left" id="mobileLeft">
-                                <img src="images/Game/Mobile/Arrow.webp" alt="Left" class="arrow-icon">
-                            </button>
-                            <button class="dpad-btn dpad-right" id="mobileRight">
-                                <img src="images/Game/Mobile/Arrow.webp" alt="Right" class="arrow-icon">
-                            </button>
+                <div class="game-btn-row souls-controls-row">
+                    <!-- Movement Joystick (Left Side) -->
+                    <div class="joystick-zone" id="mobileJoystick">
+                        <div class="joystick-base">
+                            <div class="joystick-knob" id="joystickKnob"></div>
                         </div>
                     </div>
-                    <!-- Action Controls (Right Side) -->
-                    <div class="action-controls">
-                        <button class="action-btn attack-btn" id="mobileAttack">
-                            <img src="images/Game/Mobile/Attack.webp" alt="Attack">
-                        </button>
-                        <button class="action-btn shield-btn" id="mobileShield">
-                            <img src="images/Game/Mobile/Shield.webp" alt="Shield">
-                        </button>
-                        <button class="action-btn jump-btn" id="mobileJump">
-                            <img src="images/Game/Mobile/Arrow.webp" alt="Jump" class="arrow-icon">
-                        </button>
+                    <!-- Action Buttons (Right Side) -->
+                    <div class="souls-action-btns">
+                        <button class="souls-btn atk-btn" id="btnAttack">ATK</button>
+                        <button class="souls-btn roll-btn" id="btnRoll">ROLL</button>
+                        <button class="souls-btn block-btn" id="btnBlock">BLOCK</button>
+                        <button class="souls-btn heal-btn" id="btnHeal">HEAL</button>
+                        <button class="souls-btn lock-btn" id="btnLock">LOCK</button>
                     </div>
                 </div>
             </div>
             <div class="game-controls-info">
-                <span data-translate="game_info_move">[A/D] Move</span>
-                <span data-translate="game_info_jump">[W/Space] Jump</span>
-                <span data-translate="game_info_attack">[J] Attack</span>
-                <span data-translate="game_info_block">[K] Block</span>
+                <span data-translate="game_info_move">[WASD] Move</span>
+                <span data-translate="game_info_jump">[Space] Dodge</span>
+                <span data-translate="game_info_attack">[J/LMB] Attack</span>
+                <span data-translate="game_info_block">[K/RMB] Block/Parry</span>
+                <span data-translate="game_info_heal">[E] Heal</span>
+                <span data-translate="game_info_lock">[Q] Lock-On</span>
                 <span data-translate="game_info_exit">[ESC] Exit</span>
             </div>
         </div>
@@ -1450,7 +1443,7 @@
         </div>
     </div>
 
-    <script type="module" src="script.js?v=4"></script>
+    <script type="module" src="script.js?v=5"></script>
 </body>
 
 </html>
