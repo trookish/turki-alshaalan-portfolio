@@ -308,7 +308,7 @@ section:nth-child(8) { animation-delay: 0.7s; }
     box-shadow: var(--shadow-pixel);
     z-index: 1;
     width: 100%;
-    max-width: 850px;
+    max-width: 1000px;
     margin: 0 auto;
     overflow: visible;
 }
@@ -427,19 +427,46 @@ section:nth-child(8) { animation-delay: 0.7s; }
     color: var(--text-muted);
 }
 
-/* Mobile Touch Controls - Game Boy Style */
+/* Mobile Touch Controls - Transparent overlay on top of the game display */
 .mobile-controls {
     display: none;
-    width: 100%;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    background: #000000;
-    border-top: 4px solid var(--accent-primary);
-    pointer-events: auto;
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    background: transparent;
+    border-top: none;
+    pointer-events: none;
 }
 
 .mobile-controls.active {
     display: block;
+}
+
+/* System buttons (EXIT/RESTART) float top-right, below the header */
+.mobile-controls .game-btn-row:first-child {
+    position: absolute;
+    top: 54px;
+    right: 10px;
+    margin: 0;
+}
+
+.mobile-controls .game-system-btns {
+    pointer-events: auto;
+}
+
+/* Joystick + action buttons float along the bottom of the display */
+.mobile-controls .souls-controls-row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0 12px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.mobile-controls .joystick-zone,
+.mobile-controls .souls-action-btns {
+    pointer-events: auto;
 }
 
 /* Game button layout */
@@ -830,25 +857,72 @@ html[dir="rtl"] .hud-bar-fill {
     100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - 46px)) scale(0.9); }
 }
 
-/* Only show on mobile devices (touch + small screen) */
+/* Touch devices (phones/tablets in ANY orientation incl. landscape):
+   same fullscreen phone-game layout, driven by JS device detection */
+.game-modal.touch-mode.active {
+    align-items: flex-start;
+    padding-top: 0;
+}
+
+.game-modal.touch-mode .game-container {
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.game-modal.touch-mode .game-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 7;
+    padding: 0.5rem 0.75rem;
+    background: rgba(10, 12, 11, 0.5);
+    border-bottom: 2px solid rgba(74, 222, 128, 0.35);
+}
+
+.game-modal.touch-mode #gameCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    border: none;
+}
+
+.game-modal.touch-mode .game-controls-info {
+    display: none !important;
+}
+
+.game-modal.touch-mode .hud-player {
+    top: 58px;
+}
+
+.game-modal.touch-mode .hud-boss {
+    bottom: 132px;
+    width: min(520px, 56%);
+}
+
+/* Auto-show touch controls on mobile devices (touch + small screen) */
 @media (hover: none) and (pointer: coarse) and (max-width: 768px),
        (max-width: 768px) and (pointer: coarse) {
     .mobile-controls {
         display: block;
     }
-    
-    #gameCanvas {
-        border-bottom: 4px solid var(--accent-primary);
-    }
 }
 
-/* Hide PC controls on mobile */
+/* Hide PC controls on mobile + fullscreen phone-game layout */
 @media (max-width: 768px) {
     .game-controls-info {
         display: none !important;
     }
 
-    /* Make modal fill the screen from the top so canvas is as large as possible */
+    /* Modal covers the entire screen like a native phone game */
     .game-modal.active {
         align-items: flex-start;
         padding-top: 0;
@@ -857,29 +931,48 @@ html[dir="rtl"] .hud-bar-fill {
     .game-container {
         max-width: 100vw;
         width: 100vw;
+        height: 100vh;
+        height: 100dvh;
         margin: 0;
-        border-left: none;
-        border-right: none;
-        border-top: none;
+        border: none;
         box-shadow: none;
     }
 
+    /* Header becomes a slim transparent overlay bar */
     .game-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 7;
         padding: 0.5rem 0.75rem;
+        background: rgba(10, 12, 11, 0.5);
+        border-bottom: 2px solid rgba(74, 222, 128, 0.35);
     }
 
     .game-title {
         font-size: 0.65rem;
     }
 
+    /* Canvas fills the whole modal - aspect follows the phone screen */
     #gameCanvas {
+        position: absolute;
+        inset: 0;
         width: 100%;
-        aspect-ratio: 800 / 500;
-        max-height: calc(100vh - 190px);
+        height: 100%;
+        max-height: none;
+        aspect-ratio: auto;
+        border: none;
     }
 
-    .mobile-controls {
-        padding: 8px 12px;
+    /* HUD clears the header bar and the floating action buttons */
+    .hud-player {
+        top: 58px;
+    }
+
+    .hud-boss {
+        bottom: 132px;
+        width: min(520px, 56%);
     }
 
     .joystick-zone {
@@ -929,12 +1022,17 @@ html[dir="rtl"] .hud-bar-fill {
         font-size: 0.6rem;
     }
 
-    #gameCanvas {
-        max-height: calc(100vh - 175px);
+    .mobile-controls .game-btn-row:first-child {
+        top: 46px;
+        right: 6px;
     }
 
-    .mobile-controls {
-        padding: 6px 10px;
+    .hud-player {
+        top: 50px;
+    }
+
+    .hud-boss {
+        bottom: 118px;
     }
 
     .joystick-zone {

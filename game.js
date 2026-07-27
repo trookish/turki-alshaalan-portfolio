@@ -267,7 +267,9 @@ function resetGame(skipCountdown = false) {
 
 function openGame() {
     ensureInit();
-    document.getElementById('gameModal').classList.add('active');
+    const modal = document.getElementById('gameModal');
+    modal.classList.toggle('touch-mode', isMobileDevice());
+    modal.classList.add('active');
     playSound('windowOpen', 1);
     engine.resize();
     positionHudOverlay();

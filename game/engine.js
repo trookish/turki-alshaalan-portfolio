@@ -141,21 +141,28 @@ export function createEngine(canvas, isMobile) {
     function updateCamera(dt, playerPos, playerHeading, bossPos, locked) {
         const stiffness = 1 - Math.pow(0.0015, dt); // frame-rate independent damping
 
+        // On narrow/portrait screens (phones) pull the camera back and up
+        // so both fighters stay framed despite the tight horizontal FOV.
+        let distScale = 1;
+        if (camera.aspect < 1) {
+            distScale = Math.min(1.9, 0.85 / camera.aspect);
+        }
+
         if (locked && bossPos) {
             _tmpA.subVectors(playerPos, bossPos); // boss -> player direction
             _tmpA.y = 0;
             if (_tmpA.lengthSq() < 0.0001) _tmpA.set(0, 0, 1);
             _tmpA.normalize();
 
-            camRig._desiredPos.copy(playerPos).addScaledVector(_tmpA, 6.2);
-            camRig._desiredPos.y = playerPos.y + 3.4;
+            camRig._desiredPos.copy(playerPos).addScaledVector(_tmpA, 6.2 * distScale);
+            camRig._desiredPos.y = playerPos.y + 3.4 * distScale;
 
             camRig._desiredLook.copy(playerPos).lerp(bossPos, 0.35);
             camRig._desiredLook.y = playerPos.y + 1.4;
         } else {
             _tmpB.set(-Math.sin(playerHeading), 0, -Math.cos(playerHeading));
-            camRig._desiredPos.copy(playerPos).addScaledVector(_tmpB, 6.0);
-            camRig._desiredPos.y = playerPos.y + 3.6;
+            camRig._desiredPos.copy(playerPos).addScaledVector(_tmpB, 6.0 * distScale);
+            camRig._desiredPos.y = playerPos.y + 3.6 * distScale;
             camRig._desiredLook.copy(playerPos);
             camRig._desiredLook.y = playerPos.y + 1.3;
         }
@@ -172,13 +179,22 @@ export function createEngine(canvas, isMobile) {
         const parent = canvas.parentElement;
         if (!parent) return;
         const w = parent.clientWidth;
-        // Keep a cinematic 16:10 inside the container; on mobile leave
-        // room for the touch controls below the canvas.
-        const vhCap = window.innerHeight * (isMobile ? 0.5 : 0.62);
-        const h = Math.max(220, Math.min(Math.round(w * 0.625), Math.round(vhCap)));
+        let h;
+        // Fill mode: whenever CSS makes the canvas cover the container
+        // (touch devices, narrow windows), size the buffer to match.
+        const fillMode = isMobile || window.getComputedStyle(canvas).position === 'absolute';
+        if (fillMode) {
+            h = parent.clientHeight;
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+        } else {
+            // Desktop: cinematic 16:10 inside the container.
+            const vhCap = window.innerHeight * 0.7;
+            h = Math.max(220, Math.min(Math.round(w * 0.625), Math.round(vhCap)));
+            canvas.style.width = '100%';
+            canvas.style.height = h + 'px';
+        }
         renderer.setSize(w, h, false);
-        canvas.style.width = '100%';
-        canvas.style.height = h + 'px';
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
     }
