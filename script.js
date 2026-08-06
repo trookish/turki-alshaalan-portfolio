@@ -586,7 +586,20 @@ function initProjectShowcase() {
     let screenshotsList = [];
     let currentCard = null;
     let currentIsAchievement = false;
+    let videoSlideEl = null;
 
+    function getVideoSlideEl() {
+        if (!videoSlideEl) {
+            videoSlideEl = document.createElement('iframe');
+            videoSlideEl.className = 'ss-video-slide';
+            videoSlideEl.title = 'Game Trailer';
+            videoSlideEl.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+            videoSlideEl.setAttribute('allowfullscreen', '');
+            videoSlideEl.style.display = 'none';
+            mainImg.parentElement.appendChild(videoSlideEl);
+        }
+        return videoSlideEl;
+    }
 
     // Show screenshot by index
     function showScreenshot(index) {
@@ -601,12 +614,24 @@ function initProjectShowcase() {
         // Apply fade transition
         mainImg.style.opacity = '0';
         setTimeout(() => {
-            mainImg.src = current.src;
-            mainImg.alt = current.title;
+            if (current.type === 'video') {
+                const videoEl = getVideoSlideEl();
+                mainImg.style.display = 'none';
+                videoEl.removeAttribute('src');
+                videoEl.src = `https://www.youtube.com/embed/${current.id}?autoplay=1&rel=0`;
+                videoEl.style.display = 'block';
+            } else {
+                const videoEl = getVideoSlideEl();
+                videoEl.style.display = 'none';
+                videoEl.removeAttribute('src');
+                mainImg.style.display = 'block';
+                mainImg.src = current.src;
+                mainImg.alt = current.title;
+                mainImg.style.opacity = '1';
+            }
             imgTitle.textContent = current.title;
             imgCounter.textContent = `${currentIndex + 1} / ${screenshotsList.length}`;
             imgDesc.textContent = current.desc;
-            mainImg.style.opacity = '1';
         }, 100);
 
         // Update active thumbnail
@@ -636,7 +661,11 @@ function initProjectShowcase() {
             btn.setAttribute('aria-label', `View screenshot ${index + 1}`);
 
             const img = document.createElement('img');
-            img.src = screenshot.src.replace(/screenshot(\d+)\.(png|jpeg|jpg|webp)/i, 'screenshot$1_thumb.webp');
+            if (screenshot.type === 'video') {
+                img.src = `https://img.youtube.com/vi/${screenshot.id}/hqdefault.jpg`;
+            } else {
+                img.src = screenshot.src.replace(/screenshot(\d+)\.(png|jpeg|jpg|webp)/i, 'screenshot$1_thumb.webp');
+            }
             img.alt = `Thumbnail ${index + 1}`;
 
             btn.appendChild(img);
@@ -901,6 +930,7 @@ function initProjectShowcase() {
 
         // Stop the trailer playback when the modal closes
         if (videoFrame) videoFrame.removeAttribute('src');
+        if (videoSlideEl) videoSlideEl.removeAttribute('src');
     }
 
     // Event Listeners for Project Cards

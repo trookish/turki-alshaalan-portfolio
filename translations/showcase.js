@@ -57,17 +57,13 @@ export const en = {
             { src: 'images/Projects/SyntaxStrike/screenshot7.webp', title: 'Level Completion Score Scene', desc: 'Level completion scoreboard tracking player statistics including enemies defeated, programming puzzle accuracy, time bonuses, and final score.' },
         ],
         'iwjats': [
+            { type: 'video', id: '1_v0l9b5qmU', title: 'Game Trailer', desc: 'Watch the full gameplay trailer — a routine maintenance job at the nuclear facility, one loose screw away from complete disaster.' },
             { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'One Loose Screw', desc: 'A routine maintenance job at the nuclear facility — one loose screw away from complete disaster.' },
             { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'Radioactive Chaos', desc: 'The reactor goes critical and the facility starts to collapse as the radioactive gas cloud closes in.' },
             { src: 'images/Projects/IWJATS/screenshot3.webp', title: 'Rescue Everyone', desc: 'Racing to save the babies, kittens, dogs, and the mysterious IMPORTANT person before reaching the emergency bunker.' },
         ],
     },
-    videos: {
-        'iwjats': {
-            id: '1_v0l9b5qmU',
-            title: 'Game Trailer',
-        },
-    },
+    videos: {},
 };
 
 // ARABIC TEXT — proper, readable Arabic for each EN string above.
@@ -118,15 +114,11 @@ export const ar = {
             { src: 'images/Projects/SyntaxStrike/screenshot7.webp', title: 'مشهد نتيجة إكمال المرحلة', desc: 'لوحة إكمال المرحلة التي تتبع إحصائيات اللاعب بما في ذلك الأعداء المهزومين، ودقة حل الألغاز البرمجية، والمكافآت الزمنية، والنتيجة النهائية.' },
         ],
         'iwjats': [
+            { type: 'video', id: '1_v0l9b5qmU', title: 'العرض الترويجي للعبة', desc: 'شاهد العرض الترويجي الكامل — عمل صيانة روتينية في المنشأة النووية، على بعد مسمار واحد مرتخٍ من الكارثة الكاملة.' },
             { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'مسمار واحد مرتخٍ', desc: 'عمل صيانة روتينية في المنشأة النووية — على بعد مسمار مرتخٍ واحد من الكارثة الكاملة.' },
             { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'فوضى إشعاعية', desc: 'يصل المفاعل إلى النقطة الحرجة وتبدأ المنشأة بالانهيار بينما تغطيك سحابة الغاز المشع الخانقة.' },
             { src: 'images/Projects/IWJATS/screenshot3.webp', title: 'أنقذ الجميع', desc: 'السباق لإنقاذ الأطفال الرضع، والقطط، والكلاب، والشخص المهم الغامض قبل الوصول إلى الملجأ الطارئ.' },
         ],
     },
-    videos: {
-        'iwjats': {
-            id: '1_v0l9b5qmU',
-            title: 'العرض الترويجي للعبة',
-        },
-    },
+    videos: {},
 };
