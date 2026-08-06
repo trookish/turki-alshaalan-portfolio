@@ -44,6 +44,11 @@ export const termTranslations = {
     "DocuMind": "DocuMind",
     "An open-source system for summarizing Arabic PDF documents using local LLMs and a simple Streamlit interface. A valuable learning project that helped understand how document summarization systems work in practice, from extraction to clustering and final generation.": "نظام مفتوح المصدر لتلخيص مستندات PDF العربية باستخدام Local LLMs وواجهة Streamlit مبسطة. مشروع تعليمي قيم ساعد في فهم كيفية عمل أنظمة تلخيص المستندات عملياً، بدءاً من الاستخراج إلى التجميع والتوليد النهائي.",
 
+    "MasarFlow": "MasarFlow",
+    "A professional project currently in development. Full details, features, and links will be published here once the project launches.": "مشروع مهني قيد التطوير حالياً. سيتم نشر التفاصيل الكاملة والمميزات والروابط هنا بمجرد إطلاق المشروع.",
+    "In Development": "قيد التطوير",
+    "Note: This is a placeholder — more information coming soon.": "ملاحظة: هذا مشروع مؤقت (Placeholder) — مزيد من المعلومات قريباً.",
+
     "Restaurant Ordering System": "Restaurant Ordering System",
     "A Java-based restaurant ordering application featuring a tree-structured menu, drink vending machine with stack-based inventory, and order queue management system.": "تطبيق طلبات مطاعم مبني بلغة Java يتميز بقائمة طعام ذات هيكل شجري، وآلة بيع مشروبات بنظام مخزون يعتمد على المكدس (Stack)، ونظام إدارة طابور الطلبات.",
 
