@@ -84,6 +84,7 @@ Allows switching themes via a control button. The engine alters global CSS varia
 ### 📂 Unified Project Showcase Gallery
 Rather than redirecting users, selecting projects triggers an immersive overlay modal displaying:
 - **Screenshot Sliders**: Multi-image galleries showcasing screenshots, and user interfaces (e.g. for *Syntax Strike* and *Dungeon Puzzle*).
+- **Trailer Video Slides**: Projects can embed their gameplay trailer as the first slide of the slideshow (e.g. *IT WAS JUST A TIGHTENED SCREW*), auto-playing in the gallery viewer.
 - **Localized Captions**: Image descriptions are updated depending on active language settings.
 - **Specs & Gallery Metadata**: Complete listings of tags, team credits, role mappings, and external repository links.
 
