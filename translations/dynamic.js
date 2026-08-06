@@ -32,6 +32,15 @@ export const termTranslations = {
 
     "View Gallery & Specs →": "عرض المعرض والمواصفات ←",
 
+    "IT WAS JUST A TIGHTENED SCREW": "IT WAS JUST A TIGHTENED SCREW",
+    "A chaotic comedy runner where a routine maintenance job at a nuclear facility goes horribly wrong after a single loose screw falls into the reactor. With only a short duration until a nuclear meltdown, you must sprint through a collapsing facility, dodge hazards, outrun a deadly radioactive gas cloud, and rescue babies, kittens, dogs, and the mysterious IMPORTANT person before reaching the emergency bunker. Every second counts, and every rescue could be the difference between survival and total disaster.": "لعبة جري كوميدية فوضوية حيث تتحول مهمة صيانة روتينية في منشأة نووية إلى كارثة مروعة بعد سقوط مسمار واحد مرتخٍ في المفاعل. ومع بقاء وقت قصير فقط قبل الانصهار النووي، يجب عليك الركض عبر المنشأة المنهارة، وتفادي المخاطر، والهروب من سحابة الغاز المشع القاتلة، وإنقاذ الأطفال الرضع والقطط والكلاب والشخص المهم الغامض قبل الوصول إلى الملجأ الطارئ. كل ثانية لها حساب، وكل عملية إنقاذ قد تكون الفرق بين النجاة والكارثة الكاملة.",
+    "Runner": "ألعاب الجري",
+    "Comedy": "الكوميديا",
+    "Game Jam": "هكاثون ألعاب",
+    "Game Developer": "مطور ألعاب",
+    "Play the Game →": "العب اللعبة ←",
+    "Note: You need to be logged in to the Qwacks website in order to play the game.": "ملاحظة: يجب تسجيل الدخول إلى موقع Qwacks لتتمكن من لعب اللعبة.",
+
     "DocuMind": "DocuMind",
     "An open-source system for summarizing Arabic PDF documents using local LLMs and a simple Streamlit interface. A valuable learning project that helped understand how document summarization systems work in practice, from extraction to clustering and final generation.": "نظام مفتوح المصدر لتلخيص مستندات PDF العربية باستخدام Local LLMs وواجهة Streamlit مبسطة. مشروع تعليمي قيم ساعد في فهم كيفية عمل أنظمة تلخيص المستندات عملياً، بدءاً من الاستخراج إلى التجميع والتوليد النهائي.",
 

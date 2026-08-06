@@ -1884,6 +1884,17 @@ html[dir="rtl"] .hud-bar-fill {
     line-height: 1.6;
 }
 
+.project-note {
+    font-family: var(--font-terminal);
+    font-size: 0.85rem;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px dashed rgba(251, 191, 36, 0.5);
+    padding: 0.5rem 0.6rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
 /* Project Category Sections */
 .project-category {
     margin-bottom: 3rem;
@@ -3397,6 +3408,37 @@ button.project-link {
 
 .ss-details-section #showcase-details-team {
     margin-top: 0.25rem;
+}
+
+.ss-details-note {
+    font-family: var(--font-terminal);
+    font-size: 1.05rem;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px dashed rgba(251, 191, 36, 0.5);
+    padding: 0.5rem 0.6rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.ss-video-container {
+    margin-bottom: 1rem;
+}
+
+.ss-video-main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #000;
+    border: 2px solid var(--border-color);
+}
+
+.ss-video-main iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
 .ss-action-btn {

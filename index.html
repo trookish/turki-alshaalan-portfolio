@@ -466,6 +466,39 @@
                             <button class="project-link showcase-trigger" data-project="syntax-strike">View Gallery & Specs →</button>
                         </div>
                     </div>
+
+                    <!-- Project 6: IT WAS JUST A TIGHTENED SCREW -->
+                    <div class="project-card" data-project="iwjats">
+                        <div class="project-header">
+                            <div class="project-image">
+                                <img loading="lazy" decoding="async" src="images/Projects/IWJATS.webp"
+                                    alt="IT WAS JUST A TIGHTENED SCREW Gameplay" class="project-img">
+                            </div>
+                            <h3 class="project-title">IT WAS JUST A TIGHTENED SCREW</h3>
+                            <span class="showcase-btn">Showcase &rarr;</span>
+                        </div>
+                        <div class="project-details">
+                            <p class="project-description">A chaotic comedy runner where a routine maintenance job at a nuclear facility goes horribly wrong after a single loose screw falls into the reactor. With only a short duration until a nuclear meltdown, you must sprint through a collapsing facility, dodge hazards, outrun a deadly radioactive gas cloud, and rescue babies, kittens, dogs, and the mysterious IMPORTANT person before reaching the emergency bunker. Every second counts, and every rescue could be the difference between survival and total disaster.</p>
+                            <div class="project-tags">
+                                <span class="tag">Unity</span>
+                                <span class="tag">C#</span>
+                                <span class="tag">Runner</span>
+                                <span class="tag">Comedy</span>
+                                <span class="tag">Game Jam</span>
+                            </div>
+                            <div class="project-team">
+                                <p class="team-title">Team Members:</p>
+                                <ul class="team-list">
+                                    <li><span class="team-name">Turki Alshaalan</span> <span class="team-role">Game Developer</span></li>
+                                </ul>
+                            </div>
+                            <p class="project-note">Note: You need to be logged in to the Qwacks website in order to play the game.</p>
+                            <div class="project-actions">
+                                <a href="https://community.qwacks.com/play?jam=sop-game-jam-2026&start=01KZ4M6JG2VPR7P14G3CTZMA2K&template=sop&stage=submissions" target="_blank" class="project-link">Play the Game →</a>
+                                <button class="project-link showcase-trigger" data-project="iwjats">View Gallery →</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1387,6 +1420,19 @@
                 <div class="ss-grid-container">
                     <!-- Left Column: Media -->
                     <div class="ss-col-media">
+                        <!-- Trailer Video Player (optional, shown when project has a video) -->
+                        <div class="ss-video-container" id="showcase-video-container" style="display: none;">
+                            <div class="ss-video-main">
+                                <iframe id="showcase-video-frame" src="" title="Trailer"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen loading="lazy"></iframe>
+                            </div>
+                            <div class="ss-caption-container">
+                                <div class="ss-caption-header">
+                                    <span id="showcase-video-title" class="ss-image-title">Trailer</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="ss-gallery-container">
                             <!-- Main Viewer -->
                             <div class="ss-gallery-main">
@@ -1427,13 +1473,17 @@
                             <div id="showcase-details-tags" class="project-tags">
                             </div>
                         </div>
-                        
+
                         <div class="ss-details-section" id="showcase-details-team-container">
                             <h4 id="showcase-details-team-label" class="ss-section-label">DEVELOPMENT TEAM</h4>
                             <div id="showcase-details-team">
                             </div>
                         </div>
-                        
+
+                        <div class="ss-details-section" id="showcase-details-note-container" style="display: none;">
+                            <p id="showcase-details-note" class="ss-details-note"></p>
+                        </div>
+
                         <div class="ss-details-actions">
                             <a id="showcase-details-link" href="#" target="_blank" class="ss-action-btn">View Project →</a>
                         </div>

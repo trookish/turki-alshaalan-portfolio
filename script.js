@@ -575,6 +575,11 @@ function initProjectShowcase() {
     const detailsTeamContainer = document.getElementById('showcase-details-team-container');
     const detailsTeam = document.getElementById('showcase-details-team');
     const detailsLink = document.getElementById('showcase-details-link');
+    const detailsNoteContainer = document.getElementById('showcase-details-note-container');
+    const detailsNote = document.getElementById('showcase-details-note');
+    const videoContainer = document.getElementById('showcase-video-container');
+    const videoFrame = document.getElementById('showcase-video-frame');
+    const videoTitle = document.getElementById('showcase-video-title');
 
     let currentProject = '';
     let currentIndex = 0;
@@ -657,6 +662,12 @@ function initProjectShowcase() {
         if (subtitleElem) subtitleElem.style.display = 'none';
         if (tagsLabel) tagsLabel.textContent = s.tech_stack;
         if (teamLabel) teamLabel.textContent = s.development_team;
+        if (detailsNoteContainer) detailsNoteContainer.style.display = 'none';
+        if (videoContainer) {
+            videoContainer.style.display = 'none';
+            delete videoFrame.dataset.src;
+            videoFrame.removeAttribute('src');
+        }
 
         if (currentIsAchievement) {
             // Scrape achievement details
@@ -831,6 +842,26 @@ function initProjectShowcase() {
                 prevArrow.style.display = 'none';
                 nextArrow.style.display = 'none';
             }
+
+            // Populate login / play note if present on the card
+            const noteElement = currentCard.querySelector('.project-note');
+            if (noteElement) {
+                detailsNoteContainer.style.display = 'block';
+                detailsNote.innerHTML = localize(noteElement.textContent.trim().replace(/\s+/g, ' '));
+            }
+
+            // Populate trailer video if available
+            const projectVideos = getShowcase(currentLang).videos || {};
+            const projectVideo = projectVideos[currentProject];
+            if (projectVideo) {
+                videoContainer.style.display = 'block';
+                videoFrame.dataset.src = `https://www.youtube.com/embed/${projectVideo.id}`;
+                videoTitle.textContent = projectVideo.title;
+            } else {
+                videoContainer.style.display = 'none';
+                delete videoFrame.dataset.src;
+                videoFrame.removeAttribute('src');
+            }
         }
 
         // Populate thumbnails
@@ -847,6 +878,11 @@ function initProjectShowcase() {
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+
+        // Lazy-load the trailer iframe once the modal is open
+        if (videoFrame && videoFrame.dataset.src) {
+            videoFrame.src = videoFrame.dataset.src;
+        }
         
         // Reset to first screenshot
         showScreenshot(0);
@@ -862,6 +898,9 @@ function initProjectShowcase() {
         modal.classList.remove('active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+
+        // Stop the trailer playback when the modal closes
+        if (videoFrame) videoFrame.removeAttribute('src');
     }
 
     // Event Listeners for Project Cards
@@ -871,6 +910,8 @@ function initProjectShowcase() {
 
         // Click event opens showcase
         card.addEventListener('click', (e) => {
+            // Let external links behave normally instead of opening the modal
+            if (e.target.closest('a')) return;
             openModal(projectKey, card);
         });
 
@@ -1012,7 +1053,7 @@ function initLanguageToggle() {
             // Headings and subtitles
             '.section-title', '.section-subtitle', '.category-title', '.category-description',
             // Project card details
-            '.project-title', '.project-description', '.team-title', '.team-name', '.team-role', '.project-tags .tag', '.project-link',
+            '.project-title', '.project-description', '.team-title', '.team-name', '.team-role', '.project-tags .tag', '.project-link', '.project-note',
             // Experience cards
             '.experience-title', '.experience-organization', '.experience-description', '.experience-date',
             // Skills tags
