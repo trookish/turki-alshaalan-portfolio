@@ -291,11 +291,14 @@
     <section class="projects" id="projects">
         <div class="container">
             <!-- Game Dev Projects -->
-            <div class="project-category">
+            <div class="project-category open">
                 <h2 class="section-title">Projects</h2>
                 <p class="section-subtitle">A collection of my work across different domains</p>
-                <h3 class="category-title">Game Development</h3>
-                <p class="category-description">Games and interactive experiences I've built</p>
+                <button type="button" class="category-toggle" aria-expanded="true">
+                    <h3 class="category-title">Game Development</h3>
+                    <p class="category-description">Games and interactive experiences I've built</p>
+                    <span class="category-indicator" aria-hidden="true"></span>
+                </button>
                 <div class="projects-grid">
                     <!-- Project 1: Dungeon Puzzle -->
                     <div class="project-card" data-project="dungeon-puzzle">
@@ -508,8 +511,11 @@
 
             <!-- Professional Projects -->
             <div class="project-category">
-                <h3 class="category-title">Professional Work</h3>
-                <p class="category-description">Industry projects in AI, web development, and more</p>
+                <button type="button" class="category-toggle" aria-expanded="false">
+                    <h3 class="category-title">Professional Work</h3>
+                    <p class="category-description">Industry projects in AI, web development, and more</p>
+                    <span class="category-indicator" aria-hidden="true"></span>
+                </button>
                 <div class="projects-grid">
                     <!-- DocuMind Project -->
                     <div class="project-card" data-project="documind">
@@ -570,8 +576,11 @@
 
             <!-- University Projects -->
             <div class="project-category">
-                <h3 class="category-title">University Projects</h3>
-                <p class="category-description">Academic projects and coursework</p>
+                <button type="button" class="category-toggle" aria-expanded="false">
+                    <h3 class="category-title">University Projects</h3>
+                    <p class="category-description">Academic projects and coursework</p>
+                    <span class="category-indicator" aria-hidden="true"></span>
+                </button>
                 <div class="projects-grid">
                     <!-- Restaurant Ordering System -->
                     <div class="project-card" data-project="restaurant-ordering">

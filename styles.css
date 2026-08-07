@@ -1743,10 +1743,14 @@ html[dir="rtl"] .hud-bar-fill {
    Projects Section - Pixel Style
    ======================================== */
 .projects-grid {
-    display: grid;
+    display: none;
     grid-template-columns: 1fr;
     gap: 1.5rem;
     align-items: start;
+}
+
+.project-category.open .projects-grid {
+    display: grid;
 }
 
 @media (min-width: 640px) {
@@ -1926,6 +1930,60 @@ html[dir="rtl"] .hud-bar-fill {
     font-size: 1rem;
     color: var(--text-muted);
     margin-bottom: 1.5rem;
+}
+
+/* Category Toggle Buttons - collapse/expand each project section */
+.category-toggle {
+    display: block;
+    width: 100%;
+    position: relative;
+    text-align: start;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border-color);
+    padding: 0.5rem 2.5rem 0.75rem 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color var(--transition-fast);
+}
+
+.category-toggle:hover {
+    border-color: var(--accent-primary);
+}
+
+.category-toggle:hover .category-title {
+    color: var(--accent-light, var(--accent-primary));
+}
+
+.category-toggle:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+.category-toggle .category-title {
+    border-bottom: none;
+    margin-bottom: 0.15rem;
+}
+
+.category-toggle .category-description {
+    margin-bottom: 0;
+}
+
+.category-indicator {
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 0.25rem;
+    margin-top: -10px;
+    width: 12px;
+    height: 12px;
+    border-right: 3px solid var(--accent-primary);
+    border-bottom: 3px solid var(--accent-primary);
+    transform: translateY(0) rotate(-45deg);
+    transition: transform var(--transition-fast);
+}
+
+.project-category.open .category-indicator {
+    transform: translateY(4px) rotate(135deg);
 }
 
 .project-tags {
@@ -3779,6 +3837,21 @@ html[dir="rtl"] .nav-container {
     .project-category + .project-category {
         page-break-before: always !important;
         break-before: always !important;
+    }
+
+    /* Category toggles are non-interactive in print */
+    .category-toggle {
+        border: none !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+
+    .category-indicator {
+        display: none !important;
+    }
+
+    .project-category .projects-grid {
+        display: flex !important;
     }
 
     /* ── Section Titles — always centered ── */
