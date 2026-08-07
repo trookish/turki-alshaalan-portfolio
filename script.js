@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initFooterYear();
     // initAchievementExpand(); // Retired in favor of unified showcase popup
     initProjectShowcase();
-    initProjectCategories();
 });
 
 /**
@@ -574,31 +573,6 @@ document.addEventListener('keydown', (e) => {
         closeCertModal();
     }
 });
-
-/**
- * Project Category Toggles - Collapse each project category behind a
- * button that expands and shows its related projects on click.
- */
-function initProjectCategories() {
-    const categories = [...document.querySelectorAll('.project-category')];
-    categories.forEach(category => {
-        const toggle = category.querySelector('.category-toggle');
-        if (!toggle) return;
-
-        toggle.addEventListener('click', () => {
-            const willOpen = !category.classList.contains('open');
-            categories.forEach(c => {
-                c.classList.remove('open');
-                const t = c.querySelector('.category-toggle');
-                if (t) t.setAttribute('aria-expanded', 'false');
-            });
-            if (willOpen) {
-                category.classList.add('open');
-                toggle.setAttribute('aria-expanded', 'true');
-            }
-        });
-    });
-}
 
 /**
  * Game Projects Showcase Modal Logic
