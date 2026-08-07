@@ -3829,6 +3829,8 @@ html[dir="rtl"] .nav-container {
     .cert-modal-overlay,
     .cert-modal-content,
     .certification-actions,
+    .ss-overlay,
+    .ss-modal,
     footer {
         display: none !important;
         visibility: hidden !important;
@@ -4625,4 +4627,43 @@ html[dir="rtl"] .nav-container {
     html[dir="rtl"] .navbar {
         display: none !important;
     }
+
+    /* RTL (Arabic) print typography — match the compact LTR print scale
+       (overrides the on-screen RTL font-size boosts for print only) */
+    html[dir="rtl"] body,
+    html[dir="rtl"] p,
+    html[dir="rtl"] a,
+    html[dir="rtl"] span,
+    html[dir="rtl"] li,
+    html[dir="rtl"] button,
+    html[dir="rtl"] input,
+    html[dir="rtl"] textarea {
+        font-size: 11pt !important;
+    }
+
+    html[dir="rtl"] h1 { font-size: 1.8rem !important; }
+    html[dir="rtl"] h2 { font-size: 1.5rem !important; }
+    html[dir="rtl"] h3 { font-size: 1.2rem !important; }
+    html[dir="rtl"] h4 { font-size: 1.05rem !important; }
+    html[dir="rtl"] h5 { font-size: 1rem !important; }
+    html[dir="rtl"] h6 { font-size: 1rem !important; }
+
+    html[dir="rtl"] .hero-name { font-size: 1.8rem !important; }
+    html[dir="rtl"] .hero-title { font-size: 1rem !important; }
+    html[dir="rtl"] .section-title { font-size: 1.4rem !important; }
+    html[dir="rtl"] .section-subtitle { font-size: 0.95rem !important; }
+    html[dir="rtl"] .about-text p { font-size: 0.95rem !important; }
+    html[dir="rtl"] .project-description,
+    html[dir="rtl"] .experience-description,
+    html[dir="rtl"] .activities-text { font-size: 0.85rem !important; }
+    html[dir="rtl"] .project-title,
+    html[dir="rtl"] .experience-title,
+    html[dir="rtl"] .certification-title,
+    html[dir="rtl"] .achievement-title { font-size: 1.05rem !important; }
+    html[dir="rtl"] .tag { font-size: 0.75rem !important; }
+    html[dir="rtl"] .skill-category-name { font-size: 0.85rem !important; }
+    html[dir="rtl"] .education-degree,
+    html[dir="rtl"] .education-university { font-size: 0.8rem !important; }
+    html[dir="rtl"] .contact-label,
+    html[dir="rtl"] .contact-value { font-size: 0.9rem !important; }
 }

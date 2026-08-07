@@ -248,6 +248,11 @@ function initPdfExport() {
 
     if (pdfExportBtn) {
         pdfExportBtn.addEventListener('click', () => {
+            // Force eager-loading of lazy images so nothing is blank in the PDF
+            document.querySelectorAll('img').forEach(img => {
+                img.loading = 'eager';
+            });
+
             // Trigger browser print dialog which can save as PDF
             window.print();
         });
