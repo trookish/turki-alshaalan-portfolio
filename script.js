@@ -300,8 +300,8 @@ function isGameElement(el) {
 }
 
 function initHoverSounds() {
-    const MIN_PITCH = 1.0;
-    const MAX_PITCH = 1.5;
+    const MIN_PITCH = 0.9;
+    const MAX_PITCH = 1.2;
 
     let audioCtx = null;
     let hoverBuffer = null;
