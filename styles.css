@@ -1467,6 +1467,7 @@ html[dir="rtl"] .hud-bar-fill {
 }
 
 .hero-buttons {
+    margin-top: 1.75rem;
     display: flex;
     gap: 1rem;
     justify-content: center;

@@ -24,7 +24,7 @@ export const en = {
     'game_info_lock': '[Q] Lock-On',
     'game_info_exit': '[ESC] Exit',
     'hero_name': 'Turki Alshaalan',
-    'hero_title': 'IT Graduand at IMSIU | Game Developer | Game Designer & Programmer',
+    'hero_title': 'IT Graduand at IMSIU | Game Developer | AI & Web Developer',
     
     'hero_btn_projects': 'View Projects',
     'hero_btn_contact': 'Contact Me',
