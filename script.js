@@ -3,10 +3,10 @@
  * Interactive functionality and animations
  */
 
-import { en as enStatic } from './translations/en.js?v=2';
-import { ar as arStatic } from './translations/ar.js?v=2';
-import { termTranslations } from './translations/dynamic.js?v=2';
-import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=2';
+import { en as enStatic } from './translations/en.js?v=3';
+import { ar as arStatic } from './translations/ar.js?v=3';
+import { termTranslations } from './translations/dynamic.js?v=3';
+import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=3';
 
 const staticTranslations = { en: enStatic, ar: arStatic };
 const showcase = { en: showcaseEn, ar: showcaseAr };
@@ -575,18 +575,22 @@ document.addEventListener('keydown', (e) => {
  * button that expands and shows its related projects on click.
  */
 function initProjectCategories() {
-    document.querySelectorAll('.project-category').forEach(category => {
+    const categories = [...document.querySelectorAll('.project-category')];
+    categories.forEach(category => {
         const toggle = category.querySelector('.category-toggle');
         if (!toggle) return;
 
-        const setState = () => {
-            toggle.setAttribute('aria-expanded',
-                String(category.classList.contains('open')));
-        };
-
         toggle.addEventListener('click', () => {
-            category.classList.toggle('open');
-            setState();
+            const willOpen = !category.classList.contains('open');
+            categories.forEach(c => {
+                c.classList.remove('open');
+                const t = c.querySelector('.category-toggle');
+                if (t) t.setAttribute('aria-expanded', 'false');
+            });
+            if (willOpen) {
+                category.classList.add('open');
+                toggle.setAttribute('aria-expanded', 'true');
+            }
         });
     });
 }
