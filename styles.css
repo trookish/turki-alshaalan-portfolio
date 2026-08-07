@@ -3680,6 +3680,10 @@ html[dir="rtl"] .highlight-icon {
     display: inline-block;
 }
 
+html[dir="rtl"] .ss-nav-arrow {
+    transform: translateY(-50%) scaleX(-1);
+}
+
 /* Premium Arabic Typography Sizing Overrides */
 html[dir="rtl"] body {
     font-size: 19px !important;
