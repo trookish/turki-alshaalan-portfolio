@@ -627,7 +627,7 @@ function initProjectShowcase() {
         if (!videoSlideEl) {
             videoSlideEl = document.createElement('iframe');
             videoSlideEl.className = 'ss-video-slide';
-            videoSlideEl.title = 'Game Trailer';
+            videoSlideEl.title = 'Gameplay Video';
             videoSlideEl.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
             videoSlideEl.setAttribute('allowfullscreen', '');
             videoSlideEl.style.display = 'none';
@@ -914,7 +914,7 @@ function initProjectShowcase() {
                 detailsNote.innerHTML = localize(noteElement.textContent.trim().replace(/\s+/g, ' '));
             }
 
-            // Populate trailer video if available
+            // Populate gameplay video if available
             const projectVideos = getShowcase(currentLang).videos || {};
             const projectVideo = projectVideos[currentProject];
             if (projectVideo) {
@@ -943,7 +943,7 @@ function initProjectShowcase() {
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
 
-        // Lazy-load the trailer iframe once the modal is open
+        // Lazy-load the gameplay video iframe once the modal is open
         if (videoFrame && videoFrame.dataset.src) {
             videoFrame.src = videoFrame.dataset.src;
         }
@@ -963,7 +963,7 @@ function initProjectShowcase() {
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
 
-        // Stop the trailer playback when the modal closes
+        // Stop the gameplay video playback when the modal closes
         if (videoFrame) videoFrame.removeAttribute('src');
         if (videoSlideEl) videoSlideEl.removeAttribute('src');
     }

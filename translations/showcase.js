@@ -32,6 +32,7 @@ export const en = {
             { src: 'images/Projects/DungeonPuzzle/screenshot6.webp', title: 'Treasure Corner', desc: 'A corner housing ancient wooden chests.' },
         ],
         'scary-library': [
+            { type: 'video', id: 'dzCUWznZ7e8', title: 'Gameplay Video', desc: 'Watch the full gameplay video — solve book puzzles and escape the haunted library while the AI monster hunts you.' },
             { src: 'images/Projects/ScaryLibrary/screenshot1.webp', title: 'The Book Puzzle Shelf', desc: 'A stone wall shelf with slots for 5 books, instructing the player to place them in order.' },
             { src: 'images/Projects/ScaryLibrary/screenshot2.webp', title: 'AI Monster Patrolling', desc: 'Creepy white-faced monster patrolling the library corridors as a red book sits on a table.' },
             { src: 'images/Projects/ScaryLibrary/screenshot3.webp', title: 'Library Jumpscare', desc: 'Horrifying moment the player is caught close-up by the monster.' },
@@ -57,7 +58,7 @@ export const en = {
             { src: 'images/Projects/SyntaxStrike/screenshot7.webp', title: 'Level Completion Score Scene', desc: 'Level completion scoreboard tracking player statistics including enemies defeated, programming puzzle accuracy, time bonuses, and final score.' },
         ],
         'iwjats': [
-            { type: 'video', id: '1_v0l9b5qmU', title: 'Game Trailer', desc: 'Watch the full gameplay trailer — a routine maintenance job at the nuclear facility, one loose screw away from complete disaster.' },
+            { type: 'video', id: '1_v0l9b5qmU', title: 'Gameplay Video', desc: 'Watch the full gameplay video — a routine maintenance job at the nuclear facility, one loose screw away from complete disaster.' },
             { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'One Loose Screw', desc: 'A routine maintenance job at the nuclear facility — one loose screw away from complete disaster.' },
             { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'Radioactive Chaos', desc: 'The reactor goes critical and the facility starts to collapse as the radioactive gas cloud closes in.' },
             { src: 'images/Projects/IWJATS/screenshot3.webp', title: 'Rescue Everyone', desc: 'Racing to save the babies, kittens, dogs, and the mysterious IMPORTANT person before reaching the emergency bunker.' },
@@ -89,6 +90,7 @@ export const ar = {
             { src: 'images/Projects/DungeonPuzzle/screenshot6.webp', title: 'ركن الكنز', desc: 'ركن فيه صناديق خشبية من القديم.' },
         ],
         'scary-library': [
+            { type: 'video', id: 'dzCUWznZ7e8', title: 'فيديو اللعب', desc: 'شاهد فيديو اللعب كامل — حلّ ألغاز الكتب واهرب من المكتبة المسكونة وأنت مطارد من وحش ذكاء اصطناعي.' },
             { src: 'images/Projects/ScaryLibrary/screenshot1.webp', title: 'رفّ لغز الكتب', desc: 'رف حجري فيه خمس خانات يسوي فيها اللاعب الكتب بالترتيب الصحيح.' },
             { src: 'images/Projects/ScaryLibrary/screenshot2.webp', title: 'وحش الذكاء الاصطناعي في دورية', desc: 'وحش مخيف بوجه أبيض يلف على ممرات المكتبة وكتاب أحمر قاعد على الطاولة.' },
             { src: 'images/Projects/ScaryLibrary/screenshot3.webp', title: 'لفعة المكتبة', desc: 'لحظة مرعبة لما الوحش يمسك اللاعب عن قريب.' },
@@ -114,7 +116,7 @@ export const ar = {
             { src: 'images/Projects/SyntaxStrike/screenshot7.webp', title: 'مشهد النتيجة النهائية', desc: 'لوحة النهاية تعرض كل إحصائياتك: الأعداء اللي هزمتهم، ودقتك في حل الألغاز البرمجية، ومكافآت الوقت، والنتيجة النهائية.' },
         ],
         'iwjats': [
-            { type: 'video', id: '1_v0l9b5qmU', title: 'العرض الترويجي للعبة', desc: 'شاهد العرض الترويجي الكامل — مهمة صيانة روتينية في المنشأة النووية، برغي واحد يبعدك عن الكارثة الكاملة.' },
+            { type: 'video', id: '1_v0l9b5qmU', title: 'فيديو اللعب', desc: 'شاهد فيديو اللعب كامل — مهمة صيانة روتينية في المنشأة النووية، برغي واحد يبعدك عن الكارثة الكاملة.' },
             { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'برغي واحد مرتخي', desc: 'مهمة صيانة روتينية في المنشأة النووية — برغي واحد يبعدك عن الكارثة الكاملة.' },
             { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'فوضى إشعاعية', desc: 'المفاعل يوصل مرحلة الخطر ويبتدي المبنى بالانهيار بينما سحابة الغاز المشع تقرتب.' },
             { src: 'images/Projects/IWJATS/screenshot3.webp', title: 'أنقذ الجميع', desc: 'سباق تنقذ فيه الرضع والقطط والكلاب والشخص المهم الغامض قبل ما توصل للملجأ.' },
