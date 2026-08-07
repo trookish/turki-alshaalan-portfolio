@@ -302,6 +302,8 @@ function isGameElement(el) {
 function initHoverSounds() {
     const hoverSound = new Audio('Sounds/Normal/Hover.wav');
     hoverSound.volume = 0.3;
+    const MIN_PITCH = 1.0;
+    const MAX_PITCH = 1.5;
 
     document.addEventListener('mouseover', (e) => {
         const el = e.target.closest(UI_SOUND_SELECTORS);
@@ -310,6 +312,8 @@ function initHoverSounds() {
         if (e.relatedTarget && el.contains(e.relatedTarget)) return;
         if (localStorage.getItem('sound') !== 'false') {
             hoverSound.currentTime = 0;
+            hoverSound.playbackRate = MIN_PITCH +
+                Math.random() * (MAX_PITCH - MIN_PITCH);
             hoverSound.play().catch(() => { });
         }
     });
