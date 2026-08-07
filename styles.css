@@ -1450,22 +1450,6 @@ html[dir="rtl"] .hud-bar-fill {
     margin-bottom: 1.75rem;
 }
 
-.hero-tags .tag {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
-    border-radius: 4px;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-}
-
-.hero-tags .tag:hover {
-    border-color: var(--accent-primary);
-    background: var(--accent-primary);
-    color: var(--bg-primary);
-}
-
 .hero-buttons {
     margin-top: 1.75rem;
     display: flex;
