@@ -3,72 +3,72 @@
 // Values are the Arabic equivalents. If a key equals its value, the term stays as-is in AR.
 export const termTranslations = {
     "Projects": "المشاريع",
-    "A collection of my work across different domains": "مجموعة من أعمالي في مجالات مختلفة",
+    "A collection of my work across different domains": "مجموعة من شغلي في مجالات مختلفة",
     "Game Development": "تطوير الألعاب",
-    "Games and interactive experiences I've built": "الألعاب والتجارب التفاعلية التي قمت ببنائها",
-    "Professional Work": "العمل المهني",
-    "Industry projects in AI, web development, and more": "مشاريع صناعية في الذكاء الاصطناعي وتطوير الويب وغيرها",
-    "University Projects": "المشاريع الجامعية",
-    "Academic projects and coursework": "مشاريع أكاديمية ومقررات دراسية",
+    "Games and interactive experiences I've built": "ألعاب وتجارب تفاعلية سويتها بنفسي",
+    "Professional Work": "شغلي الاحترافي",
+    "Industry projects in AI, web development, and more": "مشاريع حقيقية في الذكاء الاصطناعي وتطوير الويب وغيرها",
+    "University Projects": "مشاريع الجامعة",
+    "Academic projects and coursework": "مشاريع أكاديمية ومواد درستها",
 
     // Project Cards Details
     "Dungeon Puzzle": "Dungeon Puzzle",
-    "A puzzle-based gameplay experience where players navigate through dangerous dungeons, avoiding death traps and overcoming environmental challenges to reach the exit.": "تجربة لعب تعتمد على الألغاز حيث يتنقل اللاعبون عبر دهاليز خطيرة، متجنبين فخاخ الموت ومتغلبين على التحديات البيئية للوصول إلى المخرج.",
+    "A puzzle-based gameplay experience where players navigate through dangerous dungeons, avoiding death traps and overcoming environmental challenges to reach the exit.": "تجربة لعب تعتمد على الألغاز، يخوض اللاعب دهاليز خطيرة ويتجنّب فخاخ الموت ويتغلب على تحدّيات البيئة عشان يوصل للمخرج.",
     "View Project →": "عرض المشروع ←",
     "View Gallery →": "عرض المعرض ←",
     "Team Members:": "أعضاء الفريق:",
 
     "The Scary Library": "The Scary Library",
-    "A horror game developed during a Game Jam featuring an AI enemy that hunts the player. Solve book-based puzzles using 5 books to escape the haunted library.": "لعبة رعب تم تطويرها خلال هكاثون ألعاب (Game Jam) تتميز بعدو ذكاء اصطناعي يطارد اللاعب. قم بحل الألغاز المعتمدة على الكتب باستخدام 5 كتب للهروب من المكتبة المسكونة.",
+    "A horror game developed during a Game Jam featuring an AI enemy that hunts the player. Solve book-based puzzles using 5 books to escape the haunted library.": "لعبة رعب سويتها في هكاثون ألعاب (Game Jam) فيها عدو ذكاء اصطناعي يطارد اللاعب. حلّ ألغاز الكتب الخمسة عشان تهرب من المكتبة المسكونة.",
 
     "Knight With a Gun": "Knight With a Gun",
-    "Face hordes of enemies as a Knight using your own gun. Survive the endless horde in this action-packed survival game.": "واجه جحافل الأعداء بصفتك فارساً يستخدم مسدسك الخاص. انجُ من الحشود اللانهائية في لعبة البقاء المليئة بالحركة هذه.",
+    "Face hordes of enemies as a Knight using your own gun. Survive the endless horde in this action-packed survival game.": "واجه جحافل الأعداء بصفتك فارسًا وأنت ماسك مسدسك الخاص. عيش أطول فترة ممكنة مع الحشود اللا نهائية في لعبة البقاء المليئة بالحماس.",
 
     "The Hidden Kanz": "The Hidden Kanz",
-    "A combat-based dungeon crawler where players fight waves of skeleton AI enemies using sword combat and magic abilities to survive and clear the dungeon.": "لعبة استكشاف دهاليز قتالية حيث يقاتل اللاعبون موجات من الهياكل العظمية التي تعمل بالذكاء الاصطناعي باستخدام قتال السيوف والقدرات السحرية للنجاة وتطهير الدهليز.",
+    "A combat-based dungeon crawler where players fight waves of skeleton AI enemies using sword combat and magic abilities to survive and clear the dungeon.": "لعبة قتال واستكشاف دهاليز، يقاتل فيها اللاعب موجات من الهياكل العظمية الذكية بالسيف والقدرات السحرية عشان ينجو ويصفّي المكان.",
 
     "Syntax Strike": "سنتاكس سترايك",
-    "A 3D educational action-RPG built in Unity where players master coding by solving Java puzzles. Features compiler-integrated combat mechanics, dynamic quest lines, and a custom evaluation companion. Turki engineered the C# game systems, player state controllers, parser integration, and enemy AI combat patterns.": "لعبة تقمص أدوار قتالية تعليمية ثلاثية الأبعاد مبنية في Unity حيث يتقن اللاعبون البرمجة عن طريق حل ألغاز Java. تتميز بميكانيكيات قتال متكاملة مع المترجم (Compiler)، ومهام ديناميكية، ورفيق تقييم مخصص. هندس تركي أنظمة لعبة C#، ومتحكمات حالة اللاعب، وتكامل المحلل (Parser)، وأنماط قتال الأعداء بالذكاء الاصطناعي.",
+    "A 3D educational action-RPG built in Unity where players master coding by solving Java puzzles. Features compiler-integrated combat mechanics, dynamic quest lines, and a custom evaluation companion. Turki engineered the C# game systems, player state controllers, parser integration, and enemy AI combat patterns.": "لعبة أكشن-RPG تعليمية ثلاثية الأبعاد مبنية في Unity، يتقن فيها اللاعب البرمجة عن طريق حل ألغاز Java. فيها ميكانيكيات قتال مدمجة مع المترجم (Compiler)، ومهام ديناميكية، ورفيق تقييم خاص. تركي بنى أنظمة اللعبة بـ C# ومتحكمات حالة اللاعب وتكامل المحلل (Parser) وأنماط قتال الأعداء بالذكاء الاصطناعي.",
 
     "View Gallery & Specs →": "عرض المعرض والمواصفات ←",
 
     "IT WAS JUST A TIGHTENED SCREW": "IT WAS JUST A TIGHTENED SCREW",
-    "A chaotic comedy runner where a routine maintenance job at a nuclear facility goes horribly wrong after a single loose screw falls into the reactor. With only a short duration until a nuclear meltdown, you must sprint through a collapsing facility, dodge hazards, outrun a deadly radioactive gas cloud, and rescue babies, kittens, dogs, and the mysterious IMPORTANT person before reaching the emergency bunker. Every second counts, and every rescue could be the difference between survival and total disaster.": "لعبة جري كوميدية فوضوية حيث تتحول مهمة صيانة روتينية في منشأة نووية إلى كارثة مروعة بعد سقوط مسمار واحد مرتخٍ في المفاعل. ومع بقاء وقت قصير فقط قبل الانصهار النووي، يجب عليك الركض عبر المنشأة المنهارة، وتفادي المخاطر، والهروب من سحابة الغاز المشع القاتلة، وإنقاذ الأطفال الرضع والقطط والكلاب والشخص المهم الغامض قبل الوصول إلى الملجأ الطارئ. كل ثانية لها حساب، وكل عملية إنقاذ قد تكون الفرق بين النجاة والكارثة الكاملة.",
+    "A chaotic comedy runner where a routine maintenance job at a nuclear facility goes horribly wrong after a single loose screw falls into the reactor. With only a short duration until a nuclear meltdown, you must sprint through a collapsing facility, dodge hazards, outrun a deadly radioactive gas cloud, and rescue babies, kittens, dogs, and the mysterious IMPORTANT person before reaching the emergency bunker. Every second counts, and every rescue could be the difference between survival and total disaster.": "لعبة جري كوميدية فوضوية، مهمة صيانة بسيطة في منشأة نووية تنقلب كارثة حقيقية بعد ما طاح مسمار واحد بالمفاعل. ومعك وقت قصير قبل الانصهار النووي، لازم تجري وسط المنشأة اللي تنهار، تتفادى الأخطار، تفلت من سحابة الغاز المشع، وتنقذ الأطفال الرضع والقطط والكلاب والشخص الغامض المهم قبل ما توصل للملجأ الطوارئ. كل ثانية تحسب، وكل عملية إنقاذ ممكن تكون الفرق بين النجاة والكارثة الكاملة.",
     "Runner": "ألعاب الجري",
     "Comedy": "الكوميديا",
     "Game Jam": "هكاثون ألعاب",
     "Game Developer": "مطور ألعاب",
     "Play the Game →": "العب اللعبة ←",
-    "Note: You need to be logged in to the Qwacks website in order to play the game.": "ملاحظة: يجب تسجيل الدخول إلى موقع Qwacks لتتمكن من لعب اللعبة.",
+    "Note: You need to be logged in to the Qwacks website in order to play the game.": "ملاحظة: لازم تسجل دخول في موقع Qwacks عشان تقدر تلعب اللعبة.",
 
     "DocuMind": "DocuMind",
-    "An open-source system for summarizing Arabic PDF documents using local LLMs and a simple Streamlit interface. A valuable learning project that helped understand how document summarization systems work in practice, from extraction to clustering and final generation.": "نظام مفتوح المصدر لتلخيص مستندات PDF العربية باستخدام Local LLMs وواجهة Streamlit مبسطة. مشروع تعليمي قيم ساعد في فهم كيفية عمل أنظمة تلخيص المستندات عملياً، بدءاً من الاستخراج إلى التجميع والتوليد النهائي.",
+    "An open-source system for summarizing Arabic PDF documents using local LLMs and a simple Streamlit interface. A valuable learning project that helped understand how document summarization systems work in practice, from extraction to clustering and final generation.": "نظام مفتوح المصدر لتلخيص مستندات PDF العربية باستخدام نماذج LLM محلية وواجهة Streamlit بسيطة. مشروع تعليمي قيّم خلاني أفهم كيف تشتغل أنظمة تلخيص المستندات عملياً، من الاستخراج إلى التجميع والتوليد النهائي.",
 
     "MasarFlow": "MasarFlow",
-    "A professional project currently in development. Full details, features, and links will be published here once the project launches.": "مشروع مهني قيد التطوير حالياً. سيتم نشر التفاصيل الكاملة والمميزات والروابط هنا بمجرد إطلاق المشروع.",
+    "A professional project currently in development. Full details, features, and links will be published here once the project launches.": "مشروع مهني قيد التطوير حالياً. كل التفاصيل والمميزات والروابط بتنزل هنا بمجرد ما ينطلق المشروع.",
     "In Development": "قيد التطوير",
-    "Note: This is a placeholder — more information coming soon.": "ملاحظة: هذا مشروع مؤقت (Placeholder) — مزيد من المعلومات قريباً.",
+    "Note: This is a placeholder — more information coming soon.": "ملاحظة: هذا نص مؤقت — التفاصيل الكاملة قريباً.",
 
     "Restaurant Ordering System": "Restaurant Ordering System",
-    "A Java-based restaurant ordering application featuring a tree-structured menu, drink vending machine with stack-based inventory, and order queue management system.": "تطبيق طلبات مطاعم مبني بلغة Java يتميز بقائمة طعام ذات هيكل شجري، وآلة بيع مشروبات بنظام مخزون يعتمد على المكدس (Stack)، ونظام إدارة طابور الطلبات.",
+    "A Java-based restaurant ordering application featuring a tree-structured menu, drink vending machine with stack-based inventory, and order queue management system.": "تطبيق طلبات مطاعم مبني بلغة Java فيه قائمة طعام بهيكل شجري، وآلة بيع مشروبات بنظام مخزون قائم على المكدس (Stack)، ونظام إدارة طابور الطلبات.",
 
     "Recipe Hub": "Recipe Hub",
-    "A web-based recipe management application built with PHP, MySQL, HTML, CSS, and JavaScript. Features include browsing recipes, search functionality, categories, favorites, and an admin panel for managing recipes.": "تطبيق ويب لإدارة وصفات الطعام مبني باستخدام PHP و MySQL و HTML و CSS و JavaScript. تشمل الميزات تصفح الوصفات، وخاصية البحث، والتصنيفات، والمفضلة، ولوحة تحكم للمسؤول لإدارة الوصفات.",
+    "A web-based recipe management application built with PHP, MySQL, HTML, CSS, and JavaScript. Features include browsing recipes, search functionality, categories, favorites, and an admin panel for managing recipes.": "تطبيق ويب لإدارة وصفات الطعام مبني بـ PHP و MySQL و HTML و CSS و JavaScript. يشمل تصفح الوصفات، والبحث، والتصنيفات، والمفضلة، ولوحة تحكم للمسؤول لإدارة الوصفات.",
     "Web Systems Team:": "فريق أنظمة الويب:",
     "Architecture Team:": "فريق معمارية البرمجيات:",
 
     "SecureCheck": "SecureCheck",
-    "A web-based data breach awareness platform that helps users check if their passwords and email addresses have been compromised in data breaches. This project demonstrates ethical security tool development using k-Anonymity model for privacy-preserving password checking.": "منصة ويب للتوعية بانتهاكات البيانات تساعد المستخدمين على التحقق مما إذا كانت كلمات المرور وعناوين بريدهم الإلكتروني قد تم اختراقها في تسريبات البيانات. يوضح هذا المشروع تطوير أدوات أمان أخلاقية باستخدام نموذج k-Anonymity لفحص كلمات المرور مع الحفاظ على الخصوصية.",
+    "A web-based data breach awareness platform that helps users check if their passwords and email addresses have been compromised in data breaches. This project demonstrates ethical security tool development using k-Anonymity model for privacy-preserving password checking.": "منصة ويب للتوعية بتسريبات البيانات، تساعد المستخدمين يتحققون إذا كلمات المرور والبريد الإلكتروني انخترقت في تسريبات سابقة. المشروع يوضح تطوير أدوات أمان أخلاقية باستخدام نموذج k-Anonymity لفحص كلمات المرور مع الحفاظ على الخصوصية.",
 
     "Smart Campus Services": "Smart Campus Services",
-    "A comprehensive Android application designed to provide campus services to students, including announcements, product browsing, shopping cart functionality, and contact features. Built using Java with SQLite for local data storage.": "تطبيق Android شامل مصمم لتقديم خدمات الحرم الجامعي للطلاب، بما في ذلك الإعلانات، وتصفح المنتجات، وعربة التسوق، وميزات الاتصال. تم بناؤه باستخدام Java مع SQLite لتخزين البيانات محلياً.",
+    "A comprehensive Android application designed to provide campus services to students, including announcements, product browsing, shopping cart functionality, and contact features. Built using Java with SQLite for local data storage.": "تطبيق أندرويد شامل يوفر خدمات الحرم الجامعي للطلاب، من الإعلانات وتصفح المنتجات وسلة التسوق وميزات التواصل. مبني بلغة Java مع SQLite لتخزين البيانات محلياً.",
 
     "Graduation Project": "مشروع التخرج",
-    "A senior graduation project (IT492) investigating game-based learning effectiveness. Designed to assess the pedagogical impact of interactive coding puzzles (Parsons Problems) in reducing learning barriers for CS students. Evaluated using structured player feedback and learning-gain metrics. Abdulaziz led agile coordination and stakeholder reporting, Turki directed implementation logic, and Saud managed levels and user testing.": "مشروع تخرج للسنوات النهائية (IT492) يبحث في فعالية التعلم القائم على الألعاب. صُمم لتقييم الأثر التربوي لألغاز البرمجة التفاعلية (Parsons Problems) في تقليل حواجز التعلم لطلاب علوم الحاسب. تم تقييمه باستخدام تعليقات اللاعبين المنظمة ومقاييس اكتساب المعرفة. قاد عبد العزيز التنسيق المرن وإعداد التقارير لأصحاب المصلحة، ووجه تركي منطق التنفيذ، وأدار سعود المراحل واختبار المستخدمين.",
+    "A senior graduation project (IT492) investigating game-based learning effectiveness. Designed to assess the pedagogical impact of interactive coding puzzles (Parsons Problems) in reducing learning barriers for CS students. Evaluated using structured player feedback and learning-gain metrics. Abdulaziz led agile coordination and stakeholder reporting, Turki directed implementation logic, and Saud managed levels and user testing.": "مشروع تخرج (IT492) يبحث في فعالية التعلم القائم على الألعاب. صممناه عشان نقيس أثر الألغاز البرمجية التفاعلية (Parsons Problems) على تقليل صعوبات التعلم عند طلاب علوم الحاسب. تم تقييمه بآراء اللاعبين المنظمة ومقاييس اكتساب المعرفة. عبدالعزيز قاد التنسيق وإعداد التقارير، تركي وجّه منطق التنفيذ، وسعود أدار المراحل واختبار المستخدمين.",
 
     // Skills
     "Skills": "المهارات",
-    "Technologies and disciplines I work with": "التقنيات والمجالات التي أعمل بها",
+    "Technologies and disciplines I work with": "التقنيات والمجالات اللي أشتغل فيها",
     "Core Skills": "المهارات الأساسية",
     "Problem Solving": "حل المشكلات",
     "Team Problem Solving": "حل المشكلات الجماعي",
@@ -101,19 +101,19 @@ export const termTranslations = {
 
     // Experience
     "Experience": "الخبرة",
-    "Where I've contributed and grown": "أين ساهمت وتطورت",
+    "Where I've contributed and grown": "أماكن ساهمت فيها وتطوّرت",
     "Team Member": "عضو فريق",
     "Enjaz Club - Game Development Section": "نادي إنجاز - قسم تطوير الألعاب",
-    "Collaborated with a team of developers on game projects, focusing on gameplay logic. Contributed to building engaging interactive experiences through efficient code and creative problem-solving.": "تعاونت مع فريق من المطورين في مشاريع الألعاب، مع التركيز على منطق اللعب. ساهمت في بناء تجارب تفاعلية جذابة من خلال كود فعال وحل إبداعي للمشكلات.",
-    "2024 - 2025": "٢٠٢٤ - ٢٠٢٥",
+    "Collaborated with a team of developers on game projects, focusing on gameplay logic. Contributed to building engaging interactive experiences through efficient code and creative problem-solving.": "تعاونت مع فريق من المطورين في مشاريع ألعاب، وركزنا على منطق اللعب. ساهمت في بناء تجارب تفاعلية ممتعة بكود فعّال وحلول إبداعية للمشكلات.",
+    "2024 - 2025": "2024 - 2025",
 
     // Education
     "Education": "التعليم",
-    "My academic journey and continuous learning": "مسيرتي الأكاديمية وتعلمي المستمر",
+    "My academic journey and continuous learning": "رحلتي الأكاديمية وتعلمي المستمر",
     "Bachelor's in Information Technology": "بكالوريوس في تقنية المعلومات",
     "Imam Muhammad ibn Saud Islamic University": "جامعة الإمام محمد بن سعود الإسلامية",
-    "Dec 2022 - Jul 2026": "ديسمبر ٢٠٢٢ - يوليو ٢٠٢٦",
-    "Grade: 4.16": "المعدل: ٤.١٦ من ٥",
+    "Dec 2022 - Jul 2026": "ديسمبر 2022 - يوليو 2026",
+    "Grade: 4.16": "المعدل: 4.16 من 5",
     "Activities and Societies:": "الأنشطة والجمعيات:",
     "Enjaz Club - Game Development Club": "نادي إنجاز - نادي تطوير الألعاب",
     "On-Site": "حضوري",
@@ -124,11 +124,11 @@ export const termTranslations = {
     "Field: Game Design & Development": "المجال: تصميم وتطوير الألعاب",
     "Complete C# Unity Game Developer 3D": "Complete C# Unity Game Developer 3D",
     "Udemy": "Udemy",
-    "Jan 2025": "يناير ٢٠٢٥",
-    "Length: 57.5 total hours": "المدة: ٥٧.٥ ساعة إجمالاً",
+    "Jan 2025": "يناير 2025",
+    "Length: 57.5 total hours": "المدة: 57.5 ساعة إجمالاً",
     "Unity Game Development Courses": "Unity Game Development Courses",
     "GameDev.tv": "GameDev.tv",
-    "2024 - Ongoing": "٢٠٢٤ - مستمر",
+    "2024 - Ongoing": "2024 - مستمر",
     "Tracks: Shader Graph, Multiplayer, Turn-Based Strategy, Cutscenes, 3D Developer": "Tracks: Shader Graph, Multiplayer, Turn-Based Strategy, Cutscenes, 3D Developer",
 
     // Certifications
@@ -149,29 +149,29 @@ export const termTranslations = {
     "3D Game Developer Bootcamp": "3D Game Developer Bootcamp",
     "Imam Mohammad Ibn Saud Islamic University (IMSIU)": "جامعة الإمام محمد بن سعود الإسلامية",
     "View": "عرض",
-    "Issued Jan 2025": "أُصدرت يناير ٢٠٢٥",
-    "Issued Sep 2025": "أُصدرت سبتمبر ٢٠٢٥",
-    "Issued Dec 2024": "أُصدرت ديسمبر ٢٠٢٤",
-    "Issued Nov 2024": "أُصدرت نوفمبر ٢٠٢٤",
-    "Issued Oct 2024": "أُصدرت أكتوبر ٢٠٢٤",
-    "Issued Jun 2026": "أُصدرت يونيو ٢٠٢٦",
+    "Issued Jan 2025": "صدرت يناير 2025",
+    "Issued Sep 2025": "صدرت سبتمبر 2025",
+    "Issued Dec 2024": "صدرت ديسمبر 2024",
+    "Issued Nov 2024": "صدرت نوفمبر 2024",
+    "Issued Oct 2024": "صدرت أكتوبر 2024",
+    "Issued Jun 2026": "صدرت يونيو 2026",
 
     // Achievements
     "Achievements": "الإنجازات",
     "Recognition from competitions and events": "تكريمات من مسابقات وفعاليات",
     "1st Place Winner - PwC Middle East Hackathon": "المركز الأول - هكاثون PwC الشرق الأوسط",
     "Issuer: PwC Middle East": "الجهة المانحة: PwC الشرق الأوسط",
-    "Date: 7 February 2026": "التاريخ: ٧ فبراير ٢٠٢٦",
+    "Date: 7 February 2026": "التاريخ: 7 فبراير 2026",
     "Project: TourLens": "المشروع: TourLens",
-    "An AR glasses solution that serves as a hands-free indoor tour guide, overlaying real-time visualizations to enhance visitor experiences at events and cultural sites in Riyadh.": "حل نظارات الواقع المعزز (AR) الذي يعمل كمرشد سياحي داخلي بدون استخدام اليدين، حيث يقوم بتركيب مرئيات فورية لتحسين تجربة الزوار في الفعاليات والمواقع الثقافية في الرياض.",
+    "An AR glasses solution that serves as a hands-free indoor tour guide, overlaying real-time visualizations to enhance visitor experiences at events and cultural sites in Riyadh.": "حل نظارات الواقع المعزز (AR) يشتغل كمرشد سياحي داخلي بدون استخدام اليدين، يعرض مرئيات فورية عشان يحسّن تجربة الزوار في الفعاليات والمواقع الثقافية بالرياض.",
     "Mentor:": "الموجه/المرشد:",
     "Majed Alghamdi": "ماجد الغامدي",
 
     "1st Place Winner - Enjaz Game Jam": "المركز الأول - هكاثون ألعاب إنجاز",
     "Issuer: Enjaz Club": "الجهة المانحة: نادي إنجاز",
-    "Date: 19 November 2024": "التاريخ: ١٩ نوفمبر ٢٠٢٤",
+    "Date: 19 November 2024": "التاريخ: 19 نوفمبر 2024",
     "Game: The Scary Library": "اللعبة: The Scary Library",
-    "A horror game where players solve book puzzles to escape a haunted library while being hunted by an AI enemy.": "لعبة رعب حيث يحل اللاعبون ألغاز الكتب للهروب من مكتبة مسكونة بينما يطاردهم عدو ذكاء اصطناعي.",
+    "A horror game where players solve book puzzles to escape a haunted library while being hunted by an AI enemy.": "لعبة رعب يحل فيها اللاعب ألغاز الكتب عشان يهرب من المكتبة المسكونة بينما يطارده عدو ذكاء اصطناعي.",
 
     // Contact
     "Get In Touch": "تواصل معي",
@@ -187,7 +187,7 @@ export const termTranslations = {
 
     // Footer
     "Designed & Built by Turki Alshaalan": "تصميم وبناء تركي الشعلان",
-    "© 2026. All rights reserved.": "© ٢٠٢٦. جميع الحقوق محفوظة.",
+    "© 2026. All rights reserved.": "© 2026. جميع الحقوق محفوظة.",
 
     // General Words & Team roles
     "Saud AlFawzan": "سعود الفوزان",
@@ -228,3 +228,4 @@ export const termTranslations = {
     "Showcase →": "عرض ←",
     "→": "←"
 };
+

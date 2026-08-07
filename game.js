@@ -8,7 +8,7 @@
  * All heavy dependencies (Three.js + game modules) live under ./game/
  * and are only fetched when the user opens the game.
  */
-import { en as gameEn, ar as gameAr } from './translations/game.js?v=2';
+import { en as gameEn, ar as gameAr } from './translations/game.js?v=3';
 import { createEngine } from './game/engine.js?v=1';
 import { createKnight } from './game/knight.js?v=1';
 import { ParticlePool, ScreenShake, HitStop, HUD, worldToScreen } from './game/effects.js?v=1';

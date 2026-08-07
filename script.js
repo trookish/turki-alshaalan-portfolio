@@ -3,10 +3,10 @@
  * Interactive functionality and animations
  */
 
-import { en as enStatic } from './translations/en.js?v=3';
-import { ar as arStatic } from './translations/ar.js?v=3';
-import { termTranslations } from './translations/dynamic.js?v=3';
-import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=3';
+import { en as enStatic } from './translations/en.js?v=4';
+import { ar as arStatic } from './translations/ar.js?v=4';
+import { termTranslations } from './translations/dynamic.js?v=4';
+import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=4';
 
 const staticTranslations = { en: enStatic, ar: arStatic };
 const showcase = { en: showcaseEn, ar: showcaseAr };
