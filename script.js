@@ -300,10 +300,38 @@ function isGameElement(el) {
 }
 
 function initHoverSounds() {
-    const hoverSound = new Audio('Sounds/Normal/Hover.wav');
-    hoverSound.volume = 0.3;
     const MIN_PITCH = 1.0;
     const MAX_PITCH = 1.5;
+
+    let audioCtx = null;
+    let hoverBuffer = null;
+    let volumeNode = null;
+
+    const loadBuffer = async () => {
+        try {
+            const res = await fetch('Sounds/Normal/Hover.wav');
+            const arrayBuffer = await res.arrayBuffer();
+            audioCtx = audioCtx || new (window.AudioContext ||
+                window.webkitAudioContext)();
+            hoverBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+            volumeNode = volumeNode || audioCtx.createGain();
+            volumeNode.gain.value = 0.3;
+            volumeNode.connect(audioCtx.destination);
+        } catch { }
+    };
+
+    const playHover = () => {
+        if (!hoverBuffer) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const source = audioCtx.createBufferSource();
+        source.buffer = hoverBuffer;
+        source.playbackRate.value = MIN_PITCH +
+            Math.random() * (MAX_PITCH - MIN_PITCH);
+        source.connect(volumeNode);
+        source.start();
+    };
+
+    loadBuffer();
 
     document.addEventListener('mouseover', (e) => {
         const el = e.target.closest(UI_SOUND_SELECTORS);
@@ -311,12 +339,10 @@ function initHoverSounds() {
         // Only fire when the pointer enters the element from outside it
         if (e.relatedTarget && el.contains(e.relatedTarget)) return;
         if (localStorage.getItem('sound') !== 'false') {
-            hoverSound.currentTime = 0;
-            hoverSound.playbackRate = MIN_PITCH +
-                Math.random() * (MAX_PITCH - MIN_PITCH);
-            hoverSound.play().catch(() => { });
+            playHover();
         }
-    });
+    }
+    );
 }
 
 /**
