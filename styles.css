@@ -1771,21 +1771,27 @@ html[dir="rtl"] .hud-bar-fill {
    Projects Section - Pixel Style
    ======================================== */
 .projects-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
     gap: 1.5rem;
-    align-items: start;
+}
+
+.projects-grid > .project-card {
+    flex: 0 1 100%;
+    min-width: 0;
 }
 
 @media (min-width: 640px) {
-    .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .projects-grid > .project-card {
+        flex-basis: calc((100% - 1.5rem) / 2);
     }
 }
 
 @media (min-width: 1024px) {
-    .projects-grid {
-        grid-template-columns: repeat(3, 1fr);
+    .projects-grid > .project-card {
+        flex-basis: calc((100% - 3rem) / 3);
     }
 }
 
@@ -1826,13 +1832,14 @@ html[dir="rtl"] .hud-bar-fill {
     font-family: var(--font-terminal);
     font-size: 1.25rem;
     color: var(--text-primary);
+    text-align: center;
     padding: 0.75rem;
     margin: 0;
 }
 
 .showcase-btn {
-    align-self: flex-start;
-    margin: 0 0.75rem 0.75rem 0.75rem;
+    align-self: center;
+    margin: 0 auto 0.75rem auto;
     font-family: var(--font-terminal);
     font-size: 1.1rem;
     color: var(--accent-primary);
@@ -1900,24 +1907,20 @@ html[dir="rtl"] .hud-bar-fill {
 }
 
 .project-card-featured {
-    grid-column: 1 / -1;
+    flex: 1 1 100%;
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-@media (min-width: 1024px) {
-    .project-card-featured {
-        grid-column: 2 / 4;
-    }
+.projects-grid > .project-card-featured {
+    flex-basis: 100%;
 }
 
 .project-card-featured .project-image {
     height: auto;
     aspect-ratio: 21 / 9;
-}
-
-.project-card-featured .project-title,
-.project-card-featured .showcase-btn {
-    text-align: center;
-    align-self: center;
+    min-height: 280px;
 }
 
 .project-card-featured .project-title {
@@ -2020,6 +2023,7 @@ html[dir="rtl"] .project-card-featured .project-badge {
 /* Category Headers - static section headings above each project grid */
 .category-header {
     display: block;
+    text-align: center;
     border-bottom: 2px solid var(--border-color);
     padding: 0.5rem 0 0.75rem 0;
     margin-bottom: 1.5rem;
@@ -2032,6 +2036,7 @@ html[dir="rtl"] .project-card-featured .project-badge {
 
 .category-header .category-description {
     margin-bottom: 0;
+    max-width: none;
 }
 
 .project-tags {
@@ -4635,7 +4640,8 @@ html[dir="rtl"] .nav-container {
 
     .project-card-featured {
         width: 100% !important;
-        grid-column: 1 / -1;
+        max-width: none !important;
+        flex: 1 1 100% !important;
     }
 
     html[dir="rtl"] .achievement-card .achievement-details {
