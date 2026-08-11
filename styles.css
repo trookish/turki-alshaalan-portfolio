@@ -3504,6 +3504,20 @@ button.project-link {
     border: 0;
 }
 
+.ss-details-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.ss-details-actions .ss-action-btn {
+    width: auto;
+    flex: 1 1 0;
+    min-width: 0;
+    margin-top: 0;
+}
+
 .ss-action-btn {
     display: inline-block;
     font-family: var(--font-terminal);

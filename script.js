@@ -3,10 +3,10 @@
  * Interactive functionality and animations
  */
 
-import { en as enStatic } from './translations/en.js?v=4';
-import { ar as arStatic } from './translations/ar.js?v=4';
-import { termTranslations } from './translations/dynamic.js?v=4';
-import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=4';
+import { en as enStatic } from './translations/en.js?v=5';
+import { ar as arStatic } from './translations/ar.js?v=5';
+import { termTranslations } from './translations/dynamic.js?v=5';
+import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=5';
 
 const staticTranslations = { en: enStatic, ar: arStatic };
 const showcase = { en: showcaseEn, ar: showcaseAr };
@@ -610,6 +610,7 @@ function initProjectShowcase() {
     const detailsTeamContainer = document.getElementById('showcase-details-team-container');
     const detailsTeam = document.getElementById('showcase-details-team');
     const detailsLink = document.getElementById('showcase-details-link');
+    const detailsRelease = document.getElementById('showcase-details-release');
     const detailsNoteContainer = document.getElementById('showcase-details-note-container');
     const detailsNote = document.getElementById('showcase-details-note');
     const videoContainer = document.getElementById('showcase-video-container');
@@ -796,6 +797,7 @@ function initProjectShowcase() {
 
             // Hide external link (achievements don't have one)
             detailsLink.style.display = 'none';
+            if (detailsRelease) detailsRelease.style.display = 'none';
 
             // Build screenshots list (cover image + optional project screenshot)
             const mainImgEl = currentCard.querySelector('.achievement-image img');
@@ -867,13 +869,23 @@ function initProjectShowcase() {
             }
 
             // Populate external link button
-            const externalLink = currentCard.querySelector('a.project-link');
+            const externalLink = currentCard.querySelector('a.project-link:not(.project-link-release)');
             if (externalLink) {
                 detailsLink.style.display = 'inline-block';
                 detailsLink.href = externalLink.href;
                 detailsLink.textContent = externalLink.textContent.trim();
             } else {
                 detailsLink.style.display = 'none';
+            }
+
+            // Populate latest release button if present on the card
+            const releaseLink = currentCard.querySelector('a.project-link-release');
+            if (releaseLink && detailsRelease) {
+                detailsRelease.style.display = 'inline-block';
+                detailsRelease.href = releaseLink.href;
+                detailsRelease.textContent = releaseLink.textContent.trim();
+            } else if (detailsRelease) {
+                detailsRelease.style.display = 'none';
             }
 
             // Determine screenshot list

@@ -45,9 +45,8 @@ export const termTranslations = {
     "An open-source system for summarizing Arabic PDF documents using local LLMs and a simple Streamlit interface. A valuable learning project that helped understand how document summarization systems work in practice, from extraction to clustering and final generation.": "نظام مفتوح المصدر لتلخيص مستندات PDF العربية باستخدام نماذج LLM محلية وواجهة Streamlit بسيطة. مشروع تعليمي قيّم خلاني أفهم كيف تشتغل أنظمة تلخيص المستندات عملياً، من الاستخراج إلى التجميع والتوليد النهائي.",
 
     "MasarFlow": "MasarFlow",
-    "A professional project currently in development. Full details, features, and links will be published here once the project launches.": "مشروع مهني قيد التطوير حالياً. كل التفاصيل والمميزات والروابط بتنزل هنا بمجرد ما ينطلق المشروع.",
-    "In Development": "قيد التطوير",
-    "Note: This is a placeholder — more information coming soon.": "ملاحظة: هذا نص مؤقت — التفاصيل الكاملة قريباً.",
+    "A local-first, AI-native project workspace. Everything lives in your browser — notes, tasks, specs, canvases, and chat threads — backed by a local Python sidecar for embeddings, semantic search, and RAG context. No account. No cloud. No telemetry.": "مساحة عمل مشاريع محلية بالكامل (Local-First) مدعومة بالذكاء الاصطناعي. كل شيء يعيش في المتصفح — ملاحظات، مهام، مواصفات، لوحات، ومحادثات — مع خدمة Python محلية للتضمين والبحث الدلالي وسياق RAG. بدون حساب، بدون سحابة، وبدون تتبع.",
+    "Latest Release →": "أحدث إصدار ←",
 
     "Restaurant Ordering System": "Restaurant Ordering System",
     "A Java-based restaurant ordering application featuring a tree-structured menu, drink vending machine with stack-based inventory, and order queue management system.": "تطبيق طلبات مطاعم مبني بلغة Java فيه قائمة طعام بهيكل شجري، وآلة بيع مشروبات بنظام مخزون قائم على المكدس (Stack)، ونظام إدارة طابور الطلبات.",
