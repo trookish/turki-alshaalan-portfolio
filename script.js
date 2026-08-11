@@ -3,10 +3,10 @@
  * Interactive functionality and animations
  */
 
-import { en as enStatic } from './translations/en.js?v=5';
-import { ar as arStatic } from './translations/ar.js?v=5';
-import { termTranslations } from './translations/dynamic.js?v=5';
-import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=5';
+import { en as enStatic } from './translations/en.js?v=6';
+import { ar as arStatic } from './translations/ar.js?v=6';
+import { termTranslations } from './translations/dynamic.js?v=6';
+import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=6';
 
 const staticTranslations = { en: enStatic, ar: arStatic };
 const showcase = { en: showcaseEn, ar: showcaseAr };
@@ -1130,7 +1130,7 @@ function initLanguageToggle() {
             // Headings and subtitles
             '.section-title', '.section-subtitle', '.category-title', '.category-description',
             // Project card details
-            '.project-title', '.project-description', '.team-title', '.team-name', '.team-role', '.project-tags .tag', '.project-link', '.project-note',
+            '.project-title', '.project-description', '.team-title', '.team-name', '.team-role', '.project-tags .tag', '.project-link', '.project-note', '.project-badge',
             // Experience cards
             '.experience-title', '.experience-organization', '.experience-description', '.experience-date',
             // Skills tags

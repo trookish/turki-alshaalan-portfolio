@@ -12,6 +12,9 @@ export const termTranslations = {
     "Academic projects and coursework": "مشاريع أكاديمية ومواد درستها",
 
     // Project Cards Details
+    "Highlighted": "مميز",
+    "My latest project": "أحدث مشروع سوّيته",
+    "NEW": "جديد",
     "Dungeon Puzzle": "Dungeon Puzzle",
     "A puzzle-based gameplay experience where players navigate through dangerous dungeons, avoiding death traps and overcoming environmental challenges to reach the exit.": "تجربة لعب تعتمد على الألغاز، يخوض اللاعب دهاليز خطيرة ويتجنّب فخاخ الموت ويتغلب على تحدّيات البيئة عشان يوصل للمخرج.",
     "View Project →": "عرض المشروع ←",

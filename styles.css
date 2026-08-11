@@ -1899,6 +1899,36 @@ html[dir="rtl"] .hud-bar-fill {
     background-color: #000;
 }
 
+.project-card-featured {
+    grid-column: 1 / -1;
+}
+
+.project-card-featured .project-image {
+    height: auto;
+    aspect-ratio: 21 / 9;
+}
+
+.project-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    font-family: var(--font-terminal);
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 0.25rem 0.6rem;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    border: 2px solid var(--bg-primary);
+    box-shadow: var(--shadow-pixel);
+}
+
+html[dir="rtl"] .project-badge {
+    right: auto;
+    left: 0.75rem;
+}
+
 .project-card:hover .project-img {
     transform: scale(1.05);
 }
@@ -4570,6 +4600,11 @@ html[dir="rtl"] .nav-container {
         width: calc(50% - 0.75rem) !important;
         box-sizing: border-box !important;
         text-align: right !important;
+    }
+
+    .project-card-featured {
+        width: 100% !important;
+        grid-column: 1 / -1;
     }
 
     html[dir="rtl"] .achievement-card .achievement-details {

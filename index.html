@@ -320,10 +320,52 @@
     <!-- Projects Section -->
     <section class="projects" id="projects">
         <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <p class="section-subtitle">A collection of my work across different domains</p>
+
+            <!-- Highlighted Project -->
+            <div class="project-category">
+                <div class="category-header">
+                    <h3 class="category-title">Highlighted</h3>
+                    <p class="category-description">My latest project</p>
+                </div>
+                <div class="projects-grid">
+                    <!-- MasarFlow (Featured) -->
+                    <div class="project-card project-card-featured" data-project="masarflow">
+                        <div class="project-header">
+                            <div class="project-image">
+                                <img loading="lazy" decoding="async" src="images/Projects/MasarFlow.png"
+                                    alt="MasarFlow Project" class="project-img project-img-contain">
+                                <span class="project-badge">NEW</span>
+                            </div>
+                            <h3 class="project-title">MasarFlow</h3>
+                            <span class="showcase-btn">Showcase &rarr;</span>
+                        </div>
+                        <div class="project-details">
+                            <p class="project-description">A local-first, AI-native project workspace. Everything
+                                lives in your browser — notes, tasks, specs, canvases, and chat threads — backed by a
+                                local Python sidecar for embeddings, semantic search, and RAG context. No account. No
+                                cloud. No telemetry.</p>
+                            <div class="project-tags">
+                                <span class="tag">Next.js</span>
+                                <span class="tag">React</span>
+                                <span class="tag">TypeScript</span>
+                                <span class="tag">FastAPI</span>
+                                <span class="tag">Electron</span>
+                                <span class="tag">Local-First</span>
+                            </div>
+                            <a href="https://github.com/trookish/MasarFlow" target="_blank"
+                                class="project-link">View
+                                Project →</a>
+                            <a href="https://github.com/trookish/MasarFlow/releases/latest" target="_blank"
+                                class="project-link project-link-release">Latest Release →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Game Dev Projects -->
             <div class="project-category">
-                <h2 class="section-title">Projects</h2>
-                <p class="section-subtitle">A collection of my work across different domains</p>
                 <div class="category-header">
                     <h3 class="category-title">Game Development</h3>
                     <p class="category-description">Games and interactive experiences I've built</p>
@@ -1621,7 +1663,7 @@
         </div>
     </div>
 
-    <script type="module" src="script.js?v=6"></script>
+    <script type="module" src="script.js?v=7"></script>
 </body>
 
 </html>
