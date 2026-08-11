@@ -1903,9 +1903,36 @@ html[dir="rtl"] .hud-bar-fill {
     grid-column: 1 / -1;
 }
 
+@media (min-width: 1024px) {
+    .project-card-featured {
+        grid-column: 2 / 4;
+    }
+}
+
 .project-card-featured .project-image {
     height: auto;
     aspect-ratio: 21 / 9;
+}
+
+.project-card-featured .project-title,
+.project-card-featured .showcase-btn {
+    text-align: center;
+    align-self: center;
+}
+
+.project-card-featured .project-title {
+    font-size: 1.6rem;
+}
+
+.project-card-featured .showcase-btn {
+    font-size: 1.2rem;
+}
+
+.project-card-featured .project-badge {
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.7rem;
 }
 
 .project-badge {
@@ -1927,6 +1954,10 @@ html[dir="rtl"] .hud-bar-fill {
 html[dir="rtl"] .project-badge {
     right: auto;
     left: 0.75rem;
+}
+
+html[dir="rtl"] .project-card-featured .project-badge {
+    left: 1rem;
 }
 
 .project-card:hover .project-img {
