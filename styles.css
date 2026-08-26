@@ -2190,12 +2190,13 @@ html[dir="rtl"] .project-card-featured .project-badge {
 /* ========================================
    Skills Section - Pixel Style
    ======================================== */
-/* Skills Section - Horizontal List Layout */
+/* Skills Section - Stacked Layout (title above the tags, both centered) */
 .skill-row {
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 1.5rem;
-    gap: 1rem;
+    gap: 0.55rem;
     padding-bottom: 1.5rem;
     border-bottom: 3px solid var(--accent-primary);
 }
@@ -2205,9 +2206,10 @@ html[dir="rtl"] .project-card-featured .project-badge {
 }
 
 .skill-label {
-    min-width: 180px;
-    flex-shrink: 0;
-    padding-top: 0.5rem;
+    /* Title now sits above the row; tags take the full width below it */
+    min-width: 0;
+    padding-top: 0;
+    text-align: center;
 }
 
 .skill-category-name {
@@ -2222,6 +2224,67 @@ html[dir="rtl"] .project-card-featured .project-badge {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    /* centered when not in marquee mode (no-JS fallback) */
+    justify-content: center;
+}
+
+/* Marquee mode (activated by JS in initSkillMarquee) */
+.skill-tags.is-marquee {
+    display: block;
+    /* Fill the row (don't shrink-to-fit the 2-copy track!) — the JS clamp
+       narrows fitting categories back down to one copy via inline max-width */
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    gap: 0;
+    /* fade the edges so tags appear / disappear smoothly */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+    padding: 0.3rem 0;
+}
+
+.skill-track {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: max-content;
+    /* Never let the parent flex row squeeze the track, otherwise
+       scrollWidth collapses to clientWidth and overflow detection breaks */
+    flex: 0 0 auto;
+    white-space: nowrap;
+    /* paused by default, scrolls while the row is hovered */
+    animation: skillMarquee var(--marquee-duration, 22s) linear infinite;
+    animation-play-state: paused;
+    will-change: transform;
+}
+
+/* Each tag carries its own trailing gap so the duplicated copy lines up
+   exactly at the -50% loop point (no measuring needed, seamless scroll). */
+.skill-track .tag {
+    margin-inline-end: 0.5rem;
+    flex: 0 0 auto;
+}
+
+.skill-tags.is-marquee:hover .skill-track,
+.skill-tags.is-marquee.is-hovering .skill-track {
+    /* !important so this survives the global reduced-motion kill below */
+    animation-play-state: running !important;
+}
+
+@keyframes skillMarquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+/* Mirror the motion in Arabic so tags enter from the reading-start side */
+@keyframes skillMarqueeRtl {
+    from { transform: translateX(0); }
+    to   { transform: translateX(50%); }
+}
+
+html[dir="rtl"] .skill-track {
+    animation-name: skillMarqueeRtl;
 }
 
 .skill-tags .tag {
@@ -2243,13 +2306,30 @@ html[dir="rtl"] .project-card-featured .project-badge {
 /* Responsive */
 @media (max-width: 768px) {
     .skill-row {
-        flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.45rem;
+        margin-bottom: 1.1rem;
+        padding-bottom: 1.1rem;
     }
-    
-    .skill-label {
-        min-width: auto;
-        padding-top: 0;
+}
+
+/* Touch devices have no hover: keep the carousels moving on their own
+   (capability-based, not width-based, so narrow desktop windows still
+   require hover and wide tablets still auto-run). Skipped when the user
+   prefers reduced motion — no ambient autoplay for them. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+    .skill-tags.is-marquee .skill-track {
+        animation-play-state: running;
+    }
+}
+
+/* Reduced motion: suppress ambient/auto playback entirely (the generic *
+   kill-switch above handles that), but KEEP the marquee usable as an
+   interaction: the higher-specificity !important here restores normal
+   duration/looping so the row still drifts while directly hovered. */
+@media (prefers-reduced-motion: reduce) {
+    .skill-tags.is-marquee .skill-track {
+        animation-duration: var(--marquee-duration, 22s) !important;
+        animation-iteration-count: infinite !important;
     }
 }
 
@@ -4209,16 +4289,14 @@ html[dir="rtl"] .nav-container {
        ============================================= */
     .skill-row {
         display: flex !important;
-        flex-direction: row !important;
+        flex-direction: column !important;
         align-items: center !important;
-        justify-content: center !important;
-        gap: 1.25rem !important;
-        padding: 0.6rem 0 !important;
+        gap: 0.4rem !important;
+        padding: 0.5rem 0 !important;
         margin-bottom: 0 !important;
         border-bottom: 1px solid var(--border-color) !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
-        text-align: left !important;
     }
 
     .skill-row:last-child {
@@ -4226,10 +4304,10 @@ html[dir="rtl"] .nav-container {
     }
 
     .skill-label {
-        min-width: 130px !important;
-        width: 130px !important;
-        flex-shrink: 0 !important;
-        text-align: right !important;
+        min-width: 0 !important;
+        width: auto !important;
+        /* centered title, correct in both LTR and RTL */
+        text-align: center !important;
         padding-top: 0 !important;
     }
 
@@ -4246,6 +4324,28 @@ html[dir="rtl"] .nav-container {
         flex-wrap: wrap !important;
         gap: 0.35rem !important;
         flex: 1 !important;
+        /* undo the JS max-width clamp so chips use the full page width */
+        max-width: none !important;
+    }
+
+    /* =============================================
+       SKILLS MARQUEE — neutralize for print
+       Dissolve the track so chips flow/wrap exactly
+       like the original static list, and drop the
+       duplicated copy so no skill prints twice.
+       ============================================= */
+    .skill-tags .skill-track {
+        display: contents !important;
+    }
+
+    /* Chips keep their per-item trailing margin for the marquee loop;
+       drop it here so print spacing comes only from the flex gap above. */
+    .skill-tags .skill-track .tag {
+        margin-inline-end: 0 !important;
+    }
+
+    .skill-clone {
+        display: none !important;
     }
 
     /* =============================================

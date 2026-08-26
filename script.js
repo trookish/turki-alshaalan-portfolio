@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFooterYear();
     // initAchievementExpand(); // Retired in favor of unified showcase popup
     initProjectShowcase();
+    initSkillMarquee();
 });
 
 /**
@@ -573,6 +574,96 @@ document.addEventListener('keydown', (e) => {
         closeCertModal();
     }
 });
+
+/**
+ * Skill Marquees - Turns each skill category's tag list into an infinite
+ * carousel that scrolls while hovered. Categories whose tags fit the row are
+ * clamped to exactly one copy's width, so their duplicated copy sits just
+ * OUTSIDE the clipped area at rest — nothing looks duplicated — and feeds the
+ * seamless loop once you hover. Categories that overflow scroll as-is.
+ * Touch devices auto-run; prefers-reduced-motion suppresses ambient motion.
+ *
+ * The track holds the originals plus ONE duplicate copy. The CSS animates
+ * translateX(0) -> translateX(-50%), which is exactly one copy, so the loop is
+ * gapless with no fragile JS width math. Duration scales with tag count.
+ */
+function initSkillMarquee() {
+    const rows = document.querySelectorAll('.skill-tags');
+    const measures = [];
+
+    rows.forEach((container) => {
+        const tags = Array.from(container.querySelectorAll('.tag'));
+        if (tags.length < 2) return; // nothing worth scrolling
+
+        // Build the track: originals + ONE duplicate copy.
+        const track = document.createElement('div');
+        track.className = 'skill-track';
+        tags.forEach((tag) => track.appendChild(tag)); // move originals in
+        // The language switcher re-translates every .tag (incl. clones); give
+        // each clone the same original-HTML baseline so AR<->EN round-trips.
+        tags.forEach((tag) => {
+            const clone = tag.cloneNode(true);
+            clone.classList.add('skill-clone');
+            clone.setAttribute('aria-hidden', 'true');
+            clone.setAttribute('data-orig-html', tag.getAttribute('data-orig-html') || tag.innerHTML);
+            track.appendChild(clone);
+        });
+        container.appendChild(track);
+
+        // JS-driven hover mirror: toggling a class keeps motion working even
+        // where pure :hover hit-testing is unreliable (masks, overlays).
+        container.addEventListener('pointerenter', () => container.classList.add('is-hovering'));
+        container.addEventListener('pointerleave', () => container.classList.remove('is-hovering'));
+
+        const measure = () => {
+            // True single-copy content width from the first tag to its clone.
+            const first = track.children[0];
+            const firstClone = track.children[tags.length];
+            if (!first || !firstClone) return;
+            const setWidth = Math.round(
+                firstClone.getBoundingClientRect().left - first.getBoundingClientRect().left
+            );
+            if (!setWidth) return;
+
+            container.classList.add('is-marquee');
+            if (setWidth > container.clientWidth) {
+                // Tags genuinely exceed the row: use the full width.
+                container.style.removeProperty('max-width');
+                track.style.setProperty('--marquee-duration', Math.max(tags.length * 2.2, 8) + 's');
+            } else {
+                // Fits: clamp the visible strip to one copy so the duplicate
+                // stays just outside the clipped edge (invisible at rest).
+                container.style.maxWidth = setWidth + 'px';
+                track.style.setProperty('--marquee-duration', Math.max(tags.length * 1.6, 6) + 's');
+            }
+        };
+
+        measures.push(measure);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+        window.addEventListener('resize', measure);
+        requestAnimationFrame(measure);
+        // Reliable post-layout / post-font-load re-evaluation.
+        if (window.ResizeObserver) {
+            new ResizeObserver(measure).observe(track);
+            new ResizeObserver(measure).observe(container);
+        }
+    });
+
+    // The language switcher re-translates every .tag's text, which changes
+    // widths in Arabic, so re-measure when <html lang> changes.
+    const htmlEl = document.documentElement;
+    let lastLang = htmlEl.getAttribute('lang');
+    const langObserver = new MutationObserver(() => {
+        const lang = htmlEl.getAttribute('lang');
+        if (lang === lastLang) return;
+        lastLang = lang;
+        requestAnimationFrame(() => {
+            measures.forEach((m) => m());
+            setTimeout(() => measures.forEach((m) => m()), 350);
+        });
+    });
+    langObserver.observe(htmlEl, { attributes: true, attributeFilter: ['lang', 'dir'] });
+}
 
 /**
  * Game Projects Showcase Modal Logic
