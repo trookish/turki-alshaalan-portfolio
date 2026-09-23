@@ -59,8 +59,8 @@ export const en = {
         ],
         'iwjats': [
             { type: 'video', id: '1_v0l9b5qmU', title: 'Gameplay Video', desc: 'Watch the full gameplay video — a routine maintenance job at the nuclear facility, one loose screw away from complete disaster.' },
-            { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'One Loose Screw', desc: 'A routine maintenance job at the nuclear facility — one loose screw away from complete disaster.' },
-            { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'Radioactive Chaos', desc: 'The reactor goes critical and the facility starts to collapse as the radioactive gas cloud closes in.' },
+            { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'Game Main Menu', desc: 'Start screen showing the title "IT WAS JUST A TIGHTENED SCREW!" with PLAY, CREDITS, and QUIT buttons beside a hazmat worker and green waste barrels.' },
+            { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'Red Alert', desc: 'Emergency red lighting floods the room as the glowing worker stands over the loose screw that started the disaster.' },
             { src: 'images/Projects/IWJATS/screenshot3.webp', title: 'Rescue Everyone', desc: 'Racing to save the babies, kittens, dogs, and the mysterious IMPORTANT person before reaching the emergency bunker.' },
         ],
         'masarflow': [
@@ -125,8 +125,8 @@ export const ar = {
         ],
         'iwjats': [
             { type: 'video', id: '1_v0l9b5qmU', title: 'فيديو اللعب', desc: 'شاهد فيديو اللعب كامل — مهمة صيانة روتينية في المنشأة النووية، برغي واحد يبعدك عن الكارثة الكاملة.' },
-            { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'برغي واحد مرتخي', desc: 'مهمة صيانة روتينية في المنشأة النووية — برغي واحد يبعدك عن الكارثة الكاملة.' },
-            { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'فوضى إشعاعية', desc: 'المفاعل يوصل مرحلة الخطر ويبتدي المبنى بالانهيار بينما سحابة الغاز المشع تقرتب.' },
+            { src: 'images/Projects/IWJATS/screenshot1.webp', title: 'قائمة اللعبة الرئيسية', desc: 'شاشة البداية فيها عنوان اللعبة "IT WAS JUST A TIGHTENED SCREW!" مع أزرار PLAY وCREDITS وQUIT وبجانبها عامل ببدلة واقية وبراميل خضراء.' },
+            { src: 'images/Projects/IWJATS/screenshot2.webp', title: 'إنذار أحمر', desc: 'إنارة الطوارئ الحمراء تعم المكان والموظف متوهج واقف فوق البرغي اللي سبب الكارثة.' },
             { src: 'images/Projects/IWJATS/screenshot3.webp', title: 'أنقذ الجميع', desc: 'سباق تنقذ فيه الرضع والقطط والكلاب والشخص المهم الغامض قبل ما توصل للملجأ.' },
         ],
         'masarflow': [
