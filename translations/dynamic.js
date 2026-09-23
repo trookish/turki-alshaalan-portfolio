@@ -111,10 +111,10 @@ export const termTranslations = {
     // Experience
     "Experience": "الخبرة",
     "Where I've contributed and grown": "أماكن ساهمت فيها وتطوّرت",
-    "Team Member": "عضو فريق",
-    "Enjaz Club - Game Development Section": "نادي إنجاز - قسم تطوير الألعاب",
-    "Collaborated with a team of developers on game projects, focusing on gameplay logic. Contributed to building engaging interactive experiences through efficient code and creative problem-solving.": "تعاونت مع فريق من المطورين في مشاريع ألعاب، وركزنا على منطق اللعب. ساهمت في بناء تجارب تفاعلية ممتعة بكود فعّال وحلول إبداعية للمشكلات.",
-    "2024 - 2025": "2024 - 2025",
+    "Enterprise Applications Intern": "متدرب تطبيقات المؤسسات",
+    "Lumi | لومي": "Lumi | لومي",
+    "On-site in Riyadh, Saudi Arabia": "حضوري في الرياض، المملكة العربية السعودية",
+    "Aug 2026 - Present": "أغسطس 2026 - حتى الآن",
 
     // Education
     "Education": "التعليم",
@@ -124,7 +124,7 @@ export const termTranslations = {
     "Dec 2022 - Jul 2026": "ديسمبر 2022 - يوليو 2026",
     "Grade: 4.16": "المعدل: 4.16 من 5",
     "Activities and Societies:": "الأنشطة والجمعيات:",
-    "Enjaz Club - Game Development Club": "نادي إنجاز - نادي تطوير الألعاب",
+    "Enjaz Club - Game Development Club": "نادي إنجاز - قسم تطوير الألعاب",
     "On-Site": "حضوري",
     "Online / Self-Learning": "عن بعد / تعليم ذاتي",
     "Game Design and Development Bootcamp": "معسكر تصميم وتطوير الألعاب",
