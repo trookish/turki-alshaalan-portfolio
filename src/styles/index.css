@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './components.css';
+@import './print.css';
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-panel: var(--c-panel);
+  --color-inset: var(--c-inset);
+  --color-elev: var(--c-elevated);
+  --color-ink: var(--c-ink);
+  --color-ink2: var(--c-ink-2);
+  --color-ink3: var(--c-ink-3);
+  --color-line: var(--c-line);
+  --color-line2: var(--c-line-2);
+  --color-green: var(--c-green);
+  --color-green2: var(--c-green-2);
+  --color-greendeep: var(--c-green-deep);
+  --color-ai: var(--c-ai);
+  --color-game: var(--c-game);
+  --color-danger: var(--c-danger);
+
+  --font-mono: var(--font-mono);
+  --font-term: var(--font-term);
+  --font-pixel: var(--font-pixel);
+  --font-body: var(--font-body);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  letter-spacing: 0.2px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 180ms steps(3), color 180ms steps(3);
+}
+
+#root {
+  min-height: 100vh;
+  padding-block-end: var(--status-h);
+}
+
+main {
+  padding-block-start: var(--nav-h);
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-green);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--c-green) 35%, transparent);
+  color: var(--c-ink);
+}
+
+/* Arabic RTL typography */
+html[dir='rtl'] body {
+  font-family: 'Handjet', var(--font-body);
+  line-height: 2;
+  letter-spacing: 0;
+  word-spacing: 1px;
+}
+
+html[dir='rtl'] .section-title,
+html[dir='rtl'] .hero-name,
+html[dir='rtl'] .project-title,
+html[dir='rtl'] .window-bar,
+html[dir='rtl'] .nav-tab,
+html[dir='rtl'] .btn,
+html[dir='rtl'] .tag,
+html[dir='rtl'] .term,
+html[dir='rtl'] .ss-details,
+html[dir='rtl'] .modal-bar,
+html[dir='rtl'] .statusbar,
+html[dir='rtl'] .filter-chip,
+html[dir='rtl'] .linkedin-btn,
+html[dir='rtl'] .contact-form input,
+html[dir='rtl'] .contact-form textarea,
+html[dir='rtl'] .contact-form label {
+  font-family: 'Handjet', var(--font-mono);
+  letter-spacing: 0.4px;
+}
+
+html[dir='rtl'] .hero-name {
+  line-height: 1.3;
+}
+
+html[dir='rtl'] .section-title::after {
+  content: '';
+}

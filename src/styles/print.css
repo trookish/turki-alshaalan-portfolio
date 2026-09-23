@@ -1,0 +1,178 @@
+/* ============================================================
+   Print / Export-to-PV CV stylesheet
+   ============================================================ */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  :root,
+  [data-theme='light'] {
+    --c-bg: #ffffff;
+    --c-panel: #ffffff;
+    --c-inset: #ffffff;
+    --c-elevated: #ffffff;
+    --c-ink: #111111;
+    --c-ink-2: #333333;
+    --c-ink-3: #555555;
+    --c-line: #bbbbbb;
+    --c-line-2: #999999;
+    --c-green: #14532d;
+    --c-ai: #4c1d95;
+    --c-game: #92400e;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .navbar,
+  .statusbar,
+  .sound-fab,
+  .scroll-hint,
+  .hero-bg,
+  .hero-bg-veil,
+  .hero-grid,
+  .filter-chip,
+  .linkedin-btn,
+  .command-hint,
+  .showcase-cta,
+  .cert-actions,
+  .modal-overlay,
+  .game-modal,
+  .palette-overlay,
+  .hamburger,
+  .nav-controls,
+  .cv-download-btn,
+  .contact-form-window,
+  .btn {
+    display: none !important;
+  }
+
+  main {
+    padding-block-start: 0 !important;
+    margin-block-end: 0 !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  section {
+    padding-block: 10px !important;
+    break-inside: auto;
+  }
+
+  .window,
+  .project-card,
+  .term,
+  .window-bar {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .section-head {
+    margin-block-end: 6px;
+    border-bottom: 1px solid #999;
+    padding-block-end: 4px;
+  }
+
+  .section-title {
+    font-size: 15px;
+  }
+
+  .section-title::after {
+    content: '';
+  }
+
+  .section-subtitle {
+    margin-block-end: 8px;
+    font-size: 10px;
+  }
+
+  .hero {
+    min-height: auto !important;
+    padding-block: 6px 12px !important;
+    border-bottom: 2px solid #14532d;
+  }
+
+  .hero-name {
+    font-size: 24px;
+  }
+
+  .project-groups {
+    display: block !important;
+  }
+
+  .project-group-title {
+    display: none;
+  }
+
+  .projects-grid,
+  .cards-grid,
+  .education-columns,
+  .certs-grid,
+  .achievements-grid,
+  .about-grid {
+    display: block !important;
+  }
+
+  .project-card,
+  .edu-card,
+  .cert-card,
+  .ach-card,
+  .exp-card,
+  .highlight-item,
+  .skill-row {
+    margin-block-end: 8px;
+    border: 1px solid #bbb !important;
+  }
+
+  .project-media,
+  .ach-media,
+  .cert-media {
+    max-height: 120px;
+  }
+
+  .cert-media img {
+    object-fit: contain;
+  }
+
+  .ach-media img {
+    object-fit: contain;
+    padding: 0.4rem;
+  }
+
+  .marquee {
+    overflow: visible !important;
+    mask-image: none !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
+    flex-wrap: wrap;
+    width: auto !important;
+    transform: none !important;
+  }
+
+  .marquee-track .tag[aria-hidden='true'] {
+    display: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit !important;
+  }
+
+  footer {
+    border-top: 1px solid #999;
+    margin-block-start: 8px;
+    padding-block: 8px;
+    font-size: 10px;
+  }
+}

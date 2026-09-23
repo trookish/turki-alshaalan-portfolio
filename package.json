@@ -1,0 +1,41 @@
+{
+  "name": "turki-alshaalan-portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Terminal/IDE-styled portfolio of Turki Alshaalan — Software Engineer × AI × Game Developer.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trookish/turki-alshaalan-portfolio.git"
+  },
+  "author": "Turki Alshaalan",
+  "license": "ISC",
+  "homepage": "https://trookish.github.io/turki-alshaalan-portfolio/",
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.12.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.70.1",
+    "vite": "^8.3.0"
+  }
+}
