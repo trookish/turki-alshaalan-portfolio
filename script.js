@@ -5,8 +5,8 @@
 
 import { en as enStatic } from './translations/en.js?v=6';
 import { ar as arStatic } from './translations/ar.js?v=6';
-import { termTranslations } from './translations/dynamic.js?v=8';
-import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=6';
+import { termTranslations } from './translations/dynamic.js?v=9';
+import { en as showcaseEn, ar as showcaseAr } from './translations/showcase.js?v=7';
 
 const staticTranslations = { en: enStatic, ar: arStatic };
 const showcase = { en: showcaseEn, ar: showcaseAr };
