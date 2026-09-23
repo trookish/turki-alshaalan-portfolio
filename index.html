@@ -45,7 +45,7 @@
     </script>
 
     <link rel="preload" as="image" href="images/Background/Background.webp">
-    <link rel="stylesheet" href="styles.css?v=12">
+    <link rel="stylesheet" href="styles.css?v=13">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -1365,8 +1365,12 @@
     <div class="cert-modal" id="certModal">
         <div class="cert-modal-overlay" onclick="closeCertModal()"></div>
         <div class="cert-modal-content">
-            <button class="cert-modal-close" onclick="closeCertModal()">&times;</button>
+            <button class="cert-modal-close" onclick="closeCertModal()" aria-label="Close view">&times;</button>
             <img id="certModalImage" src="" alt="Certificate">
+            <div class="cert-modal-caption" id="certModalCaption" hidden>
+                <span class="cert-modal-title" id="certModalTitle"></span>
+                <p class="cert-modal-desc" id="certModalDesc"></p>
+            </div>
         </div>
     </div>
 
@@ -1625,6 +1629,15 @@
                                 <div class="ss-image-wrapper">
                                     <img loading="lazy" decoding="async" id="showcase-main-image" src=""
                                         alt="Gameplay Screenshot">
+                                    <button type="button" class="cert-btn view-btn ss-view-btn"
+                                        id="showcase-view-btn" aria-label="View screenshot full size">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                        View
+                                    </button>
                                 </div>
                                 <button class="ss-nav-arrow next-arrow" aria-label="Next image">&gt;</button>
                             </div>
@@ -1682,7 +1695,7 @@
         </div>
     </div>
 
-    <script type="module" src="script.js?v=11"></script>
+    <script type="module" src="script.js?v=12"></script>
 </body>
 
 </html>

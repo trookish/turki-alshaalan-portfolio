@@ -2629,7 +2629,7 @@ html[dir="rtl"] .skill-track {
 .cert-modal {
     position: fixed;
     inset: 0;
-    z-index: 10000;
+    z-index: 10001;
     display: none;
     align-items: center;
     justify-content: center;
@@ -2662,6 +2662,13 @@ html[dir="rtl"] .skill-track {
     font-size: 2rem;
     cursor: pointer;
     font-family: var(--font-terminal);
+    z-index: 3;
+    line-height: 1;
+    padding: 0 0.25rem;
+}
+
+.cert-modal-close:hover {
+    color: var(--accent-primary);
 }
 
 .cert-modal-content img {
@@ -2672,6 +2679,46 @@ html[dir="rtl"] .skill-track {
     object-fit: contain;
     border: 2px solid var(--accent-primary);
     box-shadow: var(--shadow-pixel);
+    display: block;
+}
+
+.cert-modal-caption {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    max-width: min(480px, calc(100% - 24px));
+    background: rgba(0, 0, 0, 0.88);
+    border: 2px solid var(--accent-primary);
+    box-shadow: var(--shadow-pixel);
+    padding: 0.6rem 0.85rem;
+    z-index: 2;
+    pointer-events: none;
+}
+
+html[dir="rtl"] .cert-modal-caption {
+    left: auto;
+    right: 12px;
+}
+
+html[dir="rtl"] .cert-modal-close {
+    right: auto;
+    left: 0;
+}
+
+.cert-modal-title {
+    display: block;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.3rem;
+}
+
+.cert-modal-desc {
+    margin: 0;
+    font-family: var(--font-terminal);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.4;
 }
 
 /* ========================================
@@ -3381,6 +3428,7 @@ html[dir="rtl"] .skill-track {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .ss-image-wrapper img {
@@ -3388,6 +3436,28 @@ html[dir="rtl"] .skill-track {
     max-height: 100%;
     object-fit: contain;
     transition: opacity 150ms ease-in-out;
+}
+
+.ss-view-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 11;
+    background: rgba(0, 0, 0, 0.75);
+    color: var(--text-primary);
+    display: none;
+    align-items: center;
+}
+
+.ss-view-btn:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+html[dir="rtl"] .ss-view-btn {
+    right: auto;
+    left: 10px;
 }
 
 .ss-image-wrapper iframe.ss-video-slide {

@@ -554,10 +554,22 @@ function initAchievementExpand() {
 */
 
 // Certificate Modal Functions
-window.openCertModal = function(imageSrc) {
+window.openCertModal = function(imageSrc, title, desc) {
     const modal = document.getElementById('certModal');
     const modalImg = document.getElementById('certModalImage');
+    const caption = document.getElementById('certModalCaption');
+    const captionTitle = document.getElementById('certModalTitle');
+    const captionDesc = document.getElementById('certModalDesc');
     modalImg.src = imageSrc;
+    if (caption) {
+        if (title) {
+            captionTitle.textContent = title;
+            captionDesc.textContent = desc || '';
+            caption.hidden = false;
+        } else {
+            caption.hidden = true;
+        }
+    }
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 };
@@ -565,7 +577,10 @@ window.openCertModal = function(imageSrc) {
 window.closeCertModal = function() {
     const modal = document.getElementById('certModal');
     modal.classList.remove('active');
-    document.body.style.overflow = '';
+    const showcase = document.getElementById('projectShowcaseModal');
+    if (!showcase || !showcase.classList.contains('active')) {
+        document.body.style.overflow = '';
+    }
 };
 
 // Close modal on Escape key
@@ -683,6 +698,7 @@ function initProjectShowcase() {
     const imgDesc = document.getElementById('showcase-image-desc');
     const prevArrow = modal.querySelector('.prev-arrow');
     const nextArrow = modal.querySelector('.next-arrow');
+    const viewBtn = modal.querySelector('#showcase-view-btn');
     const thumbnailsGrid = document.getElementById('showcase-thumbnails-grid');
     const modalTitleElem = document.getElementById('showcaseModalTitle');
     const captionContainer = document.getElementById('showcase-caption-container');
@@ -760,6 +776,11 @@ function initProjectShowcase() {
             imgCounter.textContent = `${currentIndex + 1} / ${screenshotsList.length}`;
             imgDesc.textContent = current.desc;
         }, 100);
+
+        // Show/hide the full-size View button (images only)
+        if (viewBtn) {
+            viewBtn.style.display = current.type === 'video' ? 'none' : 'inline-flex';
+        }
 
         // Update active thumbnail
         const thumbBtns = thumbnailsGrid.querySelectorAll('.ss-thumb-btn');
@@ -1124,6 +1145,9 @@ function initProjectShowcase() {
     // Escape key listener for this modal specifically
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('active')) {
+            // If the zoomed screenshot view is open, let it close first
+            const certModal = document.getElementById('certModal');
+            if (certModal && certModal.classList.contains('active')) return;
             closeModal();
         }
     });
@@ -1139,9 +1163,21 @@ function initProjectShowcase() {
         showScreenshot(currentIndex + 1);
     });
 
+    // Zoom current screenshot full-size with title/description caption
+    if (viewBtn) {
+        viewBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const current = screenshotsList[currentIndex];
+            if (!current || current.type === 'video') return;
+            openCertModal(current.src, current.title, current.desc);
+        });
+    }
+
     // Keyboard navigation for gallery
     document.addEventListener('keydown', (e) => {
         if (modal.classList.contains('active') && screenshotsList.length > 1) {
+            const certModal = document.getElementById('certModal');
+            if (certModal && certModal.classList.contains('active')) return;
             if (e.key === 'ArrowLeft') {
                 showScreenshot(currentIndex - 1);
             } else if (e.key === 'ArrowRight') {
