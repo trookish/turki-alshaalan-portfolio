@@ -2469,22 +2469,27 @@ html[dir="rtl"] .skill-track {
     margin-bottom: 0.25rem;
 }
 
-.activities-text {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+.activities-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.activities-text {
+    font-size: inherit;
+    color: inherit;
 }
 
 .activities-icon {
-    width: 24px;
-    height: 24px;
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
     object-fit: contain;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
-    padding: 2px;
+    padding: 3px;
 }
 
 /* ========================================

@@ -112,7 +112,7 @@ export const termTranslations = {
     "Experience": "الخبرة",
     "Where I've contributed and grown": "أماكن ساهمت فيها وتطوّرت",
     "Enterprise Applications Intern": "متدرب تطبيقات المؤسسات",
-    "Lumi | لومي": "Lumi | لومي",
+    "Lumi": "لومي",
     "On-site in Riyadh, Saudi Arabia": "حضوري في الرياض، المملكة العربية السعودية",
     "Aug 2026 - Present": "أغسطس 2026 - حتى الآن",
 
