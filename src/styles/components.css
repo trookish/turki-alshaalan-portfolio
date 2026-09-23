@@ -169,6 +169,14 @@
 .contact-form .form-status.ok { color: var(--c-green); }
 .contact-form .form-status.err { color: var(--c-danger); }
 
+.contact-form .form-status-detail {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--c-ink-3);
+  word-break: break-word;
+}
+
 .contact-form .form-hint {
   font-family: var(--font-mono);
   font-size: 0.72rem;

@@ -88,9 +88,14 @@ async function sendViaFormSubmit(payload: {
       Message: payload.message,
     }),
   })
+  const data = (await res.json().catch(() => ({}))) as {
+    success?: string | boolean
+    message?: string
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  const data = (await res.json().catch(() => ({}))) as { success?: string | boolean }
-  if (data.success === 'false' || data.success === false) throw new Error('submit rejected')
+  if (data.success === 'false' || data.success === false) {
+    throw new Error(data.message || 'submit rejected')
+  }
 }
 
 function buildMailto(name: string, email: string, subject: string, message: string) {
@@ -113,6 +118,7 @@ export function Contact() {
   const [message, setMessage] = useState('')
   const [honeypot, setHoneypot] = useState('')
   const [status, setStatus] = useState<Status>('idle')
+  const [errDetail, setErrDetail] = useState('')
 
   const copyEmail = async () => {
     try {
@@ -140,11 +146,13 @@ export function Contact() {
       message: message.trim(),
     }
     if (!payload.name || !payload.email || !payload.message) {
+      setErrDetail('')
       setStatus('err')
       return
     }
 
     setStatus('sending')
+    setErrDetail('')
     try {
       await sendViaFormSubmit(payload)
       setStatus('ok')
@@ -152,7 +160,9 @@ export function Contact() {
       setEmail('')
       setSubject('')
       setMessage('')
-    } catch {
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : ''
+      setErrDetail(msg && !/^HTTP \d+$/.test(msg) ? msg : '')
       setStatus('err')
     }
   }
@@ -312,6 +322,7 @@ export function Contact() {
             {status === 'err' && (
               <p className="form-status err" role="alert">
                 ✕ {t('contact_form_err')}
+                {errDetail ? <span className="form-status-detail">{errDetail}</span> : null}
               </p>
             )}
           </form>
