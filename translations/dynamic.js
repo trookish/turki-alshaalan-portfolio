@@ -51,7 +51,7 @@ export const termTranslations = {
     "A local-first, AI-native project workspace. Everything lives in your browser — notes, tasks, specs, canvases, and chat threads — backed by a local Python sidecar for embeddings, semantic search, and RAG context. No account. No cloud. No telemetry.": "مساحة عمل مشاريع محلية بالكامل (Local-First) مدعومة بالذكاء الاصطناعي. كل شيء يعيش في المتصفح — ملاحظات، مهام، مواصفات، لوحات، ومحادثات — مع خدمة Python محلية للتضمين والبحث الدلالي وسياق RAG. بدون حساب، بدون سحابة، وبدون تتبع.",
     "Latest Release →": "أحدث إصدار ←",
 
-    "PlateMind": "PlateMind",
+    "Saudi Plate Predictor System": "Saudi Plate Predictor System",
     "A proof-of-concept prediction system for Saudi distinguished license plate auctions. Analyzes historical auction behavior, rarity, cultural significance, and plate patterns to forecast which plates are most likely to appear in upcoming auctions — with ethical data collection and a permanent local history archive.": "نظام تجريبي للتنبؤ بمزادات اللوحات المميزة السعودية. يحلل سلوك المزادات السابقة والندرة والدلالات الثقافية وأنماط اللوحات عشان يتنبأ بأي لوحات أرجح إنها تطلع في المزادات القادمة — مع جمع بيانات أخلاقي وأرشيف تاريخي دائم.",
     "Coming Soon": "قريباً",
     "Python": "Python",
