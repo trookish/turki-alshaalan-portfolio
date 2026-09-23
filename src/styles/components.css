@@ -508,11 +508,10 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: var(--hero-image);
   background-size: cover;
   background-position: center 70%;
   background-repeat: no-repeat;
-  opacity: 0.55;
+  opacity: 0.7;
   filter: contrast(1.05) saturate(1.15);
   pointer-events: none;
   will-change: transform;
@@ -523,8 +522,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 55% at 35% 42%, color-mix(in srgb, var(--c-bg) 78%, transparent) 0%, transparent 70%),
-    linear-gradient(180deg, color-mix(in srgb, var(--c-bg) 55%, transparent) 0%, transparent 35%, color-mix(in srgb, var(--c-bg) 70%, transparent) 100%);
+    radial-gradient(ellipse 70% 55% at 35% 42%, color-mix(in srgb, var(--c-bg) 55%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--c-bg) 35%, transparent) 0%, transparent 40%, color-mix(in srgb, var(--c-bg) 50%, transparent) 100%);
   pointer-events: none;
 }
 
@@ -541,14 +540,14 @@
 }
 
 [data-theme='light'] .hero-bg {
-  opacity: 0.35;
+  opacity: 0.45;
   filter: contrast(1.05) saturate(1.05);
 }
 
 [data-theme='light'] .hero-bg-veil {
   background:
-    radial-gradient(ellipse 70% 55% at 35% 42%, color-mix(in srgb, var(--c-bg) 82%, transparent) 0%, transparent 70%),
-    linear-gradient(180deg, color-mix(in srgb, var(--c-bg) 60%, transparent) 0%, transparent 40%, color-mix(in srgb, var(--c-bg) 75%, transparent) 100%);
+    radial-gradient(ellipse 70% 55% at 35% 42%, color-mix(in srgb, var(--c-bg) 70%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--c-bg) 45%, transparent) 0%, transparent 45%, color-mix(in srgb, var(--c-bg) 60%, transparent) 100%);
 }
 
 .scroll-hint {

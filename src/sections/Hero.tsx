@@ -11,7 +11,7 @@ export function Hero() {
     <section id="home" className="hero relative overflow-hidden">
       <div
         className="hero-bg"
-        style={{ ['--hero-image' as string]: `url(${heroBg})` }}
+        style={{ backgroundImage: `url("${heroBg}")` }}
         aria-hidden="true"
       />
       <div className="hero-bg-veil" aria-hidden="true" />
