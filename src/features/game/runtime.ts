@@ -145,6 +145,7 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
   let accumulator = 0
   let lastBannerPhase = 0
   let wasVulnerable = false
+  let lastTellAttack = ''
   const TIME_STEP = 1000 / 60
   const MAX_ACCUMULATOR = TIME_STEP * 5
 
@@ -411,6 +412,18 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
       hud.setTell(getGameText('RIPOSTE READY'), { duration: 1200 })
     }
     wasVulnerable = !!boss.vulnerable
+
+    // The unblockable slam is only fair if the windup carries a written warning.
+    const attackName = typeof boss.attackName === 'string' ? boss.attackName : ''
+    if (attackName && attackName !== lastTellAttack) {
+      lastTellAttack = attackName
+      if (attackName === 'quakeSlam') {
+        hud.setTell(getGameText('UNBLOCKABLE SLAM'), { danger: true, duration: 1500 })
+        playSound('block', 0.65)
+      }
+    } else if (!attackName) {
+      lastTellAttack = ''
+    }
 
     if (player.dead && gameState === 'playing') onPlayerDefeated()
   }
