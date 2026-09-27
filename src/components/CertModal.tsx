@@ -4,7 +4,7 @@ import { useOverlay } from '../ui/OverlayContext'
 
 export function CertModal() {
   const { t, b } = useI18n()
-  const { cert, closeCert, openImageView } = useOverlay()
+  const { cert, closeCert } = useOverlay()
 
   useEffect(() => {
     if (!cert) return
@@ -38,14 +38,6 @@ export function CertModal() {
           style={{ position: 'fixed', top: '1rem', insetInlineEnd: '1rem', zIndex: 5 }}
         >
           {t('sc_close')}
-        </button>
-        <button
-          type="button"
-          className="cert-open-view"
-          onClick={() => openImageView({ src: cert.image, title, desc })}
-          aria-label={t('sc_view_full')}
-        >
-          {t('sc_view_full')}
         </button>
         <img className="cert-zoom-img" src={cert.image} alt={title} />
         <p className="cert-caption">

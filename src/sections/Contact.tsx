@@ -244,7 +244,7 @@ export function Contact() {
                   maxLength={120}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ada Lovelace"
+                  placeholder={t('contact_ph_name')}
                 />
               </div>
               <div className="field">
@@ -273,7 +273,7 @@ export function Contact() {
                 maxLength={200}
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                placeholder="Project inquiry"
+                placeholder={t('contact_ph_subject')}
               />
             </div>
 

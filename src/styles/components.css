@@ -419,6 +419,8 @@
   transition: color 120ms steps(2), background-color 120ms steps(2);
 }
 
+.nav-extra svg { flex-shrink: 0; }
+
 .nav-extra:hover {
   color: var(--c-green);
   background: color-mix(in srgb, var(--c-green) 7%, transparent);
@@ -1065,7 +1067,7 @@
   pointer-events: none;
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 1;
   background: repeating-linear-gradient(
     to bottom,
     transparent 0 2px,
@@ -1110,11 +1112,13 @@
   border: 0;
 }
 
+/* Stays under .modal-bar (z-index 2) so the arrows never ride over the window bar
+   when the modal scrolls. */
 .ss-nav {
   position: absolute;
   inset-block-start: 50%;
   transform: translateY(-50%);
-  z-index: 3;
+  z-index: 1;
   width: 40px;
   height: 48px;
   background: rgba(0, 0, 0, 0.65);
@@ -1143,7 +1147,7 @@
   background: rgba(0, 0, 0, 0.75);
   color: var(--c-ink);
   font-size: 0.72rem;
-  z-index: 3;
+  z-index: 1;
 }
 
 .ss-zoom:hover {
@@ -1260,24 +1264,7 @@
   font-size: 0.9rem;
 }
 
-.cert-open-view {
-  position: absolute;
-  inset-block-end: 0.5rem;
-  inset-inline-end: 0.5rem;
-  z-index: 4;
-  padding: 0.35rem 0.55rem;
-  background: rgba(0, 0, 0, 0.75);
-  border: 1px solid var(--c-line-2);
-  color: var(--c-ink);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  cursor: pointer;
-}
-
-.cert-open-view:hover {
-  border-color: var(--c-green);
-  color: var(--c-green);
-}
+.cert-view-btn { gap: 0.4rem; }
 
 /* ---------- Image viewer ---------- */
 .image-viewer-overlay {
@@ -1967,6 +1954,42 @@ html[dir='rtl'] .hud-bar-fill {
   .term-body { padding: 0.9rem 0.95rem; }
   .project-body { padding: 0.9rem 0.95rem 1rem; }
   .ss-thumbs { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+  .contact-form label { font-size: 0.76rem; letter-spacing: 0.08em; }
+
+  /* Comfortable hit area for the one interactive chip left in the status bar */
+  .statusbar .status-chip { position: relative; }
+  .statusbar .status-chip::after {
+    content: '';
+    position: absolute;
+    inset: -8px 0;
+  }
+
+  /* Screenshot viewer: on a phone the caption sits under the image instead of
+     covering it, and stays a compact strip. */
+  .image-viewer {
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 100%;
+    max-height: 88vh;
+  }
+  .image-viewer-img { max-width: 94vw; max-height: 66vh; }
+  .image-viewer-caption {
+    position: static;
+    width: 94vw;
+    max-width: none;
+    padding: 0.45rem 0.6rem;
+    overflow: hidden;
+  }
+  .image-viewer-title { font-size: 0.68rem; letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+  .image-viewer-desc {
+    font-size: 0.72rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 @media (max-width: 380px) {

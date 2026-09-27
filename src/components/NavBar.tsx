@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useI18n } from '../i18n/LanguageContext'
+import { LinkedInIcon } from './icons'
 import { useTheme } from '../theme/ThemeProvider'
 import { useActiveSection, useScrolled } from '../hooks/usePage'
 import { sections } from '../data/site'
@@ -60,7 +61,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
 
   return (
     <header className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <nav className="nav-inner" aria-label="Primary">
+      <nav className="nav-inner" aria-label={t('nav_primary_a11y')}>
         <a
           href="#home"
           onClick={(e) => {
@@ -123,7 +124,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
               className="nav-extra"
               onClick={() => setMenuOpen(false)}
             >
-              <span aria-hidden="true">in</span> LinkedIn
+              <LinkedInIcon size={14} /> LinkedIn
             </a>
           </div>
         </div>
@@ -188,7 +189,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
           <button
             type="button"
             className={`hamburger ${menuOpen ? 'open' : ''}`}
-            aria-label="Menu"
+            aria-label={t('nav_menu_a11y')}
             aria-controls="site-menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}

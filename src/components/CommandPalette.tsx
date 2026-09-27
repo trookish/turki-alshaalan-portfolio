@@ -112,7 +112,7 @@ export function CommandPalette() {
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label="Command palette"
+        aria-label={t('palette_title')}
       >
         <input
           ref={inputRef}

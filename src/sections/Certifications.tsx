@@ -1,5 +1,6 @@
 import { useI18n } from '../i18n/LanguageContext'
 import { LinkedInBtn, Section } from '../components/Section'
+import { EyeIcon } from '../components/icons'
 import { useOverlay } from '../ui/OverlayContext'
 import { certifications } from '../data/certifications'
 import { linkedinDetails } from '../data/site'
@@ -21,8 +22,13 @@ export function Certifications() {
               <p className="font-mono text-xs text-green">{b(cert.issuer)}</p>
               <p className="font-mono text-xs text-ink3">{b(cert.date)}</p>
               <div className="cert-actions mt-auto pt-3">
-                <button type="button" className="btn w-full !py-2 !text-xs" onClick={() => openCert(cert)}>
-                  👁 {t('cert_view')}
+                <button
+                  type="button"
+                  className="btn cert-view-btn w-full !py-2 !text-xs"
+                  onClick={() => openCert(cert)}
+                >
+                  <EyeIcon />
+                  {t('cert_view')}
                 </button>
               </div>
             </div>

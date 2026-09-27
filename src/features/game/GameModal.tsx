@@ -136,19 +136,19 @@ export function GameModal() {
               </div>
               <div className="souls-action-btns">
                 <button type="button" className="souls-btn lock-btn" id="btnLock">
-                  LOCK
+                  {t('game_btn_lock')}
                 </button>
                 <button type="button" className="souls-btn atk-btn" id="btnAttack">
-                  ATK
+                  {t('game_btn_attack')}
                 </button>
                 <button type="button" className="souls-btn heal-btn" id="btnHeal">
-                  HEAL
+                  {t('game_btn_heal')}
                 </button>
                 <button type="button" className="souls-btn roll-btn" id="btnRoll">
-                  ROLL
+                  {t('game_btn_roll')}
                 </button>
                 <button type="button" className="souls-btn block-btn" id="btnBlock">
-                  BLOCK
+                  {t('game_btn_block')}
                 </button>
               </div>
             </div>

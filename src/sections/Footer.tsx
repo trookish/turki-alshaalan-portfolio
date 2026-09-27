@@ -1,7 +1,7 @@
 import { useI18n } from '../i18n/LanguageContext'
 
 export function Footer() {
-  const { t, lang } = useI18n()
+  const { t } = useI18n()
   const year = new Date().getFullYear()
 
   return (
@@ -9,7 +9,6 @@ export function Footer() {
       <p>
         © {year} {t('footer_text')} — {t('footer_rights')}
       </p>
-      <p className="mt-1 opacity-70">{lang === 'ar' ? 'صُنع بـ React + Tailwind + terminal energy' : 'Built with React + Tailwind + terminal energy'}</p>
     </footer>
   )
 }

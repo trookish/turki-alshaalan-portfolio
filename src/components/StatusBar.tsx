@@ -48,7 +48,13 @@ export function StatusBar({ onOpenPalette }: { onOpenPalette: () => void }) {
           ⌘K
         </button>
         <span className="hide-sm">{clock}</span>
-        <button type="button" className="status-chip" onClick={toggle}>
+        <button
+          type="button"
+          className="status-chip"
+          onClick={toggle}
+          aria-label={t('nav_theme_tip')}
+          title={t('nav_theme_tip')}
+        >
           {theme === 'dark' ? t('status_mode') : 'PAPER'}
         </button>
         <span>{t('nav_lang')}</span>

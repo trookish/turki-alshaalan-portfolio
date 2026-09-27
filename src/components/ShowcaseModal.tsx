@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/LanguageContext'
 import { useOverlay } from '../ui/OverlayContext'
 import type { ShowcaseState } from '../ui/OverlayContext'
 import type { Slide } from '../data/types'
+import { EyeIcon } from './icons'
 
 function Thumb({ slide, label }: { slide: Slide; label: string }) {
   if (slide.type === 'video') {
@@ -115,10 +116,7 @@ function ShowcaseContent({ showcase, close }: { showcase: ShowcaseState; close: 
                     })
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
+                  <EyeIcon />
                   <span>{t('sc_view_full')}</span>
                 </button>
               )}
@@ -207,7 +205,7 @@ function ShowcaseContent({ showcase, close }: { showcase: ShowcaseState; close: 
 
             {showcase.note && (
               <>
-                <p className="ss-label">NOTE</p>
+                <p className="ss-label">{t('sc_note')}</p>
                 <p className="ss-desc-para">{showcase.note}</p>
               </>
             )}
