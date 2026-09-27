@@ -58,6 +58,7 @@ src/
   theme/        # ThemeProvider
   ui/           # Overlay context (showcase/cert/game/palette)
 public/         # images, Sounds, CV
+cv/             # CV source (HTML) that renders public/CV/Turki_Alshalaan_CV.pdf
 legacy/         # Old vanilla site (reference only, gitignored)
 ```
 

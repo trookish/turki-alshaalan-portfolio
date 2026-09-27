@@ -1,0 +1,222 @@
+<!doctype html>
+<!--
+  Source for public/CV/Turki_Alshalaan_CV.pdf — keep the two of them in sync.
+  Regenerate: open this file in Chrome, then Print → Save as PDF
+  (paper A4, margins "None", "Background graphics" ON). Content is mirrored from
+  src/data/*, so update those first when something changes.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Turki Alshaalan — CV</title>
+<style>
+  @page { size: A4; margin: 12mm 13mm 11mm; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: Arial, Helvetica, "Segoe UI", sans-serif;
+    font-size: 9.7pt;
+    line-height: 1.38;
+    color: #000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ---------- header ---------- */
+  .name { font-size: 26pt; font-weight: 700; letter-spacing: -0.3px; line-height: 1.05; margin: 0; }
+  .tagline { font-size: 10.4pt; color: #222; margin: 4px 0 0; }
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10mm;
+    row-gap: 3px;
+    margin-top: 8px;
+    font-size: 8.9pt;
+  }
+  .contact span { display: flex; align-items: center; gap: 5px; }
+  .contact svg { flex: 0 0 auto; }
+
+  /* ---------- sections ---------- */
+  h2 {
+    font-size: 10.8pt;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    margin: 14px 0 7px;
+    padding-bottom: 2.5px;
+    border-bottom: 1.6px solid #000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    break-after: avoid;
+  }
+  h2 svg { flex: 0 0 auto; }
+
+  .new-page { break-before: page; }
+  .keep { break-inside: avoid; }
+
+  p { margin: 0; }
+
+  /* ---------- entries ---------- */
+  .entry { margin-bottom: 7px; break-inside: avoid; }
+  .entry:last-child { margin-bottom: 0; }
+  .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .entry-title { font-weight: 700; font-size: 10.1pt; }
+  .entry-date { font-size: 8.9pt; color: #333; white-space: nowrap; }
+  .entry-sub { font-size: 9.1pt; color: #333; }
+  .entry-body { margin-top: 1px; }
+
+  .proj { margin-bottom: 5.5px; break-inside: avoid; }
+  .proj-name { font-weight: 700; }
+  .proj-tech { color: #333; font-size: 8.9pt; }
+
+  .skills div { margin-bottom: 3px; }
+  .skills b { font-weight: 700; }
+
+  .certs div, .ach div { margin-bottom: 2.5px; break-inside: avoid; }
+  .ach b { font-weight: 700; }
+
+  .langs { display: grid; grid-template-columns: 1fr 1fr; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="name">Turki Alshaalan</h1>
+  <p class="tagline">Information Technology Graduate · Game Developer · AI &amp; Software Developer</p>
+  <div class="contact">
+    <span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4h20v16H2V4zm2.4 1.8L12 11.3l7.6-5.5H4.4zM20 7.6l-8 5.8-8-5.8V19h16V7.6z"/></svg>trookishgamedev@gmail.com</span>
+    <span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2z"/></svg>+966 53 184 9801</span>
+    <span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Riyadh, Saudi Arabia</span>
+    <span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.5 4.78 5.75V21h-4v-5.6c0-1.34-.03-3.06-1.9-3.06-1.9 0-2.2 1.45-2.2 2.96V21h-4V9z"/></svg>linkedin.com/in/turki-alshaalan</span>
+    <span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1 .8-.2 1.6-.3 2.5-.3s1.7.1 2.5.3c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5C19.1 20.2 22 16.4 22 12c0-5.5-4.5-10-10-10z"/></svg>github.com/trookish</span>
+    <span><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-2.9a15 15 0 0 0-1.3-3.4A8 8 0 0 1 18.9 8zM12 4.1c.7 1 1.3 2.4 1.7 3.9h-3.4c.4-1.5 1-2.9 1.7-3.9zM4.3 14A8 8 0 0 1 4 12c0-.7.1-1.4.3-2h3.3a17 17 0 0 0 0 4H4.3zm.8 2h2.9c.3 1.2.8 2.4 1.3 3.4A8 8 0 0 1 5.1 16zm2.9-8H5.1a8 8 0 0 1 4.2-3.4A15 15 0 0 0 8 8zm4 11.9c-.7-1-1.3-2.4-1.7-3.9h3.4c-.4 1.5-1 2.9-1.7 3.9zM14.2 14H9.8a15 15 0 0 1 0-4h4.4a15 15 0 0 1 0 4zm.4 5.4c.5-1 1-2.2 1.3-3.4h2.9a8 8 0 0 1-4.2 3.4zm2-5.4a17 17 0 0 0 0-4h3.3c.2.6.3 1.3.3 2s-.1 1.4-.3 2h-3.3z"/></svg>trookish.github.io/turki-alshaalan-portfolio</span>
+  </div>
+</header>
+
+<section>
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h8l6 6v14H6V2zm7 1.5V9h5.5L13 3.5zM8 12h8v1.5H8V12zm0 3.5h8V17H8v-1.5z"/></svg>Summary</h2>
+  <p>Information Technology graduate from Imam Muhammad ibn Saud Islamic University (GPA 4.16), currently an Enterprise Applications Intern at Lumi in Riyadh. I build across three areas — Unity and C# gameplay systems, AI tools on Python and local models, and full-stack web applications — and have shipped playable games, an Arabic document summarizer, and a local-first AI workspace. I'm looking for a team where I can keep building software that holds up in real use.</p>
+</section>
+
+<section>
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2h4a2 2 0 0 1 2 2v2h4a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4V4a2 2 0 0 1 2-2zm0 4h4V4h-4v2z"/></svg>Experience</h2>
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Enterprise Applications Intern — Lumi</span>
+      <span class="entry-date">Aug 2026 – Present</span>
+    </div>
+    <div class="entry-sub">Riyadh, Saudi Arabia · On-site</div>
+    <p class="entry-body">Enterprise application development within the product team.</p>
+  </div>
+</section>
+
+<section>
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h6l2 2h10v14H3V4zm2 4v10h14V8H4z"/></svg>Projects</h2>
+
+  <div class="proj"><span class="proj-name">MasarFlow</span> — Local-first, AI-native project workspace where notes, tasks, specs and chat threads stay on your machine, backed by a Python sidecar for embeddings, semantic search and RAG context. <span class="proj-tech">Next.js · React · TypeScript · FastAPI · Electron · github.com/trookish/MasarFlow</span></div>
+
+  <div class="proj"><span class="proj-name">DocuMind</span> — Open-source Arabic document summarizer that runs on local LLMs through a Streamlit interface. <span class="proj-tech">Python · LLM · Arabic NLP · Streamlit</span></div>
+
+  <div class="proj"><span class="proj-name">Syntax Strike</span> — Graduation project: a 3D educational action-RPG that teaches Java through in-game coding puzzles, with compiler-integrated combat and AST-based answer evaluation. <span class="proj-tech">Unity · C# · AST Parsing · Game AI</span></div>
+
+  <div class="proj"><span class="proj-name">The Scary Library</span> — Jam-winning horror game where an AI enemy hunts the player while they solve book puzzles to escape a haunted library. <span class="proj-tech">Unity · C# · Game AI · trookish.itch.io/scary-library</span></div>
+
+  <div class="proj"><span class="proj-name">The Hidden Kanz</span> — 3D dungeon crawler with wave-based skeleton AI, sword combat and magic abilities. <span class="proj-tech">Unity · C# · Combat Systems</span></div>
+
+  <div class="proj"><span class="proj-name">IT WAS JUST A TIGHTENED SCREW</span> — Comedy runner built in five days for SOP Game Jam 2026; placed 119th of 716 submissions. <span class="proj-tech">Unity · C# · Game Jam</span></div>
+
+  <div class="proj"><span class="proj-name">Saudi Plate Predictor System</span> — Machine-learning proof of concept that forecasts Saudi distinguished licence-plate auction outcomes from historical and cultural data. <span class="proj-tech">Python · Machine Learning · SQLite</span></div>
+
+  <div class="proj"><span class="proj-name">SecureCheck</span> — Web platform that checks whether an email or password has appeared in known data breaches, built around a privacy-first query flow. <span class="proj-tech">Python · Flask · REST APIs</span></div>
+
+  <div class="proj"><span class="proj-name">Recipe Hub</span> — Recipe management web app with search, categories, favourites and an admin dashboard. <span class="proj-tech">PHP · MySQL · JavaScript</span></div>
+
+  <div class="proj"><span class="proj-name">Smart Campus Services</span> — Android app delivering campus announcements, product browsing, cart and contact features over a local database. <span class="proj-tech">Java · Android · SQLite · MVC</span></div>
+
+  <div class="proj"><span class="proj-name">Restaurant Ordering System</span> — Java application modelling a full ordering flow with tree-structured menus, order queues and stack-based inventory. <span class="proj-tech">Java · Data Structures</span></div>
+
+  <div class="proj"><span class="proj-name">Dungeon Puzzle</span> — Trap-dodging dungeon puzzler released on itch.io, focused on environmental challenges and survival. <span class="proj-tech">Unity · C# · trookish.itch.io/dungeon-puzzle</span></div>
+
+  <div class="proj"><span class="proj-name">Knight With a Gun</span> — Endless survival shooter with wave-based enemy combat, released on itch.io. <span class="proj-tech">Unity · C#</span></div>
+</section>
+
+<section class="new-page">
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 5-9 5-9-5 9-5zm0 12.5L4.5 11v5.2L12 20l7.5-3.8V11L12 15.5z"/></svg>Skills</h2>
+  <div class="skills">
+    <div><b>Programming:</b> C# · Python · TypeScript · JavaScript · Java · PHP · SQL · HTML · CSS</div>
+    <div><b>Web &amp; Desktop:</b> React · Next.js · Electron · FastAPI · Flask · REST APIs · MySQL · SQLite · XAMPP</div>
+    <div><b>AI &amp; Machine Learning:</b> Large Language Models · RAG · Vector Databases · Generative AI · Game AI</div>
+    <div><b>Game Development:</b> Unity · Gameplay Systems · Game Mechanics · Game Design · Blender · 3D Modelling</div>
+    <div><b>Engineering:</b> Full-Stack Development · Software Architecture · Local-First Architecture · MVC · Release Engineering · HCI</div>
+    <div><b>Core:</b> Problem Solving · Teamwork · Collaboration · Project Management · Self-Learning</div>
+  </div>
+</section>
+
+<section>
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.9V17h2V9L12 3zM5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8z"/></svg>Education</h2>
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Bachelor's in Information Technology — Imam Muhammad ibn Saud Islamic University</span>
+      <span class="entry-date">Dec 2022 – Jul 2026</span>
+    </div>
+    <div class="entry-sub">Riyadh, Saudi Arabia · GPA 4.16 · Enjaz Club, game development club</div>
+  </div>
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Game Design and Development Bootcamp — Tuwaiq Academy</span>
+      <span class="entry-date">Completed</span>
+    </div>
+    <div class="entry-sub">Intensive game design and development track.</div>
+  </div>
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Complete C# Unity Game Developer 3D — Udemy</span>
+      <span class="entry-date">Jan 2025</span>
+    </div>
+    <div class="entry-sub">57.5 hours of Unity and C# game development.</div>
+  </div>
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Unity Game Development Courses — GameDev.tv</span>
+      <span class="entry-date">2024 – Ongoing</span>
+    </div>
+    <div class="entry-sub">Shader Graph, multiplayer, turn-based strategy and cutscenes.</div>
+  </div>
+</section>
+
+<section>
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 5.9 6.4.6-4.8 4.2 1.4 6.3L12 15.8 6.4 19l1.4-6.3L3 8.5l6.4-.6L12 2z"/></svg>Certifications</h2>
+  <div class="certs">
+    <div>McKinsey.org Forward Program — McKinsey &amp; Company · Jun 2026</div>
+    <div>Game Design and Development — Tuwaiq Academy · Sep 2025</div>
+    <div>Complete C# Unity Game Developer 3D (Unity 6) — GameDev.tv / Udemy · Jan 2025</div>
+    <div>Unity Essentials Pathway — Unity · Jan 2025</div>
+    <div>Game Design Between Imagination and Reality — Digital Attaa Initiative · Jan 2025</div>
+    <div>Introduction to Blender — Imam Muhammad ibn Saud Islamic University · Dec 2024</div>
+    <div>Game Design and Development with Unity and Generative AI Tools — Digital Attaa Initiative · Nov 2024</div>
+    <div>Jobs in Game Development — Digital Attaa Initiative · Nov 2024</div>
+    <div>3D Game Developer Bootcamp — Imam Muhammad ibn Saud Islamic University · Oct 2024</div>
+  </div>
+</section>
+
+<section>
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.6A6 6 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A6 6 0 0 1 7.6 12H7a4 4 0 0 1-4-4V5h3V3zm0 4H5v1a2 2 0 0 0 1 1.7V7zm13 0h-1v2.7A2 2 0 0 0 19 8V7z"/></svg>Achievements</h2>
+  <div class="ach">
+    <div><b>1st Place — PwC Middle East Hackathon</b> · 7 February 2026 — built <i>TourLens</i>, an AR-glasses indoor tour guide that overlays live visualisations for visitors at events and cultural sites in Riyadh.</div>
+    <div><b>1st Place — Enjaz Game Jam</b> · 19 November 2024 — designed and shipped <i>The Scary Library</i>, a horror game with an AI-driven hunter.</div>
+    <div><b>119th of 716 — SOP Game Jam 2026</b> · 30 July – 4 August 2026 — built <i>IT WAS JUST A TIGHTENED SCREW</i> in five days; featured on stream by the jam's host.</div>
+  </div>
+</section>
+
+<section class="keep">
+  <h2><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-2.9a15 15 0 0 0-1.3-3.4A8 8 0 0 1 18.9 8zM12 4.1c.7 1 1.3 2.4 1.7 3.9h-3.4c.4-1.5 1-2.9 1.7-3.9zM4.3 14A8 8 0 0 1 4 12c0-.7.1-1.4.3-2h3.3a17 17 0 0 0 0 4H4.3zm.8 2h2.9c.3 1.2.8 2.4 1.3 3.4A8 8 0 0 1 5.1 16zm2.9-8H5.1a8 8 0 0 1 4.2-3.4A15 15 0 0 0 8 8zm4 11.9c-.7-1-1.3-2.4-1.7-3.9h3.4c-.4 1.5-1 2.9-1.7 3.9zM14.2 14H9.8a15 15 0 0 1 0-4h4.4a15 15 0 0 1 0 4zm.4 5.4c.5-1 1-2.2 1.3-3.4h2.9a8 8 0 0 1-4.2 3.4zm2-5.4a17 17 0 0 0 0-4h3.3c.2.6.3 1.3.3 2s-.1 1.4-.3 2h-3.3z"/></svg>Languages</h2>
+  <div class="langs">
+    <span>Arabic — Native / Bilingual</span>
+    <span>English — Fluent</span>
+  </div>
+</section>
+
+</body>
+</html>
