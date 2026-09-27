@@ -120,7 +120,7 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
   const engine: EngineHandle = createEngine(canvas, isMobile)
 
   const playerRig: KnightRig = createKnight({ color: 0x4ade80, darkColor: 0x14201a, scale: 1 })
-  const bossRig: KnightRig = createKnight({ color: 0xef4444, darkColor: 0x241416, scale: 1.28 })
+  const bossRig: KnightRig = createKnight({ color: 0xef4444, darkColor: 0x241416, scale: 1.28, isBoss: true })
   engine.scene.add(playerRig.root, bossRig.root)
 
   const player = new Player(playerRig)

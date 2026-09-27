@@ -32,6 +32,10 @@ const POSE_KEYS = [
     'blobOp',
 ];
 
+// Free-chain states fold the legs directly; every other state is foot-IK grounded.
+const FREE_KNEE = { roll: 0.55, heal: 1.55, dead: 0.28 };
+const STEP_KEYS = ['stepLX', 'stepLY', 'stepLZ', 'stepRX', 'stepRY', 'stepRZ'];
+
 function restPose() {
     return {
         spinX: 0, bodyY: legH, bodyX: 0,
@@ -166,14 +170,19 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
     const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false });
     const blob = mesh('contact-shadow', root, new THREE.CircleGeometry(0.49, 16), shadowMat, [1, 1, 1], [0, 0.018, 0]);
     blob.rotation.x = -Math.PI / 2;
+    if (isBoss) blob.scale.set(1.3, 1.85, 1); // cover the wide heavy stance
     blob.castShadow = false;
     root.scale.setScalar(scale);
+    // Heavier fighters compress deeper into swings and breathe slower.
+    const weight = isBoss ? 1.35 : 1;
+    const tempo = isBoss ? 0.82 : 1;
 
     const rig = {
         root, spin, body, upper, head, torso, sword, shield, blade, blob, plume, visor,
         ...limbs, cape, capeTip, tabard, tabardTip,
         _prevState: 'idle',
         _blend: 1,
+        _legBlend: 1,
         _tgt: restPose(),
         _last: restPose(),
     };
@@ -223,15 +232,15 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
             tgt.upperY = lerp(0, start.upperY, w);
             tgt.legLX = lerp(0, start.legLX, w);
             tgt.legRX = lerp(0, start.legRX, w);
-            tgt.bodyY = legH - 0.02 * w;
+            tgt.bodyY = legH - 0.028 * w * weight;
             // Shield braces during windup
             tgt.armLX = lerp(0, -0.3, w);
             tgt.armLY = lerp(rest.armLY, 0.2, w);
             return;
         }
 
-        // --- Active swing: chamber → follow-through ---
-        const s = easeInOut(clamp01(swingP));
+        // --- Active swing: chamber → follow-through (snaps early, settles late) ---
+        const s = easeOut(clamp01(swingP));
         tgt.armRX = lerp(start.armRX, end.armRX, s);
         tgt.armRY = lerp(start.armRY, end.armRY, s);
         tgt.armRZ = lerp(start.armRZ, end.armRZ, s);
@@ -243,7 +252,7 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
         tgt.legRX = lerp(start.legRX, end.legRX, s);
         tgt.armLX = lerp(-0.3, -0.4, s);
         // Compress down into the slash, then release
-        tgt.bodyY = legH - Math.sin(clamp01(swingP) * Math.PI) * 0.04;
+        tgt.bodyY = legH - Math.sin(clamp01(swingP) * Math.PI) * 0.04 * weight;
 
         // --- Recovery: follow-through → ready guard → settle ---
         if (recoverP > 0) {
@@ -273,14 +282,22 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
         }
     }
 
+    /** Fold the leg chain directly (rolls, kneels, corpses) with a level sole. */
+    function poseLegChain(side, hip, knee) {
+        limbs[`leg${side}`].rotation.set(hip, 0, 0);
+        limbs[`knee${side}`].rotation.x = knee;
+        limbs[`foot${side}`].rotation.set(-hip - knee, 0, 0);
+    }
+
     let tgt = rig._tgt;
     let last = rig._last;
     let gaitPhase = 0;
 
     // Two-link IK keeps a support sole on the floor while the other knee lifts.
     function plantFoot(side) {
-        const dx = tgt[`step${side}X`];
-        const dz = tgt[`step${side}Z`];
+        const widen = isBoss ? 1 : 0;
+        const dx = tgt[`step${side}X`] + (side === 'L' ? -0.03 : 0.03) * widen;
+        const dz = tgt[`step${side}Z`] + (side === 'L' ? 0.042 : -0.042) * widen;
         const dy = tgt.bodyY - tgt[`step${side}Y`];
         const vertical = Math.hypot(dx, dy);
         const reach = Math.min(0.6395, Math.max(0.10, Math.hypot(vertical, dz)));
@@ -391,7 +408,7 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
             case 'stagger':
             case 'guardbroken': {
                 const fade = 1 - clamp01(progress);
-                const wobble = Math.sin(t * 18) * 0.07 * fade;
+                const wobble = Math.sin(clamp01(progress) * Math.PI * 2.6) * 0.085 * fade;
                 const deep = state === 'guardbroken' ? 1.15 : 1;
                 tgt.upperX = (-0.3 - wobble) * deep;
                 tgt.upperZ = wobble * 2.2;
@@ -402,7 +419,7 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
                 tgt.armLX = -0.2;
                 tgt.legLX = 0.38;
                 tgt.legRX = -0.22;
-                tgt.bodyY = legH - 0.05 * fade;
+                tgt.bodyY = legH - 0.05 * fade * weight;
                 break;
             }
             case 'heal': {
@@ -440,7 +457,7 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
                 tgt.armRX = Math.PI - 0.3 + Math.sin(t * 3.2) * 0.12;
                 tgt.armRZ = -0.18;
                 tgt.swordX = 0.4;
-                tgt.bodyY = legH + hop * 0.055;
+                tgt.bodyY = legH + hop * 0.055 * weight;
                 tgt.upperX = -0.05;
                 tgt.armLX = -0.35;
                 tgt.legLX = 0.1;
@@ -449,18 +466,20 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
                 break;
             }
             default: { // idle
-                const b = Math.sin(t * 2.15) * 0.028;
-                const sway = Math.sin(t * 1.25) * 0.05;
-                const drift = Math.sin(t * 0.75);
-                tgt.upperX = b * 0.55;
-                tgt.bodyY = legH + Math.sin(t * 2.15) * 0.016;
-                tgt.armRX = 0.08 + b + sway * 0.45;
-                tgt.armRZ = -0.05 + sway * 0.3;
-                tgt.armLX = -0.06 - b;
-                tgt.armLZ = 0.04;
+                const b = Math.sin(t * 2.15 * tempo) * 0.028;
+                const sway = Math.sin(t * 1.25 * tempo) * 0.05;
+                const drift = Math.sin(t * 0.75 * tempo);
+                const braced = isBoss ? 1 : 0;
+                tgt.upperX = b * 0.55 + 0.2 * braced;
+                tgt.bodyY = legH + Math.sin(t * 2.15 * tempo) * 0.016;
+                tgt.armRX = 0.08 + b + sway * 0.45 - 0.34 * braced;
+                tgt.armRZ = -0.05 + sway * 0.3 - 0.12 * braced;
+                tgt.armLX = -0.06 - b - 0.38 * braced;
+                tgt.armLZ = 0.04 + 0.18 * braced;
                 tgt.headY = drift * 0.1;
-                tgt.headX = Math.sin(t * 1.6) * 0.03;
+                tgt.headX = Math.sin(t * 1.6) * 0.03 + 0.06 * braced;
                 tgt.swordZ = sway * 0.4;
+                tgt.swordX = 0.32 * braced;
                 tgt.legLX = 0.03;
                 tgt.legRX = -0.03;
                 tgt.shieldY = 0.15;
@@ -468,11 +487,15 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
             }
         }
 
+        // Heavy fighters settle deeper into the ground in every grounded state.
+        if (isBoss && state !== 'roll' && state !== 'dead' && state !== 'heal') tgt.bodyY -= 0.075;
+
         // Crossfade from last applied pose on soft transitions
         if (state !== rig._prevState) {
             const hard = HARD_STATES.has(state) || HARD_STATES.has(rig._prevState);
             rig._prevState = state;
             rig._blend = hard ? 1 : 0;
+            if (hard) rig._legBlend = 0;
         }
 
         if (rig._blend < 1) {
@@ -484,15 +507,31 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
             }
         }
 
+        // Feet glide into a new stance even when the pose itself snaps hard.
+        if (rig._legBlend < 1) {
+            rig._legBlend = Math.min(1, rig._legBlend + dt / 0.12);
+            const b = easeOut(rig._legBlend);
+            for (let i = 0; i < STEP_KEYS.length; i++) {
+                const k = STEP_KEYS[i];
+                tgt[k] = lerp(last[k], tgt[k], b);
+            }
+        }
+
         // Apply to scene graph
         spin.rotation.x = tgt.spinX;
         body.position.y = tgt.bodyY;
         body.rotation.x = tgt.bodyX;
         upper.rotation.set(tgt.upperX, tgt.upperY, tgt.upperZ);
         head.rotation.set(tgt.headX, tgt.headY, tgt.headZ);
-        legL.rotation.x = tgt.legLX;
-        legR.rotation.x = tgt.legRX;
-        if (state === 'run' || state === 'idle') {
+        // Legs: grounded states solve through the foot IK so soles stay planted
+        // even when a stance leans; rolls, kneels and corpses fold the chain.
+        const freeLegs = state === 'roll' || state === 'heal' || state === 'dead';
+        if (freeLegs) {
+            poseLegChain('L', tgt.legLX, FREE_KNEE[state]);
+            poseLegChain('R', tgt.legRX, FREE_KNEE[state] * 0.82);
+        } else {
+            tgt.stepLZ += tgt.legLX * 0.42;
+            tgt.stepRZ += tgt.legRX * 0.42;
             plantFoot('L');
             plantFoot('R');
         }
@@ -505,6 +544,11 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
         // Plume trails upper lean
         plume.rotation.x = -tgt.upperX * 0.5 + Math.sin(t * 4.2) * 0.04;
         plume.rotation.z = -tgt.upperZ * 0.7 + Math.sin(t * 3.1) * 0.03;
+
+        // Cloth trails the torso instead of standing rigid
+        capeTip.rotation.x = -tgt.upperX * 0.5 + Math.sin(t * 2.7) * 0.05 - (tgt.bodyY - legH) * 1.6;
+        capeTip.rotation.z = -tgt.upperY * 0.55 + Math.sin(t * 2.2 + 1.1) * 0.045;
+        tabardTip.rotation.x = tgt.upperX * 0.4 + Math.sin(t * 3.1 + 1.2) * 0.04 + (tgt.bodyY - legH) * 1.4;
 
         // Remember for next crossfade
         for (let i = 0; i < POSE_KEYS.length; i++) {
