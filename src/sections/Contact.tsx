@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useI18n } from '../i18n/LanguageContext'
 import { Section } from '../components/Section'
 import { profile } from '../data/profile'
+import { DownloadIcon } from '../components/icons'
 
 type Status = 'idle' | 'sending' | 'ok' | 'err'
 
@@ -214,7 +215,7 @@ export function Contact() {
           </div>
           <div className="flex flex-wrap gap-3 border-t border-line p-4">
             <a href={profile.cv} download={profile.cvDownloadName} className="btn btn-primary">
-              ⤓ {t('contact_download_cv')}
+              <DownloadIcon size={15} /> {t('contact_download_cv')}
             </a>
             <button type="button" className="btn" onClick={copyEmail}>
               {copied ? t('contact_copied') : `⧉ ${t('contact_copy_email')}`}
