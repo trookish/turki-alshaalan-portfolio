@@ -49,6 +49,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;
   padding: 0.7rem 1.3rem;
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -89,6 +90,19 @@
 .btn:disabled:hover {
   border-color: var(--c-line-2);
   color: var(--c-ink);
+}
+
+/* Small uppercase micro-label (kept legible on phones) */
+.micro-label {
+  font-size: 0.68rem;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-ink-3);
+}
+
+@media (max-width: 640px) {
+  .micro-label { font-size: 0.76rem; letter-spacing: 0.08em; }
 }
 
 /* ---------- Contact form ---------- */
@@ -217,8 +231,9 @@
 /* ---------- Section headings ---------- */
 .section-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 1rem;
+  gap: 0.4rem 1rem;
   margin-bottom: 0.6rem;
   font-family: var(--font-mono);
 }
@@ -237,21 +252,11 @@
   letter-spacing: -0.02em;
 }
 
-.section-title::after {
-  content: '_';
-  color: var(--c-green);
-  animation: caret-blink 1.1s steps(2, start) infinite;
-}
-
 .section-subtitle {
   font-family: var(--font-mono);
   font-size: 0.9rem;
   color: var(--c-ink-3);
   margin-bottom: 2rem;
-}
-
-@keyframes caret-blink {
-  to { visibility: hidden; }
 }
 
 /* ---------- Reveal on scroll ---------- */
@@ -288,10 +293,20 @@
   max-width: 1280px;
   height: 100%;
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-tabs {
@@ -343,6 +358,7 @@
   justify-content: center;
   gap: 2px;
   min-width: 44px;
+  min-height: 44px;
   padding: 0.3rem 0.4rem;
   background: transparent;
   border: 1px solid transparent;
@@ -370,11 +386,42 @@
 .hamburger {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0.5rem;
   background: none;
   border: none;
   cursor: pointer;
+}
+
+/* Extra shortcuts surfaced inside the mobile menu panel */
+.nav-extras {
+  display: none;
+}
+
+.nav-extra {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0.7rem 0.9rem;
+  background: none;
+  border: 0;
+  border-block-start: 1px solid var(--c-line);
+  color: var(--c-ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-align: start;
+  cursor: pointer;
+  transition: color 120ms steps(2), background-color 120ms steps(2);
+}
+
+.nav-extra:hover {
+  color: var(--c-green);
+  background: color-mix(in srgb, var(--c-green) 7%, transparent);
 }
 
 .hamburger span {
@@ -395,12 +442,13 @@
   inset-block-end: 0;
   inset-inline: 0;
   z-index: 60;
-  height: var(--status-h);
+  height: calc(var(--status-h) + env(safe-area-inset-bottom, 0px));
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   padding-inline: 1rem;
+  padding-block-end: env(safe-area-inset-bottom, 0px);
   background: var(--c-inset);
   border-top: 1px solid var(--c-line);
   font-family: var(--font-mono);
@@ -422,6 +470,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  min-height: 28px;
   background: none;
   border: none;
   color: inherit;
@@ -501,6 +550,9 @@
   margin-top: 0.9rem;
 }
 
+/* Keep each role whole and only wrap between roles */
+.hero-role .role-group { white-space: nowrap; }
+
 .hero-role .sep { color: var(--c-line-2); margin-inline: 0.45rem; }
 .hero-role .r-swe { color: var(--c-green); }
 .hero-role .r-ai { color: var(--c-ai); }
@@ -508,6 +560,7 @@
 
 .hero {
   min-height: min(100vh, 900px);
+  min-height: min(100svh, 900px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -516,6 +569,8 @@
 .hero-bg {
   position: absolute;
   inset: 0;
+  /* Set from Hero.tsx — the phone-sized art is swapped in under 640px */
+  background-image: var(--hero-bg);
   background-size: cover;
   background-position: center 70%;
   background-repeat: no-repeat;
@@ -523,6 +578,10 @@
   filter: contrast(1.05) saturate(1.15);
   pointer-events: none;
   will-change: transform;
+}
+
+@media (max-width: 640px) {
+  .hero-bg { background-image: var(--hero-bg-mobile); }
 }
 
 /* Soft veil so boot text / name stay readable over the pixel scene */
@@ -852,6 +911,9 @@
 }
 
 .project-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--c-green);
@@ -874,6 +936,9 @@
 .team-list .team-name { color: var(--c-ink-2); }
 
 .filter-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
   padding: 0.4rem 0.95rem;
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -950,7 +1015,9 @@
 .modal-window {
   width: min(1100px, 100%);
   max-height: min(90vh, 900px);
+  max-height: min(90dvh, 900px);
   overflow: auto;
+  overscroll-behavior: contain;
   background: var(--c-panel);
   border: 1px solid var(--c-line-2);
   box-shadow: var(--shadow-window);
@@ -980,6 +1047,8 @@
 }
 
 .modal-close {
+  min-width: 40px;
+  min-height: 40px;
   padding: 0.2rem 0.55rem;
   background: none;
   border: 1px solid var(--c-line-2);
@@ -1046,8 +1115,8 @@
   inset-block-start: 50%;
   transform: translateY(-50%);
   z-index: 3;
-  width: 34px;
-  height: 44px;
+  width: 40px;
+  height: 48px;
   background: rgba(0, 0, 0, 0.65);
   border: 1px solid var(--c-line-2);
   color: var(--c-green);
@@ -1229,8 +1298,8 @@
   inset-block-start: 1rem;
   inset-inline-end: 1rem;
   z-index: 5;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   display: grid;
   place-items: center;
   background: rgba(0, 0, 0, 0.8);
@@ -1360,6 +1429,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 44px;
   margin-top: 1.6rem;
   padding: 0.55rem 1.1rem;
   font-family: var(--font-mono);
@@ -1374,12 +1444,13 @@
 
 .sound-fab {
   position: fixed;
-  inset-block-end: calc(var(--status-h) + 1.25rem);
+  inset-block-end: calc(var(--status-h) + env(safe-area-inset-bottom, 0px) + 1.25rem);
   inset-inline-end: 1.25rem;
   z-index: 70;
   min-width: 52px;
   height: 52px;
-  display: inline-flex;
+  /* Hidden on desktop: the status bar already exposes a sound chip there */
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -1434,7 +1505,7 @@
   .sound-fab {
     min-width: 46px;
     height: 46px;
-    inset-block-end: calc(var(--status-h) + 0.85rem);
+    inset-block-end: calc(var(--status-h) + env(safe-area-inset-bottom, 0px) + 0.85rem);
     inset-inline-end: 0.85rem;
   }
 }
@@ -1607,6 +1678,12 @@ html[dir='rtl'] .hud-bar-fill {
 }
 
 .hud-boss.visible { opacity: 1; }
+
+/* Phone layouts keep the EXIT/RESTART row at the top, so drop the boss bar below it */
+@media (max-width: 640px) {
+  .hud-boss { inset-block-start: 62px; }
+  .hud-boss-name { font-size: 0.66rem; letter-spacing: 0.18em; }
+}
 
 .hud-boss-name {
   font-size: 0.72rem;
@@ -1808,15 +1885,23 @@ html[dir='rtl'] .hud-bar-fill {
 }
 
 @media (max-width: 860px) {
+  /* Compact bar: only the essentials stay visible, the rest move into the menu */
+  .nav-controls .nav-secondary { display: none; }
+
   .nav-tabs {
     position: fixed;
     inset-block-start: var(--nav-h);
     inset-inline: 0;
     height: auto;
+    max-height: calc(100vh - var(--nav-h));
+    max-height: calc(100dvh - var(--nav-h));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     flex-direction: column;
     align-items: stretch;
     background: var(--c-panel);
     border-bottom: 1px solid var(--c-line);
+    box-shadow: var(--shadow-window);
     padding: 0.4rem;
     display: none;
   }
@@ -1824,7 +1909,9 @@ html[dir='rtl'] .hud-bar-fill {
   .nav-tabs.open { display: flex; }
 
   .nav-tab {
+    min-height: 44px;
     padding: 0.75rem 0.9rem;
+    font-size: 0.8rem;
     border-bottom: 0;
     border-inline-start: 2px solid transparent;
   }
@@ -1834,15 +1921,58 @@ html[dir='rtl'] .hud-bar-fill {
     border-bottom-color: transparent;
   }
 
+  .nav-tabs.open .nav-extras {
+    display: flex;
+    flex-direction: column;
+    margin-block-start: 0.35rem;
+  }
+
   .hamburger { display: flex; }
 
   .icon-btn .btn-label { display: none; }
+
+  /* Below the tab strip breakpoint the floating sound button replaces the status-bar chip */
+  .sound-fab { display: inline-flex; }
+  .statusbar .sound-chip { display: none; }
+
+  .modal-overlay { padding: 0.7rem; }
+  .ss-media { padding: 0.7rem; }
+  .section-subtitle { margin-bottom: 1.5rem; }
+  .hero { min-height: min(86svh, 720px); }
+  .scroll-hint { inset-block-end: calc(var(--status-h) + 0.9rem); }
+
+  /* Comfortable touch rows for contact links */
+  .contact-item a { padding-block: 0.6rem; }
+  .ss-nav.ss-zoom { min-height: 40px; }
 
   .game-container { inset: 0; border: 0; }
 }
 
 @media (max-width: 640px) {
+  .statusbar {
+    gap: 0.5rem;
+    padding-inline: 0.7rem;
+    font-size: 0.66rem;
+  }
+
   .statusbar .hide-sm { display: none; }
+
+  /* The floating sound button already covers this control */
+  .statusbar .sound-chip { display: none; }
+
+  .status-left,
+  .status-right { gap: 0.6rem; }
+
+  .section-title { font-size: clamp(1.3rem, 6vw, 1.7rem); }
+  .term-body { padding: 0.9rem 0.95rem; }
+  .project-body { padding: 0.9rem 0.95rem 1rem; }
+  .ss-thumbs { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+}
+
+@media (max-width: 380px) {
+  .nav-brand { font-size: 0.74rem; }
+  .icon-btn { min-width: 40px; }
+  .btn { padding: 0.65rem 1rem; font-size: 0.8rem; }
 }
 
 /* ---------- Reduced motion ---------- */
@@ -1852,8 +1982,6 @@ html[dir='rtl'] .hud-bar-fill {
   .reveal { opacity: 1; transform: none; transition: none; }
 
   .marquee-track { animation: none !important; }
-
-  .section-title::after { animation: none; }
 
   .scroll-hint { animation: none; }
 

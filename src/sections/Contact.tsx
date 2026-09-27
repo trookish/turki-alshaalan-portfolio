@@ -193,7 +193,7 @@ export function Contact() {
                   <Icon name={item.icon} />
                 </span>
                 <div className="min-w-0">
-                  <div className="font-mono text-[0.68rem] uppercase tracking-wider text-ink3">
+                  <div className="micro-label font-mono">
                     {t(item.labelKey)}
                   </div>
                   {item.href ? (

@@ -1,8 +1,12 @@
+import type { CSSProperties } from 'react'
 import { useI18n } from '../i18n/LanguageContext'
 import { profile } from '../data/profile'
 
 const base = import.meta.env.BASE_URL
-const heroBg = `${base}images/Background/Background.webp`
+// Absolute URLs: relative ones inside a CSS custom property would resolve against
+// the stylesheet's location (dist/assets/) instead of the document.
+const heroBg = new URL(`${base}images/Background/Background.webp`, document.baseURI).href
+const heroBgMobile = new URL(`${base}images/Background/Background-mobile.webp`, document.baseURI).href
 
 export function Hero() {
   const { t, b } = useI18n()
@@ -11,7 +15,12 @@ export function Hero() {
     <section id="home" className="hero relative overflow-hidden">
       <div
         className="hero-bg"
-        style={{ backgroundImage: `url("${heroBg}")` }}
+        style={
+          {
+            '--hero-bg': `url("${heroBg}")`,
+            '--hero-bg-mobile': `url("${heroBgMobile}")`,
+          } as CSSProperties
+        }
         aria-hidden="true"
       />
       <div className="hero-bg-veil" aria-hidden="true" />
@@ -23,11 +32,17 @@ export function Hero() {
         </h1>
 
         <p className="hero-role">
-          <span className="r-swe">{t('hero_role_swe')}</span>
-          <span className="sep">×</span>
-          <span className="r-ai">{t('hero_role_ai')}</span>
-          <span className="sep">×</span>
-          <span className="r-game">{t('hero_role_game')}</span>
+          <span className="role-group">
+            <span className="r-swe">{t('hero_role_swe')}</span>
+          </span>{' '}
+          <span className="role-group">
+            <span className="sep">×</span>
+            <span className="r-ai">{t('hero_role_ai')}</span>
+          </span>{' '}
+          <span className="role-group">
+            <span className="sep">×</span>
+            <span className="r-game">{t('hero_role_game')}</span>
+          </span>
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">

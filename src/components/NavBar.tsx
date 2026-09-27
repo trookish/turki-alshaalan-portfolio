@@ -24,6 +24,35 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
     el?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
   }, [active])
 
+  // Mobile menu: close on outside tap / Escape, and lock the page behind it.
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const onPointerDown = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null
+      if (!target?.closest('.navbar')) setMenuOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    const onResize = () => {
+      if (window.innerWidth > 860) setMenuOpen(false)
+    }
+
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('resize', onResize)
+
+    return () => {
+      document.body.style.overflow = prevOverflow
+      document.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [menuOpen])
+
   const go = (id: string) => {
     setMenuOpen(false)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -38,12 +67,12 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
             e.preventDefault()
             go('home')
           }}
-          className="font-mono text-[0.82rem] font-bold tracking-tight text-green shrink-0"
+          className="nav-brand font-mono text-[0.82rem] font-bold tracking-tight text-green"
         >
           {b(profile.name)}
         </a>
 
-        <div ref={tabsRef} className={`nav-tabs ${menuOpen ? 'open' : ''}`}>
+        <div id="site-menu" ref={tabsRef} className={`nav-tabs ${menuOpen ? 'open' : ''}`}>
           {sections.map((s) => (
             <a
               key={s.id}
@@ -57,13 +86,53 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
               {t(s.labelKey)}
             </a>
           ))}
+
+          <div className="nav-extras">
+            <a
+              href={profile.cv}
+              download={profile.cvDownloadName}
+              className="nav-extra"
+              onClick={() => setMenuOpen(false)}
+            >
+              <span aria-hidden="true">⤓</span> {t('nav_cv_tip')}
+            </a>
+            <button
+              type="button"
+              className="nav-extra"
+              onClick={() => {
+                setMenuOpen(false)
+                window.print()
+              }}
+            >
+              <span aria-hidden="true">⎙</span> {t('nav_pdf_tip')}
+            </button>
+            <button
+              type="button"
+              className="nav-extra"
+              onClick={() => {
+                setMenuOpen(false)
+                onOpenPalette()
+              }}
+            >
+              <span aria-hidden="true">⌘</span> {t('nav_palette_tip')}
+            </button>
+            <a
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nav-extra"
+              onClick={() => setMenuOpen(false)}
+            >
+              <span aria-hidden="true">in</span> LinkedIn
+            </a>
+          </div>
         </div>
 
         <div className="nav-controls">
           <a
             href={profile.cv}
             download={profile.cvDownloadName}
-            className="icon-btn"
+            className="icon-btn nav-secondary"
             title={t('nav_cv_tip')}
           >
             <span aria-hidden="true">⤓</span>
@@ -71,7 +140,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
           </a>
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn nav-secondary"
             title={t('nav_pdf_tip')}
             onClick={() => window.print()}
           >
@@ -106,9 +175,12 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
           </button>
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn nav-secondary"
             title={t('nav_palette_tip')}
-            onClick={onOpenPalette}
+            onClick={() => {
+              setMenuOpen(false)
+              onOpenPalette()
+            }}
           >
             <span aria-hidden="true">⌘</span>
             <span className="btn-label">K</span>
@@ -117,6 +189,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
             type="button"
             className={`hamburger ${menuOpen ? 'open' : ''}`}
             aria-label="Menu"
+            aria-controls="site-menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
           >

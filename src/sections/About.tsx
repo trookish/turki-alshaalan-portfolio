@@ -78,8 +78,9 @@ export function About() {
               <img
                 src={profile.photo}
                 alt={profile.name[lang]}
-                className="h-44 w-full object-cover object-[center_20%]"
+                className="aspect-[4/3] w-full object-cover object-[center_30%]"
                 loading="lazy"
+                decoding="async"
               />
             </a>
           </div>

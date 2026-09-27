@@ -33,7 +33,7 @@ export function Skills() {
               >
                 {b(cat.name)}
               </span>
-              <div className="mt-0.5 font-mono text-[0.65rem] uppercase tracking-widest text-ink3">
+              <div className="micro-label mt-0.5 font-mono">
                 {cat.discipline === 'core'
                   ? t('skills_core')
                   : t(`filter_${cat.discipline}` as 'filter_swe' | 'filter_ai' | 'filter_game')}

@@ -27,7 +27,7 @@ export function Education() {
                     <p className="mt-1 text-sm text-ink2">{b(item.detail)}</p>
                     {item.activities && item.activities.length > 0 && (
                       <div className="mt-2">
-                        <p className="font-mono text-[0.68rem] uppercase tracking-wider text-ink3">
+                        <p className="micro-label font-mono">
                           {t('edu_activities')}
                         </p>
                         {item.activities.map((act) => (

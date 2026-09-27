@@ -12,7 +12,22 @@ function Thumb({ slide, label }: { slide: Slide; label: string }) {
       </span>
     )
   }
-  return <img src={slide.src} alt="" loading="lazy" />
+  // Grid strips use the small sibling asset; fall back to the full image if it is absent.
+  const thumbSrc = slide.src.replace(/\.webp$/i, '_thumb.webp')
+  return (
+    <img
+      src={thumbSrc}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      onError={(e) => {
+        const img = e.currentTarget
+        if (img.dataset.fallback === '1') return
+        img.dataset.fallback = '1'
+        img.src = slide.src
+      }}
+    />
+  )
 }
 
 function ShowcaseContent({ showcase, close }: { showcase: ShowcaseState; close: () => void }) {

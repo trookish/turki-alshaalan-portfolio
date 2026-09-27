@@ -86,10 +86,6 @@
     font-size: 15px;
   }
 
-  .section-title::after {
-    content: '';
-  }
-
   .section-subtitle {
     margin-block-end: 8px;
     font-size: 10px;
