@@ -116,7 +116,11 @@ export class HUD {
             <div class="hud-boss">
                 <div class="hud-boss-name"></div>
                 <div class="hud-bar hud-boss-hp"><div class="hud-bar-fill"></div></div>
+                <div class="hud-bar hud-poise"><div class="hud-bar-fill"></div></div>
+                <div class="hud-phase"></div>
             </div>
+            <div class="hud-tell"></div>
+            <div class="hud-lock"></div>
             <div class="hud-center"></div>
             <div class="hud-flash"></div>
             <div class="hud-numbers"></div>
@@ -126,15 +130,22 @@ export class HUD {
         this.hpFill = root.querySelector('.hud-hp .hud-bar-fill');
         this.stFill = root.querySelector('.hud-stamina .hud-bar-fill');
         this.bossFill = root.querySelector('.hud-boss-hp .hud-bar-fill');
+        this.poiseFill = root.querySelector('.hud-poise .hud-bar-fill');
         this.bossName = root.querySelector('.hud-boss-name');
         this.bossWrap = root.querySelector('.hud-boss');
         this.estusWrap = root.querySelector('.hud-estus');
+        this.phaseEl = root.querySelector('.hud-phase');
+        this.tellEl = root.querySelector('.hud-tell');
+        this.lockEl = root.querySelector('.hud-lock');
         this.center = root.querySelector('.hud-center');
         this.flashEl = root.querySelector('.hud-flash');
         this.numbers = root.querySelector('.hud-numbers');
-        this._last = { hp: -1, st: -1, boss: -1, estus: -1 };
+        this._last = { hp: -1, st: -1, boss: -1, estus: -1, poise: -1, phase: 0 };
         this._numPool = [];
         this._flashTimer = null;
+        this._tellTimer = null;
+        this._centerTimer = null;
+        this._retryHandler = null;
     }
 
     setBossName(name) { this.bossName.textContent = name; }
@@ -148,6 +159,10 @@ export class HUD {
         if (estus !== l.estus) {
             l.estus = estus;
             this.estusWrap.innerHTML = '';
+            const label = document.createElement('span');
+            label.className = 'estus-label';
+            label.textContent = this.getText('FLASK');
+            this.estusWrap.appendChild(label);
             for (let i = 0; i < estusMax; i++) {
                 const pip = document.createElement('span');
                 pip.className = 'estus-pip' + (i < estus ? ' full' : '');
@@ -156,12 +171,67 @@ export class HUD {
         }
     }
 
-    /** Big centered text (countdown, YOU DIED, VICTORY...). */
-    showCenter(text, { cls = '', duration = 0 } = {}) {
-        this.center.innerHTML = text ? `<div class="hud-center-text ${cls}">${text}</div>` : '';
+    /** Boss poise bar, phase line, and the riposte cue on the lock marker. */
+    setBoss(hp, poise, phase, vulnerable) {
+        const l = this._last;
+        const hpFrac = Math.max(0, Math.min(1, hp));
+        if (hpFrac !== l.boss) { this.bossFill.style.transform = `scaleX(${hpFrac})`; l.boss = hpFrac; }
+        const poiseFrac = Math.max(0, Math.min(1, poise));
+        if (poiseFrac !== l.poise) { this.poiseFill.style.transform = `scaleX(${poiseFrac})`; l.poise = poiseFrac; }
+        if (phase !== l.phase) { this.setPhase(phase); l.phase = phase; }
+        this.lockEl.classList.toggle('riposte', Boolean(vulnerable));
+    }
+
+    setPhase(phase) {
+        const names = { 1: 'THE OATHBOUND', 2: 'NIGHTMARE AWAKENS', 3: 'ASHEN FURY' };
+        const label = this.getText('PHASE');
+        const name = this.getText(names[phase] || names[1]);
+        this.phaseEl.textContent = `${label} ${phase} · ${name}`;
+    }
+
+    /** Transient combat line (tell warnings, heal confirmations). */
+    setTell(text, { danger = false, duration = 1600 } = {}) {
+        this.tellEl.textContent = text;
+        this.tellEl.classList.toggle('danger', danger);
+        clearTimeout(this._tellTimer);
+        if (text && duration > 0) {
+            this._tellTimer = setTimeout(() => { this.tellEl.textContent = ''; }, duration);
+        }
+    }
+
+    /** World-anchored lock-on marker in canvas pixels. */
+    showLock(show, x = 0, y = 0) {
+        this.lockEl.style.display = show ? 'block' : 'none';
+        if (show) {
+            this.lockEl.style.left = `${x}px`;
+            this.lockEl.style.top = `${y}px`;
+        }
+    }
+
+    setLowHealth(on) {
+        this.root.classList.toggle('low-health', Boolean(on));
+    }
+
+    /** Big centered text (countdown, YOU DIED, VICTORY...).
+     * @param {string} text
+     * @param {{ cls?: string, duration?: number, retry?: string | null, onRetry?: (() => void) | null }} [options]
+     */
+    showCenter(text, { cls = '', duration = 0, retry = null, onRetry = null } = {}) {
+        clearTimeout(this._centerTimer);
+        this._retryHandler = null;
+        const retryHtml = retry ? `<button type="button" class="game-primary hud-retry">${retry}</button>` : '';
+        this.center.innerHTML = text ? `<div class="hud-center-text ${cls}">${text}</div>${retryHtml}` : '';
+        if (retry && onRetry) {
+            const button = this.center.querySelector('.hud-retry');
+            this._retryHandler = onRetry;
+            button?.addEventListener('click', () => {
+                const handler = this._retryHandler;
+                this._retryHandler = null;
+                handler?.();
+            });
+        }
         if (duration > 0) {
-            clearTimeout(this._centerTimer);
-            this._centerTimer = setTimeout(() => { this.center.innerHTML = ''; }, duration);
+            this._centerTimer = setTimeout(() => { this.center.innerHTML = ''; this._retryHandler = null; }, duration);
         }
     }
 
@@ -190,7 +260,13 @@ export class HUD {
         el._t = setTimeout(() => { el.classList.remove('on'); }, 800);
     }
 
-    destroy() { this.root.remove(); }
+    destroy() {
+        clearTimeout(this._flashTimer);
+        clearTimeout(this._tellTimer);
+        clearTimeout(this._centerTimer);
+        this._retryHandler = null;
+        this.root.remove();
+    }
 }
 
 /** Project a world position to HUD (canvas) pixel coordinates. */

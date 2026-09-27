@@ -2,13 +2,38 @@
  * Souls-like Battle Game - Combat Module
  * Player controller (souls mechanics: dodge i-frames, parry -> riposte,
  * block/guard-break, stamina, estus, 3-hit combos, lock-on strafing)
- * and the Boss AI (distance-based decisions, delayed attacks, feints,
- * gap closers, heal punishes, rage phase, poise, occasional blocking).
+ * and the Boss AI (distance-based decisions, delayed attacks, grounded feints,
+ * gap closers, heal punishes, three escalating phases, poise -> riposte
+ * windows, an unblockable ground slam, occasional blocking).
  */
 import * as THREE from 'three';
 import { clampToArena } from './engine.js';
 
 const _v = new THREE.Vector3();
+
+export const COMBAT_TUNING = Object.freeze({
+    ROLL_COST: 26,
+    ROLL_DURATION: 0.56,
+    IFRAME_START: 0.08,
+    IFRAME_END: 0.30,
+    INPUT_BUFFER: 0.2,
+    PARRY_WINDOW: 0.12,
+    PARRY_COOLDOWN: 0.65,
+    // Boss phases (hp fractions) and the safe window between them
+    PHASE2_AT: 0.65,
+    PHASE3_AT: 0.30,
+    TRANSITION_DURATION: 1.1,
+    WINDUP_FLOOR: 0.26,
+    POISE_FACTOR: 1,
+    POISE_STAGGER: 1.2,
+});
+
+/** Per-phase pacing multipliers (phase 2/3 read and recover faster). */
+const PHASE_MULT = Object.freeze({
+    1: Object.freeze({ windup: 1, recover: 1, cd: 1 }),
+    2: Object.freeze({ windup: 0.85, recover: 0.85, cd: 0.75 }),
+    3: Object.freeze({ windup: 0.72, recover: 0.78, cd: 0.62 }),
+});
 
 function angleDiff(a, b) {
     let d = a - b;
@@ -42,15 +67,16 @@ export class Player {
         this.pos.set(0, 0, 5.5);
         this.heading = Math.PI;           // face -z (toward boss spawn)
         this.vel = new THREE.Vector3();
-        this.hp = this.maxHp = 120;
+        this.hp = this.maxHp = 100;
         this.stamina = this.maxStamina = 100;
-        this.estus = this.estusMax = 3;
+        this.estus = this.estusMax = 2;
         this.state = 'idle';
         this.stateTime = 0;
         this.comboIndex = 0;
         this.comboQueued = false;
         this.iframes = 0;
         this.parryWindow = 0;
+        this.parryCooldown = 0;
         this.riposteWindow = 0;
         this.staminaDelay = 0;
         this.blockHeld = false;
@@ -63,6 +89,7 @@ export class Player {
         this.rollBuffer = false;
         this.healBuffer = false;
         this.bufferedRollDir = null;
+        this.bufferTimers = { attack: 0, roll: 0, heal: 0 };
         this.rig.root.visible = true;
     }
 
@@ -78,7 +105,7 @@ export class Player {
 
     /** Edge-triggered actions from the input layer. */
     tryAttack() {
-        if (this.dead) return;
+        if (this.dead || this.rollBuffer) return false;
         // Riposte?
         if (this.riposteWindow > 0 && this.state !== 'attack' && this.state !== 'roll' && this.state !== 'stagger') {
             this.state = 'attack';
@@ -97,9 +124,9 @@ export class Player {
             return;
         }
         // Buffer input out of roll / stagger recovery so late presses still land
-        if (this.state === 'roll' && this.stateTime > 0.34) { this.attackBuffer = true; return; }
+        if (this.state === 'roll' && this.stateTime > 0.34) { this.queueInput('attack'); return; }
         if (this.state === 'stagger' || this.state === 'guardbroken' || this.state === 'parry') {
-            this.attackBuffer = true;
+            this.queueInput('attack');
             return;
         }
         if (this.busy) return;
@@ -109,6 +136,7 @@ export class Player {
 
     startSwing(index) {
         const atk = PLAYER_ATTACKS[index];
+        this.parryWindow = 0;
         this.state = 'attack';
         this.stateTime = 0;
         this.comboIndex = index;
@@ -123,19 +151,23 @@ export class Player {
         if (this.state === 'attack' && this.currentAttack) {
             const a = this.currentAttack;
             if (this.stateTime > a.windup + a.active + a.recover - 0.12) {
-                this.rollBuffer = true;
-                this.bufferedRollDir = { x: moveDir.x, z: moveDir.z, locked };
+                this.queueInput('roll');
+                this.bufferedRollDir = { direction: new THREE.Vector3(moveDir.x, 0, moveDir.z), locked };
+                return true;
             }
-            return;
+            return false;
         }
         if (this.state === 'stagger' || this.state === 'guardbroken') {
-            this.rollBuffer = true;
-            return;
+            this.queueInput('roll');
+            this.bufferedRollDir = { direction: new THREE.Vector3(moveDir.x, 0, moveDir.z), locked };
+            return true;
         }
-        if (this.busy || this.stamina < 1) return;
+        if (this.busy || this.stamina < COMBAT_TUNING.ROLL_COST) return false;
+        this.clearBuffers();
         this.state = 'roll';
+        this.parryWindow = 0;
         this.stateTime = 0;
-        this.spendStamina(20);
+        this.spendStamina(COMBAT_TUNING.ROLL_COST);
         this.iframes = 0;
         if (moveDir.lengthSq() > 0.01) {
             this.rollDir.copy(moveDir).normalize();
@@ -146,17 +178,19 @@ export class Player {
             forward(this.heading, this.rollDir);
         }
         this.heading = Math.atan2(this.rollDir.x, this.rollDir.z);
+        return true;
     }
 
     tryHeal(ctx) {
         // Buffer heal out of recovery windows
         if (this.state === 'roll' || this.state === 'stagger' || this.state === 'guardbroken') {
-            this.healBuffer = true;
+            this.queueInput('heal');
             return;
         }
         if (this.busy || this.estus <= 0) return;
         this.estus--; // consume immediately — prevents free-heal on interrupt after commit
         this.state = 'heal';
+        this.parryWindow = 0;
         this.stateTime = 0;
         this.healed = false;
     }
@@ -165,9 +199,13 @@ export class Player {
         if (held && !this.blockHeld && !this.busy) {
             this.state = 'block';
             this.stateTime = 0;
-            this.parryWindow = 0.18;      // parry active window on press
+            if (this.parryCooldown <= 0) {
+                this.parryWindow = COMBAT_TUNING.PARRY_WINDOW;
+                this.parryCooldown = COMBAT_TUNING.PARRY_COOLDOWN;
+            }
         }
         this.blockHeld = held;
+        if (!held) this.parryWindow = 0;
         if (!held && this.state === 'block') {
             this.state = 'idle';
             this.stateTime = 0;
@@ -180,7 +218,7 @@ export class Player {
     receiveHit(atk, attacker, ctx) {
         if (this.dead) return 'dead';
         // Dodge i-frames (roll window)
-        if (this.iframes > 0 || (this.state === 'roll' && this.stateTime > 0.04 && this.stateTime < 0.42)) {
+        if (this.state === 'roll' && this.stateTime >= COMBAT_TUNING.IFRAME_START && this.stateTime < COMBAT_TUNING.IFRAME_END) {
             return 'dodged';
         }
         // Must be facing the attacker to parry/block
@@ -188,7 +226,7 @@ export class Player {
         const toAttacker = Math.atan2(_v.x, _v.z);
         const facing = Math.abs(angleDiff(toAttacker, this.heading)) < 1.1;
 
-        if (this.parryWindow > 0 && facing && atk.parryable !== false) {
+        if (this.state === 'block' && this.blockHeld && this.parryWindow > 0 && facing && atk.parryable !== false) {
             this.parryWindow = 0;
             this.riposteWindow = 2.8;
             this.state = 'parry';
@@ -232,9 +270,17 @@ export class Player {
     onParried(ctx) { /* player never gets parried by boss in this design */ }
 
     update(dt, input, boss, ctx) {
+        for (const action of ['attack', 'roll', 'heal']) {
+            this.bufferTimers[action] = Math.max(0, this.bufferTimers[action] - dt);
+            if (this.bufferTimers[action] <= 0) {
+                this[`${action}Buffer`] = false;
+                if (action === 'roll') this.bufferedRollDir = null;
+            }
+        }
         this.stateTime += dt;
         this.iframes = Math.max(0, this.iframes - dt);
         this.parryWindow = Math.max(0, this.parryWindow - dt);
+        this.parryCooldown = Math.max(0, this.parryCooldown - dt);
         this.riposteWindow = Math.max(0, this.riposteWindow - dt);
         this.staminaDelay = Math.max(0, this.staminaDelay - dt);
 
@@ -286,13 +332,11 @@ export class Player {
                 break;
             }
             case 'roll': {
-                const ROLL_TIME = 0.55;
-                const p = this.stateTime / ROLL_TIME;
+                const p = this.stateTime / COMBAT_TUNING.ROLL_DURATION;
                 const sp = 8.0 * (1 - easeOut(Math.min(1, p)) * 0.55);
                 this.vel.x = this.rollDir.x * sp;
                 this.vel.z = this.rollDir.z * sp;
-                // i-frames active ~0.04–0.42s (matches receiveHit)
-                this.iframes = (this.stateTime > 0.04 && this.stateTime < 0.42) ? 0.01 : 0;
+                this.iframes = (this.stateTime >= COMBAT_TUNING.IFRAME_START && this.stateTime < COMBAT_TUNING.IFRAME_END) ? 0.01 : 0;
                 if (p >= 1) {
                     this.state = 'idle';
                     this.stateTime = 0;
@@ -374,6 +418,13 @@ export class Player {
                 break;
         }
 
+        // A held guard survives committed actions, but recovery is not a new press.
+        if (this.blockHeld && !this.busy && this.state !== 'block') {
+            this.state = 'block';
+            this.stateTime = 0;
+            this.parryWindow = 0;
+        }
+
         // Integrate
         this.pos.x += this.vel.x * dt;
         this.pos.z += this.vel.z * dt;
@@ -399,6 +450,7 @@ export class Player {
             this.rig.pose('run', this.stateTime, dt, { moveSpeed: this.moveSpeed });
         } else {
             const dur = this.state === 'dead' ? 1.2
+                : this.state === 'roll' ? COMBAT_TUNING.ROLL_DURATION
                 : this.state === 'guardbroken' ? 2.0
                 : this.state === 'stagger' ? 0.45
                 : this.state === 'parry' ? 0.4
@@ -419,25 +471,30 @@ export class Player {
         return Math.abs(angleDiff(toTarget, this.heading)) < atk.arc / 2;
     }
 
+    queueInput(action) {
+        if (action !== 'roll' && this.rollBuffer) return false;
+        if (action === 'roll') this.clearBuffers();
+        this[`${action}Buffer`] = true;
+        this.bufferTimers[action] = COMBAT_TUNING.INPUT_BUFFER;
+        return true;
+    }
+
+    clearBuffers() {
+        this.attackBuffer = this.rollBuffer = this.healBuffer = false;
+        this.comboQueued = false;
+        this.bufferedRollDir = null;
+        for (const action in this.bufferTimers) this.bufferTimers[action] = 0;
+    }
+
     /** Fire off buffered inputs after recovery ends (roll/stagger/heal out). */
     flushBuffer() {
-        if (this.attackBuffer) {
-            this.attackBuffer = false;
-            this.tryAttack();
-            if (this.state === 'attack') return;
-        }
-        if (this.rollBuffer) {
-            this.rollBuffer = false;
-            const b = this.bufferedRollDir;
-            this.bufferedRollDir = null;
-            if (b) this.tryRoll(b, b.locked);
-            if (this.state === 'roll') return;
-        }
-        if (this.healBuffer) {
-            this.healBuffer = false;
-            this.tryHeal();
-            if (this.state === 'heal') return;
-        }
+        const roll = this.rollBuffer && this.bufferedRollDir;
+        const attack = this.attackBuffer;
+        const heal = this.healBuffer;
+        this.clearBuffers();
+        if (roll) this.tryRoll(roll.direction, roll.locked);
+        else if (attack) this.tryAttack();
+        else if (heal) this.tryHeal();
     }
 }
 
@@ -454,6 +511,8 @@ const BOSS_ATTACKS = {
     comboSlash:    { type: 1, windup: 0.34, active: 0.13, recover: 0.32, range: 2.8, arc: 2.1, damage: 14, cd: 1.8, band: 'mid' },
     heavyOverhead: { type: 2, windup: 0.85, active: 0.16, recover: 0.72, range: 3.0, arc: 1.6, damage: 30, cd: 2.6, guardPressure: 1.2, band: 'mid' },
     spinSlash:     { type: 0, windup: 0.55, active: 0.22, recover: 0.65, range: 3.2, arc: 3.4, damage: 22, cd: 3.4, band: 'mid' },
+    // Unblockable ground slam (phase 2+, most common in phase 3)
+    quakeSlam:     { type: 2, windup: 0.95, active: 0.18, recover: 0.85, range: 3.2, arc: 2.8, damage: 40, cd: 7, guardPressure: 3.2, chip: true, parryable: false, minWindup: 0.85, band: 'mid' },
     // FAR (5.5 – 9)
     dashThrust:    { type: 3, windup: 0.50, active: 0.26, recover: 0.62, range: 2.8, arc: 1.3, damage: 22, cd: 2.8, dash: 11, band: 'far' },
     runningSlash:  { type: 0, windup: 0.55, active: 0.20, recover: 0.70, range: 3.0, arc: 2.0, damage: 20, cd: 3.2, dash: 13, band: 'far' },
@@ -464,6 +523,9 @@ const BOSS_ATTACKS = {
 const BAND_CLOSE = 2.6;
 const BAND_MID = 5.5;
 const BAND_FAR = 9.0;
+// Committed-attack movement bounds (units per frame at a 60Hz step)
+const MAX_ATTACK_TRAVEL_PER_STEP = 0.55;
+const ATTACK_STOP_DIST = 1.2;
 
 function pickWeighted(list) {
     // list: [[name, weight], ...]
@@ -489,10 +551,15 @@ export class Boss {
         this.pos.set(0, 0, -5.5);
         this.heading = 0;
         this.vel = new THREE.Vector3();
-        this.hp = this.maxHp = 320;
+        this.hp = this.maxHp = 900;
+        this.phase = 1;
+        this.poise = 0;
+        this.maxPoise = 100;
         this.state = 'idle';
         this.stateTime = 0;
         this.currentAttack = null;
+        this.attackName = null;
+        this.pendingPhase = 0;
         this.attackHitDone = false;
         this.comboStep = 0;
         this.thinkTimer = 0.4;
@@ -504,6 +571,7 @@ export class Boss {
         this.hitCounter = 0;
         this.rage = false;
         this.feinting = false;
+        this.vulnerable = false;
         this.dead = false;
         this.staggerDuration = 2.5;
         this.lastBand = 'mid';
@@ -511,10 +579,10 @@ export class Boss {
         this.rig.root.visible = true;
     }
 
-    /** Rage = phase 2: shorter windups, faster recovers, tighter CDs. */
-    get windupMult() { return this.rage ? 0.72 : 1; }
-    get recoverMult() { return this.rage ? 0.78 : 1; }
-    get cdMult() { return this.rage ? 0.65 : 1; }
+    /** Per-phase pacing: shorter windups, faster recovers, tighter CDs. */
+    get windupMult() { return (PHASE_MULT[this.phase] || PHASE_MULT[1]).windup; }
+    get recoverMult() { return (PHASE_MULT[this.phase] || PHASE_MULT[1]).recover; }
+    get cdMult() { return (PHASE_MULT[this.phase] || PHASE_MULT[1]).cd; }
 
     onParried() {
         this.state = 'staggered';
@@ -523,11 +591,29 @@ export class Boss {
         this.currentAttack = null;
         this.feinting = false;
         this.attackName = null;
+        this.vulnerable = true; // parry stagger is the classic riposte window
+    }
+
+    /** Enter the next phase: banner + a safe, non-attacking transition window. */
+    applyPhaseTransition(ctx) {
+        this.phase = this.pendingPhase;
+        this.pendingPhase = 0;
+        this.rage = this.phase >= 2;
+        this.state = 'transition';
+        this.stateTime = 0;
+        this.attackName = null;
+        this.currentAttack = null;
+        this.comboStep = 0;
+        this.feinting = false;
+        this.vel.set(0, 0, 0);
+        ctx.onBossRage(this);
     }
 
     receiveHit(atk, attacker, ctx) {
         if (this.dead) return 'dead';
         if (this.state === 'block') return 'blocked';
+        // Riposte safety: only a staggered, vulnerable boss takes riposte damage
+        if (atk.riposte && !this.vulnerable) return 'blocked';
         this.hp -= atk.damage;
         this.hitCounter++;
         if (this.hp <= 0) {
@@ -537,17 +623,27 @@ export class Boss {
             this.stateTime = 0;
             return 'hit';
         }
-        if (!this.rage && this.hp < this.maxHp * 0.5) {
-            this.rage = true;
-            ctx.onBossRage(this);
+        // Phase thresholds — but never mid-swing: defer until the attack finishes
+        const targetPhase = this.hp <= this.maxHp * COMBAT_TUNING.PHASE3_AT ? 3
+            : this.hp <= this.maxHp * COMBAT_TUNING.PHASE2_AT ? 2 : 1;
+        if (targetPhase > this.phase && targetPhase > this.pendingPhase) {
+            this.pendingPhase = targetPhase;
         }
-        // High poise: only every 6th hit (not during own swing) staggers briefly
-        if (!atk.riposte && this.state !== 'staggered' && this.state !== 'attack' && this.hitCounter % 6 === 0) {
-            this.state = 'staggered';
-            this.stateTime = 0;
-            this.staggerDuration = 0.4;
-            this.currentAttack = null;
-            this.attackName = null;
+        // Poise: accumulated damage (ripostes count double) wears the boss
+        // down into a stagger that opens the riposte window
+        this.poise += atk.damage * COMBAT_TUNING.POISE_FACTOR * (atk.riposte ? 2 : 1);
+        if (this.poise >= this.maxPoise) {
+            this.poise = 0;
+            if (this.state !== 'staggered') {
+                this.state = 'staggered';
+                this.stateTime = 0;
+                this.staggerDuration = COMBAT_TUNING.POISE_STAGGER;
+                this.currentAttack = null;
+                this.attackName = null;
+                this.comboStep = 0;
+                this.feinting = false;
+                this.vulnerable = true;
+            }
         }
         return 'hit';
     }
@@ -569,6 +665,12 @@ export class Boss {
      * vfar: charge / approach
      */
     decide(player) {
+        if (player.dead || player.state === 'victory') {
+            this.state = 'strafe';
+            this.stateTime = 0;
+            this.thinkTimer = 0.5;
+            return;
+        }
         _v.subVectors(player.pos, this.pos);
         const dist = _v.length();
         const band = this.bandOf(dist);
@@ -603,6 +705,7 @@ export class Boss {
             if (this.ready('comboSlash')) options.push(['comboSlash', 2.2 * rageW]);
             if (this.ready('heavyOverhead')) options.push(['heavyOverhead', 1.6]);
             if (this.ready('spinSlash') && this.rage) options.push(['spinSlash', 1.8]);
+            if (this.phase >= 2 && this.ready('quakeSlam')) options.push(['quakeSlam', this.phase >= 3 ? 1.7 : 0.8]);
             if (options.length) {
                 // Feint opener in rage: fake overhead into jab/slash
                 if (this.rage && this.ready('heavyOverhead') && Math.random() < 0.28) {
@@ -627,6 +730,7 @@ export class Boss {
             if (this.ready('quickSlash')) options.push(['quickSlash', 1.5 * rageW]);
             if (this.ready('jab')) options.push(['jab', 1.2 * rageW]);
             if (this.ready('dashThrust')) options.push(['dashThrust', 1.8 * rageW]);
+            if (this.phase >= 2 && this.ready('quakeSlam')) options.push(['quakeSlam', this.phase >= 3 ? 2.2 : 1]);
             if (options.length) {
                 if (this.rage && this.ready('heavyOverhead') && Math.random() < 0.22) {
                     this.startAttack('heavyOverhead');
@@ -668,7 +772,7 @@ export class Boss {
         this.currentAttack = {
             ...base,
             name,
-            windup: base.windup * this.windupMult,
+            windup: Math.max(base.minWindup ?? COMBAT_TUNING.WINDUP_FLOOR, base.windup * this.windupMult),
             recover: base.recover * this.recoverMult,
             damage: this.rage ? Math.round(base.damage * 1.12) : base.damage,
         };
@@ -680,17 +784,13 @@ export class Boss {
         this.cooldowns[name] = base.cd * this.cdMult;
     }
 
-    /** Called by decide before startAttack for feints — preserve flag. */
-    startFeintedAttack(name) {
-        this.startAttack(name);
-        this.feinting = true;
-    }
-
     update(dt, player, ctx) {
         this.stateTime += dt;
         for (const k in this.cooldowns) this.cooldowns[k] = Math.max(0, this.cooldowns[k] - dt);
         this.blockChanceCd = Math.max(0, this.blockChanceCd - dt);
         this.reactiveCd = Math.max(0, this.reactiveCd - dt);
+        // Vulnerability lives exactly as long as the stagger state does
+        if (this.state !== 'staggered') this.vulnerable = false;
 
         if (this.dead) {
             this.vel.set(0, 0, 0);
@@ -699,9 +799,27 @@ export class Boss {
             return;
         }
 
+        // The fight is over: no attack logic against a dead/victorious player
+        const playerGone = player.dead || player.state === 'victory';
+        if (playerGone && !['dead', 'staggered', 'transition'].includes(this.state)) {
+            if (this.state !== 'strafe') {
+                this.currentAttack = null;
+                this.attackName = null;
+                this.comboStep = 0;
+                this.feinting = false;
+                this.state = 'strafe';
+                this.stateTime = 0;
+            }
+        }
+
         _v.subVectors(player.pos, this.pos);
         const dist = _v.length();
         const toPlayer = Math.atan2(_v.x, _v.z);
+
+        // Apply a deferred phase transition between attacks (never mid-swing)
+        if (this.pendingPhase > this.phase && this.state !== 'attack' && this.state !== 'staggered') {
+            this.applyPhaseTransition(ctx);
+        }
 
         // Reactive block if player swings while we're free
         if (player.state === 'attack' && dist < 3.4 && this.blockChanceCd <= 0 &&
@@ -735,6 +853,12 @@ export class Boss {
                 break;
             }
             case 'strafe': {
+                if (playerGone) {
+                    // Nothing to fight: idle in place instead of redeciding
+                    this.vel.set(0, 0, 0);
+                    this.thinkTimer = 0.5;
+                    break;
+                }
                 this.heading += angleDiff(toPlayer, this.heading) * Math.min(1, dt * 9);
                 this.strafeTimer -= dt;
                 if (this.strafeTimer <= 0) {
@@ -762,24 +886,31 @@ export class Boss {
                     this.thinkTimer = 0.05;
                 }
                 break;
+            case 'transition':
+                // Safe, clearly-timed phase change: no attacking, no movement
+                this.vel.set(0, 0, 0);
+                if (this.stateTime > COMBAT_TUNING.TRANSITION_DURATION) {
+                    this.state = 'idle';
+                    this.stateTime = 0;
+                    this.thinkTimer = 0.3 + Math.random() * 0.2;
+                }
+                break;
             case 'attack': {
                 const atk = this.currentAttack;
                 const t = this.stateTime;
 
-                // Feint: cancel overhead mid-windup → sidestep → jab/slash
+                // Feint: cancel the overhead mid-windup into a quick grounded
+                // follow-up — a fake-out, never a positional teleport
                 if (this.feinting && this.attackName === 'heavyOverhead' && t > atk.windup * 0.52) {
                     this.feinting = false;
-                    const side = toPlayer + (Math.random() < 0.5 ? Math.PI / 2 : -Math.PI / 2);
-                    forward(side, _v);
-                    this.pos.x += _v.x * 1.5;
-                    this.pos.z += _v.z * 1.5;
-                    clampToArena(this.pos);
+                    this.vel.set(0, 0, 0);
                     this.startAttack(Math.random() < 0.5 ? 'jab' : 'quickSlash');
                     break;
                 }
 
-                // Early windup tracking (then commit)
-                if (t < atk.windup * 0.5) {
+                // Track only early in the windup — the final 40% and the whole
+                // active window are committed to the frozen heading
+                if (t < atk.windup * 0.6) {
                     this.heading += angleDiff(toPlayer, this.heading) * Math.min(1, dt * 4);
                 }
 
@@ -803,7 +934,7 @@ export class Boss {
                         this.vel.x = _v.x * 2.0;
                         this.vel.z = _v.z * 2.0;
                     }
-                    if (!this.attackHitDone && !player.dead && this.meleeCheck(atk, player)) {
+                    if (!this.attackHitDone && !playerGone && this.meleeCheck(atk, player)) {
                         this.attackHitDone = true;
                         const res = player.receiveHit(atk, this, ctx);
                         ctx.onPlayerHit(res, atk, player, this);
@@ -814,12 +945,15 @@ export class Boss {
                 }
 
                 if (t > atk.windup + atk.active + atk.recover) {
-                    // Chain combo: 3-hit string if player still in range
-                    if (this.attackName === 'comboSlash' && this.comboStep < 2 && dist < 4.2 && !player.dead) {
+                    // Chain combo: 3-hit string (4 in phase 3) if player still in range
+                    const maxStep = this.phase >= 3 ? 3 : 2;
+                    if (this.attackName === 'comboSlash' && this.comboStep < maxStep && dist < 4.2 && !playerGone) {
                         this.comboStep++;
+                        const isFinal = this.comboStep >= maxStep;
                         this.currentAttack = {
                             ...atk,
-                            windup: 0.24 * this.windupMult,
+                            windup: Math.max(COMBAT_TUNING.WINDUP_FLOOR, 0.24 * this.windupMult),
+                            recover: isFinal && this.phase >= 3 ? Math.max(atk.recover, 0.55) : atk.recover,
                             type: this.comboStep % 2,
                             damage: Math.round(atk.damage * 0.95),
                         };
@@ -843,13 +977,38 @@ export class Boss {
                     this.stateTime = 0;
                     this.thinkTimer = 0.15;
                     this.staggerDuration = 2.5;
+                    this.vulnerable = false;
                 }
                 break;
         }
 
-        // Integrate
-        this.pos.x += this.vel.x * dt;
-        this.pos.z += this.vel.z * dt;
+        // Integrate — bounded per-frame travel while attacking, and never
+        // overshoot past the player (clampToArena handles the arena walls)
+        let mx = this.vel.x * dt;
+        let mz = this.vel.z * dt;
+        if (this.state === 'attack') {
+            const stepLen = Math.hypot(mx, mz);
+            if (stepLen > MAX_ATTACK_TRAVEL_PER_STEP) {
+                const s = MAX_ATTACK_TRAVEL_PER_STEP / stepLen;
+                mx *= s;
+                mz *= s;
+            }
+            if (this.currentAttack && !playerGone) {
+                _v.subVectors(player.pos, this.pos);
+                _v.y = 0;
+                const d = _v.length();
+                if (d > 0.001) {
+                    const toward = (mx * _v.x + mz * _v.z) / d;
+                    if (toward > 0 && toward > d - ATTACK_STOP_DIST) {
+                        const s = Math.max(0, d - ATTACK_STOP_DIST) / toward;
+                        mx *= s;
+                        mz *= s;
+                    }
+                }
+            }
+        }
+        this.pos.x += mx;
+        this.pos.z += mz;
         clampToArena(this.pos);
 
         // Body collision

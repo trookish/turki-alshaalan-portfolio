@@ -6,6 +6,7 @@ import { createEngine } from './modules/engine.js'
 import { createKnight } from './modules/knight.js'
 import { ParticlePool, ScreenShake, HitStop, HUD, worldToScreen } from './modules/effects.js'
 import { Player, Boss } from './modules/combat.js'
+import { bindJoystick, bindPointerButton } from './modules/input.js'
 import { gameAr, gameEn } from './strings'
 import type { Lang } from '../../i18n/types'
 import type { Scene, PerspectiveCamera, Vector3, Object3D } from 'three'
@@ -19,6 +20,8 @@ interface EngineHandle {
   render: () => void
   resize: () => void
   camRig: { shakeX: number; shakeY: number; shakeZ: number; [k: string]: unknown }
+  getStats?: () => { drawCalls: number; triangles: number; pixelRatio: number }
+  updatePerformance?: (frameSeconds: number) => void
   dispose: () => void
 }
 
@@ -31,12 +34,16 @@ export interface StartOptions {
   lang: Lang
   soundEnabled: boolean
   onExit?: () => void
+  onPauseChange?: (paused: boolean) => void
   onSoundToggle?: (enabled: boolean) => void
 }
 
 export interface GameHandle {
   dispose: () => void
   resize: () => void
+  begin: () => void
+  togglePause: () => void
+  clearInput: () => void
 }
 
 const SOUND_PATHS = {
@@ -51,6 +58,12 @@ const SOUND_PATHS = {
 type SoundName = keyof typeof SOUND_PATHS
 
 const base = import.meta.env.BASE_URL
+
+const PHASE_NAMES: Record<number, string> = {
+  1: 'THE OATHBOUND',
+  2: 'NIGHTMARE AWAKENS',
+  3: 'ASHEN FURY',
+}
 
 export function startGame(canvas: HTMLCanvasElement, options: StartOptions): GameHandle {
   const getGameText = (enText: string): string => {
@@ -83,6 +96,7 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
     const detail = (e as CustomEvent<{ enabled: boolean }>).detail
     soundEnabled = detail.enabled
     applyVolumes()
+    options.onSoundToggle?.(detail.enabled)
   }
   window.addEventListener('soundToggle', onSoundEvt)
 
@@ -121,13 +135,16 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
   const hud = new HUD(stage, getGameText)
   hud.setBossName(getGameText('DARK KNIGHT'))
 
-  type GameState = 'countdown' | 'playing' | 'over' | 'win'
-  let gameState: GameState = 'countdown'
+  type GameState = 'idle' | 'countdown' | 'playing' | 'over' | 'win'
+  let gameState: GameState = 'idle'
+  let paused = false
   let countdownValue = 3
   let countdownTimer = 0
   let gameRunning = true
   let lastFrameTime = 0
   let accumulator = 0
+  let lastBannerPhase = 0
+  let wasVulnerable = false
   const TIME_STEP = 1000 / 60
   const MAX_ACCUMULATOR = TIME_STEP * 5
 
@@ -181,6 +198,17 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
 
     input.moveVec.x = camRight.x * ix + camFwd.x * iy
     input.moveVec.z = camRight.z * ix + camFwd.z * iy
+  }
+
+  function showPhaseBanner(phase: number) {
+    const resolved = typeof phase === 'number' && phase >= 1 ? Math.floor(phase) : 1
+    if (resolved === lastBannerPhase) return
+    lastBannerPhase = resolved
+    hud.showCenter(getGameText(PHASE_NAMES[resolved] || PHASE_NAMES[1]), { cls: 'bad', duration: 1500 })
+    hud.flash('rgba(239, 68, 68, 0.3)', 350)
+    shake.add(0.5)
+    playSound('hit', 0.5)
+    particles.spawn(boss.pos.x, boss.pos.y + 1.5, boss.pos.z, 30, { color: 0xef4444, speed: 4.5, life: 0.8 })
   }
 
   const ctx = {
@@ -257,14 +285,21 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
         gravity: 1.5,
       })
       playSound('countdown', 0.9)
+      hud.setTell(getGameText('GREAT HEAL'), { duration: 1100 })
     },
 
     onBossRage(bs: Boss) {
-      hud.showCenter(getGameText('ENRAGED!'), { cls: 'bad', duration: 1200 })
-      hud.flash('rgba(239, 68, 68, 0.3)', 350)
-      shake.add(0.5)
-      playSound('hit', 0.5)
-      particles.spawn(bs.pos.x, bs.pos.y + 1.5, bs.pos.z, 30, { color: 0xef4444, speed: 4.5, life: 0.8 })
+      showPhaseBanner(typeof bs.phase === 'number' ? bs.phase : 2)
+    },
+
+    onPhaseChange(phaseOrBoss: unknown) {
+      showPhaseBanner(typeof phaseOrBoss === 'number' ? phaseOrBoss : (boss.phase ?? 1))
+    },
+
+    onBossTell(text: unknown) {
+      if (typeof text === 'string' && text) {
+        hud.setTell(getGameText(text), { danger: true, duration: 1700 })
+      }
     },
   }
 
@@ -276,9 +311,10 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
     hitStop.freeze(300)
     shake.add(0.6)
     playSound('windowOpen', 0.9)
+    hud.showLock(false)
     hud.showCenter(
       getGameText('VICTORY!') + `<div class="hud-sub">${getGameText('Press R to Play Again')}</div>`,
-      { cls: 'good' },
+      { cls: 'good', retry: getGameText('RETRY'), onRetry: retryGame },
     )
   }
 
@@ -286,19 +322,30 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
     gameState = 'over'
     playSound('gameOver', 1)
     hud.flash('rgba(0, 0, 0, 0.55)', 900)
+    hud.showLock(false)
     hud.showCenter(
       getGameText('YOU DIED') + `<div class="hud-sub">${getGameText('Press R to Restart')}</div>`,
-      { cls: 'bad' },
+      { cls: 'bad', retry: getGameText('RETRY'), onRetry: retryGame },
     )
+  }
+
+  function retryGame() {
+    hud.showCenter('')
+    resetGame(true)
   }
 
   function resetGame(skipCountdown = false) {
     player.reset()
     boss.reset()
     input.locked = true
+    lastBannerPhase = 0
+    wasVulnerable = false
     hud.setBossName(getGameText('DARK KNIGHT'))
     hud.showBossBar(true)
     hud.setBars(1, 1, player.estus, player.estusMax, 1)
+    hud.setBoss(1, 0, 1, false)
+    hud.setLowHealth(false)
+    hud.setTell('')
     hud.showCenter('')
     if (skipCountdown) {
       gameState = 'playing'
@@ -345,13 +392,25 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
     player.update(dt, input, boss, ctx)
     boss.update(dt, player, ctx)
 
+    const hpFrac = player.hp / (player.maxHp || 1)
     hud.setBars(
-      player.hp / (player.maxHp || 1),
+      hpFrac,
       player.stamina / (player.maxStamina || 1),
       player.estus,
       player.estusMax,
       (boss.hp || 0) / (boss.maxHp || 1),
     )
+    hud.setBoss(
+      (boss.hp || 0) / (boss.maxHp || 1),
+      (boss.poise || 0) / (boss.maxPoise || 100),
+      typeof boss.phase === 'number' ? boss.phase : 1,
+      !!boss.vulnerable,
+    )
+    hud.setLowHealth(hpFrac > 0 && hpFrac < 0.3)
+    if (boss.vulnerable && !wasVulnerable) {
+      hud.setTell(getGameText('RIPOSTE READY'), { duration: 1200 })
+    }
+    wasVulnerable = !!boss.vulnerable
 
     if (player.dead && gameState === 'playing') onPlayerDefeated()
   }
@@ -370,7 +429,7 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
 
     while (accumulator >= TIME_STEP) {
       accumulator -= TIME_STEP
-      if (!frozen) tick(TIME_STEP / 1000)
+      if (!frozen && !paused) tick(TIME_STEP / 1000)
     }
 
     shake.apply(dtReal, engine.camRig)
@@ -378,6 +437,21 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
     engine.updateEnvironment(dtReal)
     updateCameraBasis()
     engine.updateCamera(dtReal, player.pos, player.heading ?? 0, boss.pos, input.locked && !boss.dead)
+    engine.updatePerformance?.(dtReal)
+
+    // Lock-on marker rides on the boss's projected chest position.
+    if (input.locked && !boss.dead && (gameState === 'playing' || gameState === 'countdown')) {
+      engine.camera.updateMatrixWorld()
+      const s = worldToScreen(
+        { x: boss.pos.x, y: boss.pos.y + 2.35, z: boss.pos.z },
+        engine.camera,
+        canvas,
+      )
+      hud.showLock(!s.behind, s.x, s.y)
+    } else {
+      hud.showLock(false)
+    }
+
     engine.render()
   }
 
@@ -388,22 +462,24 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
     input.keys[k] = true
     if (k === 'shift') input.sprint = true
 
+    if (k === 'p' && !e.repeat && (gameState === 'playing' || gameState === 'countdown')) {
+      togglePause()
+      return
+    }
+    if (paused) return
+
     if (gameState === 'playing' && !e.repeat) {
       if (k === 'j') player.tryAttack()
       if (k === ' ') {
         e.preventDefault()
-        player.tryRoll(currentRollDir(), input.locked)
-        playSound('dodge', 1)
+        if (player.tryRoll(currentRollDir(), input.locked)) playSound('dodge', 1)
       }
       if (k === 'e') player.tryHeal(ctx)
       if (k === 'q') input.locked = !input.locked
       if (k === 'k') player.setBlock(true)
     }
     if (k === 'k' && !e.repeat) input.blockHeld = true
-    if (k === 'r' && (gameState === 'over' || gameState === 'win')) {
-      hud.showCenter('')
-      resetGame(true)
-    }
+    if (k === 'r' && (gameState === 'over' || gameState === 'win')) retryGame()
   }
 
   const onKeyUp = (e: KeyboardEvent) => {
@@ -417,7 +493,7 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
   }
 
   const onMouseDown = (e: MouseEvent) => {
-    if (!gameRunning || gameState !== 'playing') return
+    if (!gameRunning || paused || gameState !== 'playing') return
     if (e.button === 0) player.tryAttack()
     if (e.button === 2) {
       input.blockHeld = true
@@ -442,86 +518,33 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
   canvas.addEventListener('contextmenu', onContextMenu)
   document.addEventListener('visibilitychange', onVisibility)
 
-  // ---------- Mobile controls ----------
+  // ---------- Touch controls (pointer ownership, radial deadzone) ----------
+  const touchBindings: Array<{ reset: () => void; dispose: () => void }> = []
   const joyZone = document.getElementById('mobileJoystick')
   const joyKnob = document.getElementById('joystickKnob')
-  let joyPointer: number | null = null
-
-  const setKnob = (dx: number, dy: number) => {
-    if (joyKnob) joyKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`
+  if (joyZone) {
+    touchBindings.push(bindJoystick(joyZone, joyKnob, (x, y) => {
+      input.joyX = x
+      input.joyY = y
+    }))
   }
 
-  const JOY_R = 42
-  const onJoyMove = (e: PointerEvent) => {
-    if (joyPointer !== e.pointerId || !joyZone) return
-    const rect = joyZone.getBoundingClientRect()
-    let dx = e.clientX - (rect.left + rect.width / 2)
-    let dy = e.clientY - (rect.top + rect.height / 2)
-    const d = Math.hypot(dx, dy)
-    if (d > JOY_R) {
-      dx = (dx / d) * JOY_R
-      dy = (dy / d) * JOY_R
-    }
-    setKnob(dx, dy)
-    input.joyX = dx / JOY_R
-    input.joyY = dy / JOY_R
-  }
-  const onJoyEnd = (e: PointerEvent) => {
-    if (joyPointer !== e.pointerId) return
-    joyPointer = null
-    input.joyX = 0
-    input.joyY = 0
-    setKnob(0, 0)
-  }
-  const onJoyDown = (e: PointerEvent) => {
-    e.preventDefault()
-    joyPointer = e.pointerId
-    joyZone?.setPointerCapture(e.pointerId)
-    onJoyMove(e)
-  }
-
-  joyZone?.addEventListener('pointerdown', onJoyDown)
-  joyZone?.addEventListener('pointermove', onJoyMove)
-  joyZone?.addEventListener('pointerup', onJoyEnd)
-  joyZone?.addEventListener('pointercancel', onJoyEnd)
-
-  const holdHandlers: Array<() => void> = []
-  function bindHoldButton(id: string, onDown: () => void, onUp?: () => void) {
+  const bindAction = (id: string, onDown: () => void, onUp?: () => void) => {
     const el = document.getElementById(id)
-    if (!el) return
-    const down = (e: Event) => {
-      e.preventDefault()
-      el.classList.add('active')
-      onDown()
-    }
-    const release = () => {
-      el.classList.remove('active')
-      onUp?.()
-    }
-    el.addEventListener('pointerdown', down)
-    el.addEventListener('pointerup', release)
-    el.addEventListener('pointercancel', release)
-    el.addEventListener('pointerleave', release)
-    holdHandlers.push(() => {
-      el.removeEventListener('pointerdown', down)
-      el.removeEventListener('pointerup', release)
-      el.removeEventListener('pointercancel', release)
-      el.removeEventListener('pointerleave', release)
-    })
+    if (el) touchBindings.push(bindPointerButton(el, onDown, onUp))
   }
 
-  bindHoldButton('btnAttack', () => {
-    if (gameState === 'playing') player.tryAttack()
+  bindAction('btnAttack', () => {
+    if (gameState === 'playing' && !paused) player.tryAttack()
   })
-  bindHoldButton('btnRoll', () => {
-    if (gameState !== 'playing') return
-    player.tryRoll(currentRollDir(), input.locked)
-    playSound('dodge', 1)
+  bindAction('btnRoll', () => {
+    if (gameState !== 'playing' || paused) return
+    if (player.tryRoll(currentRollDir(), input.locked)) playSound('dodge', 1)
   })
-  bindHoldButton(
+  bindAction(
     'btnBlock',
     () => {
-      if (gameState !== 'playing') return
+      if (gameState !== 'playing' || paused) return
       input.blockHeld = true
       player.setBlock(true)
     },
@@ -530,10 +553,10 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
       player.setBlock(false)
     },
   )
-  bindHoldButton('btnHeal', () => {
-    if (gameState === 'playing') player.tryHeal(ctx)
+  bindAction('btnHeal', () => {
+    if (gameState === 'playing' && !paused) player.tryHeal(ctx)
   })
-  bindHoldButton('btnLock', () => {
+  bindAction('btnLock', () => {
     input.locked = !input.locked
   })
 
@@ -544,18 +567,31 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
     options.onExit?.()
   }
   const onRestart = () => {
-    if (gameState === 'over' || gameState === 'win' || gameState === 'playing') {
-      hud.showCenter('')
-      resetGame(true)
-    }
+    if (gameState === 'over' || gameState === 'win' || gameState === 'playing') retryGame()
   }
   mobileExit?.addEventListener('click', onExit)
   mobileRestart?.addEventListener('click', onRestart)
 
-  // Start
+  function togglePause() {
+    if (gameState !== 'playing' && gameState !== 'countdown') return
+    paused = !paused
+    options.onPauseChange?.(paused)
+  }
+
+  function clearInput() {
+    input.keys = {}
+    input.joyX = 0
+    input.joyY = 0
+    input.sprint = false
+    input.blockHeld = false
+    player.setBlock(false)
+    touchBindings.forEach((binding) => binding.reset())
+  }
+
+  // Start: render the cathedral behind the intro screen; the fight begins on demand.
+  hud.showBossBar(false)
   playSound('windowOpen', 1)
   engine.resize()
-  resetGame()
   lastFrameTime = 0
   accumulator = 0
   requestAnimationFrame(gameLoop)
@@ -564,6 +600,13 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
   window.addEventListener('resize', onWindowResize)
 
   return {
+    begin() {
+      if (gameState !== 'idle') return
+      playSound('countdown', 1.2)
+      resetGame(false)
+    },
+    togglePause,
+    clearInput,
     resize() {
       engine.resize()
     },
@@ -577,11 +620,7 @@ export function startGame(canvas: HTMLCanvasElement, options: StartOptions): Gam
       document.removeEventListener('visibilitychange', onVisibility)
       canvas.removeEventListener('mousedown', onMouseDown)
       canvas.removeEventListener('contextmenu', onContextMenu)
-      joyZone?.removeEventListener('pointerdown', onJoyDown)
-      joyZone?.removeEventListener('pointermove', onJoyMove)
-      joyZone?.removeEventListener('pointerup', onJoyEnd)
-      joyZone?.removeEventListener('pointercancel', onJoyEnd)
-      holdHandlers.forEach((fn) => fn())
+      touchBindings.forEach((binding) => binding.dispose())
       mobileExit?.removeEventListener('click', onExit)
       mobileRestart?.removeEventListener('click', onRestart)
       hud.destroy()

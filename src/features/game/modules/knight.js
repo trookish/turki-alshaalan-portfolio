@@ -6,7 +6,7 @@
  */
 import * as THREE from 'three';
 
-const legH = 0.72;
+const legH = 0.695;
 const torsoH = 0.62;
 const headH = 0.3;
 
@@ -24,6 +24,7 @@ const POSE_KEYS = [
     'upperX', 'upperY', 'upperZ',
     'headX', 'headY', 'headZ',
     'legLX', 'legRX',
+    'stepLX', 'stepLY', 'stepLZ', 'stepRX', 'stepRY', 'stepRZ',
     'armRX', 'armRY', 'armRZ',
     'armLX', 'armLY', 'armLZ',
     'swordX', 'swordY', 'swordZ',
@@ -37,6 +38,8 @@ function restPose() {
         upperX: 0, upperY: 0, upperZ: 0,
         headX: 0, headY: 0, headZ: 0,
         legLX: 0, legRX: 0,
+        stepLX: -0.012, stepLY: 0.09, stepLZ: 0.05,
+        stepRX: 0.012, stepRY: 0.09, stepRZ: -0.05,
         armRX: 0, armRY: 0, armRZ: 0,
         armLX: 0, armLY: 0, armLZ: 0,
         swordX: 0, swordY: 0, swordZ: 0,
@@ -45,97 +48,130 @@ function restPose() {
     };
 }
 
-export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1 } = {}) {
-    const armorMat = new THREE.MeshLambertMaterial({ color });
-    const darkMat = new THREE.MeshLambertMaterial({ color: darkColor });
-    const bladeMat = new THREE.MeshLambertMaterial({ color: 0xc9d1d3, emissive: 0x555555, emissiveIntensity: 0.25 });
-    const visorMat = new THREE.MeshBasicMaterial({ color: 0x0b0f0c });
+export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1, isBoss = false } = {}) {
+    // Per-rig resources are shared by matching parts, never by separately disposed rigs.
+    const armorMat = new THREE.MeshStandardMaterial({ color: isBoss ? 0x48484b : 0x747d83, metalness: 0.72, roughness: 0.48, flatShading: true });
+    const edgeMat = new THREE.MeshStandardMaterial({ color: 0xa0a9ad, metalness: 0.8, roughness: 0.36, flatShading: true });
+    const darkMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(darkColor).lerp(new THREE.Color(0x28292b), 0.65), metalness: 0.28, roughness: 0.82 });
+    const accent = new THREE.Color(color).lerp(new THREE.Color(0x4c5150), 0.65).multiplyScalar(0.7);
+    const clothMat = new THREE.MeshLambertMaterial({ color: accent, side: THREE.DoubleSide });
+    const visorMat = new THREE.MeshBasicMaterial({ color: isBoss ? 0xdf622c : 0x090b0d });
+    const box = new THREE.BoxGeometry(1, 1, 1);
+    const round = new THREE.CylinderGeometry(1, 0.86, 1, 8);
+    const plate = new THREE.CylinderGeometry(1, 0.78, 1, 6);
+    const group = (name, parent, x = 0, y = 0, z = 0) => {
+        const node = new THREE.Group();
+        node.name = name;
+        node.position.set(x, y, z);
+        parent?.add(node);
+        return node;
+    };
+    const mesh = (name, parent, geometry, material, dimensions, position = [0, 0, 0]) => {
+        const node = new THREE.Mesh(geometry, material);
+        node.name = name;
+        node.scale.set(...dimensions);
+        node.position.set(...position);
+        node.castShadow = true;
+        parent.add(node);
+        return node;
+    };
+    const outline = (points, depth) => {
+        const shape = new THREE.Shape();
+        points.forEach(([x, y], i) => i ? shape.lineTo(x, y) : shape.moveTo(x, y));
+        shape.closePath();
+        const geometry = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelSegments: 1, steps: 1, bevelSize: 0.008, bevelThickness: 0.008 });
+        geometry.translate(0, 0, -depth / 2);
+        return geometry;
+    };
 
-    const root = new THREE.Group();
+    const root = group('knight');
+    const spin = group('spin', root);
+    const body = group('hips', spin, 0, legH);
+    const upper = group('upper', body);
+    mesh('mail', upper, box, darkMat, [0.46, 0.52, 0.3], [0, 0.27, 0]);
+    const torso = mesh('breastplate', upper, plate, armorMat, [isBoss ? 0.395 : 0.34, 0.5, isBoss ? 0.25 : 0.22], [0, 0.31, 0.012]);
+    mesh('belt', upper, box, darkMat, [0.5, 0.085, 0.34], [0, 0.065, 0]);
+    for (const side of [-1, 1]) {
+        const tasset = mesh('tasset', upper, plate, armorMat, [0.13, 0.2, 0.15], [side * 0.19, -0.03, 0]);
+        tasset.rotation.z = side * 0.12;
+    }
+    const tabard = group('tabard', upper, 0, 0.08, 0.195);
+    mesh('tabard-upper', tabard, box, clothMat, [0.2, 0.22, 0.018], [0, -0.11, 0]);
+    const tabardTip = group('tabard-tip', tabard, 0, -0.22, 0);
+    mesh('tabard-hem', tabardTip, box, clothMat, [0.185, 0.22, 0.018], [0, -0.11, 0]);
+    mesh('gorget', upper, round, edgeMat, [0.19, 0.08, 0.16], [0, 0.59, 0]);
 
-    // Spin layer: full-body rolls / death fall
-    const spin = new THREE.Group();
-    root.add(spin);
+    const head = group('head', upper, 0, torsoH + headH / 2 + 0.025);
+    mesh('helmet', head, round, armorMat, [0.18, 0.31, 0.17]);
+    const visor = mesh('visor', head, box, visorMat, [0.258, 0.032, 0.026], [0, 0.025, 0.156]);
+    const plume = group('plume', head, 0, 0.16, -0.02);
+    mesh('crest', plume, box, clothMat, [0.055, 0.105, 0.235], [0, 0.025, -0.035]);
+    if (isBoss) {
+        const hornGeometry = new THREE.ConeGeometry(0.065, 0.38, 5);
+        for (const side of [-1, 1]) {
+            const horn = mesh(`horn-${side}`, head, hornGeometry, edgeMat, [1, 1, 1], [side * 0.205, 0.19, -0.025]);
+            horn.rotation.z = -side * 0.45;
+            horn.rotation.x = -0.24;
+        }
+        const crownGeometry = outline([[-0.15, 0], [-0.15, 0.18], [-0.075, 0.10], [0, 0.25], [0.075, 0.10], [0.15, 0.18], [0.15, 0]], 0.035);
+        mesh('crown', head, crownGeometry, armorMat, [1, 1, 1], [0, 0.10, 0.025]);
+    }
 
-    // Body layer: vertical bob only
-    const body = new THREE.Group();
-    body.position.y = legH;
-    spin.add(body);
+    const limbs = {};
+    for (const [side, sign] of [['L', -1], ['R', 1]]) {
+        const leg = group(`hip-${side}`, body, sign * 0.155);
+        leg.rotation.order = 'ZXY';
+        mesh(`cuisses-${side}`, leg, plate, armorMat, [0.115, 0.28, 0.12], [0, -0.16, 0]);
+        const knee = group(`knee-${side}`, leg, 0, -0.34, 0);
+        mesh(`poleyn-${side}`, knee, round, edgeMat, [0.12, 0.12, 0.12], [0, -0.005, 0.025]);
+        mesh(`greave-${side}`, knee, plate, armorMat, [0.095, 0.26, 0.10], [0, -0.17, 0]);
+        const foot = group(`ankle-${side}`, knee, 0, -0.30, 0);
+        foot.rotation.order = 'XZY';
+        mesh(`sabatons-${side}`, foot, box, darkMat, [0.21, 0.14, 0.32], [0, -0.015, 0.075]);
+        const arm = group(`shoulder-${side}`, upper, sign * (isBoss ? 0.415 : 0.36), 0.53, 0);
+        mesh(`pauldron-${side}`, arm, plate, armorMat, [isBoss ? 0.235 : 0.19, isBoss ? 0.21 : 0.16, 0.18], [sign * 0.025, -0.035, 0]);
+        mesh(`pauldron-lame-${side}`, arm, plate, edgeMat, [0.158, 0.095, 0.151], [sign * 0.025, -0.13, 0]);
+        mesh(`rerebrace-${side}`, arm, round, darkMat, [0.09, 0.23, 0.10], [0, -0.17, 0]);
+        const elbow = group(`elbow-${side}`, arm, 0, -0.29, 0);
+        mesh(`couter-${side}`, elbow, round, edgeMat, [0.10, 0.105, 0.10]);
+        mesh(`vambrace-${side}`, elbow, plate, armorMat, [0.094, 0.21, 0.10], [0, -0.12, 0]);
+        mesh(`gauntlet-${side}`, elbow, box, darkMat, [0.15, 0.13, 0.15], [0, -0.255, 0]);
+        limbs[`leg${side}`] = leg;
+        limbs[`knee${side}`] = knee;
+        limbs[`foot${side}`] = foot;
+        limbs[`arm${side}`] = arm;
+        limbs[`elbow${side}`] = elbow;
+    }
+    const { legL, legR, armR, armL, elbowR, elbowL } = limbs;
+    const sword = group('sword', elbowR, 0, -0.27, 0);
+    mesh('grip', sword, round, darkMat, [0.031, 0.15, 0.031], [0, 0.025, 0]);
+    mesh('crossguard', sword, box, edgeMat, [0.27, 0.045, 0.075], [0, -0.055, 0]);
+    mesh('pommel', sword, round, edgeMat, [0.042, 0.058, 0.04], [0, 0.125, 0]);
+    const bladeGeometry = outline([[-0.042, -0.08], [-0.04, -0.70], [0, -0.94], [0.04, -0.70], [0.042, -0.08]], 0.023);
+    const blade = mesh('blade', sword, bladeGeometry, edgeMat, [1, 1, 1]);
+    mesh('blade-ridge', sword, box, armorMat, [0.014, 0.62, 0.034], [0, -0.4, 0]);
 
-    // Legs (pivot at hip) — never inherit upper lean
-    const legGeo = new THREE.BoxGeometry(0.2, legH, 0.24);
-    legGeo.translate(0, -legH / 2, 0);
-    const legL = new THREE.Mesh(legGeo, darkMat);
-    legL.position.set(-0.14, 0, 0);
-    const legR = new THREE.Mesh(legGeo, darkMat);
-    legR.position.set(0.14, 0, 0);
-    body.add(legL, legR);
+    const shield = group('shield', elbowL, -0.035, -0.14, 0.13);
+    const shieldGeometry = outline([[-0.26, 0.22], [0, 0.31], [0.26, 0.22], [0.22, -0.06], [0, -0.43], [-0.22, -0.06]], 0.045);
+    mesh('shield-rim', shield, shieldGeometry, edgeMat, [1, 1, 1]);
+    mesh('shield-face', shield, shieldGeometry, clothMat, [0.90, 0.90, 1], [0, 0, 0.032]);
+    const insignia = mesh('shield-insignia', shield, plate, edgeMat, [0.065, 0.30, 0.028], [0, 0.005, 0.068]);
+    insignia.rotation.z = 0.15;
 
-    // Upper layer: torso lean/twist, head, arms, sword, shield
-    const upper = new THREE.Group();
-    body.add(upper);
+    const cape = group('cape', upper, 0, 0.52, -0.19);
+    mesh('cape-upper', cape, box, clothMat, [0.49, 0.40, 0.018], [0, -0.20, -0.015]);
+    const capeTip = group('cape-tip', cape, 0, -0.4, -0.015);
+    mesh('cape-hem', capeTip, box, clothMat, [0.53, 0.40, 0.018], [0, -0.20, 0]);
 
-    const torso = new THREE.Mesh(new THREE.BoxGeometry(0.56, torsoH, 0.34), armorMat);
-    torso.position.y = torsoH / 2 + 0.02;
-    upper.add(torso);
-
-    const skirt = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.16, 0.3), darkMat);
-    skirt.position.y = 0.02;
-    upper.add(skirt);
-
-    const head = new THREE.Mesh(new THREE.BoxGeometry(headH, headH, headH), armorMat);
-    head.position.y = torsoH + headH / 2 + 0.06;
-    upper.add(head);
-
-    const visor = new THREE.Mesh(new THREE.BoxGeometry(headH * 0.8, 0.06, 0.04), visorMat);
-    visor.position.set(0, torsoH + headH / 2 + 0.06, headH / 2 + 0.01);
-    upper.add(visor);
-
-    const plume = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.2, 0.3), armorMat);
-    plume.position.set(0, torsoH + headH + 0.12, -0.03);
-    upper.add(plume);
-
-    const armR = new THREE.Group();
-    armR.position.set(0.36, torsoH - 0.06, 0);
-    upper.add(armR);
-    const armRMesh = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.5, 0.16), armorMat);
-    armRMesh.position.y = -0.22;
-    armR.add(armRMesh);
-
-    const sword = new THREE.Group();
-    sword.position.set(0, -0.46, 0);
-    armR.add(sword);
-    const guard = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.05, 0.06), darkMat);
-    sword.add(guard);
-    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.95, 0.03), bladeMat);
-    blade.position.y = -0.5;
-    sword.add(blade);
-
-    const armL = new THREE.Group();
-    armL.position.set(-0.36, torsoH - 0.06, 0);
-    upper.add(armL);
-    const armLMesh = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.46, 0.16), armorMat);
-    armLMesh.position.y = -0.2;
-    armL.add(armLMesh);
-
-    const shield = new THREE.Group();
-    shield.position.set(-0.1, -0.4, 0.05);
-    armL.add(shield);
-    const shieldFace = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.56, 0.42), darkMat);
-    shield.add(shieldFace);
-    const shieldBoss = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.16, 0.16), armorMat);
-    shield.add(shieldBoss);
-
-    const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.42, depthWrite: false });
-    const blob = new THREE.Mesh(new THREE.CircleGeometry(0.55, 20), shadowMat);
+    const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false });
+    const blob = mesh('contact-shadow', root, new THREE.CircleGeometry(0.49, 16), shadowMat, [1, 1, 1], [0, 0.018, 0]);
     blob.rotation.x = -Math.PI / 2;
-    blob.position.y = 0.02;
-    root.add(blob);
-
+    blob.castShadow = false;
     root.scale.setScalar(scale);
 
     const rig = {
-        root, spin, body, upper, head, torso, armR, armL, sword, shield, blade, legL, legR, blob, plume,
+        root, spin, body, upper, head, torso, sword, shield, blade, blob, plume, visor,
+        ...limbs, cape, capeTip, tabard, tabardTip,
         _prevState: 'idle',
         _blend: 1,
         _tgt: restPose(),
@@ -239,6 +275,24 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
 
     let tgt = rig._tgt;
     let last = rig._last;
+    let gaitPhase = 0;
+
+    // Two-link IK keeps a support sole on the floor while the other knee lifts.
+    function plantFoot(side) {
+        const dx = tgt[`step${side}X`];
+        const dz = tgt[`step${side}Z`];
+        const dy = tgt.bodyY - tgt[`step${side}Y`];
+        const vertical = Math.hypot(dx, dy);
+        const reach = Math.min(0.6395, Math.max(0.10, Math.hypot(vertical, dz)));
+        const thigh = 0.34;
+        const shin = 0.30;
+        const knee = Math.PI - Math.acos(Math.max(-1, Math.min(1, (thigh * thigh + shin * shin - reach * reach) / (2 * thigh * shin))));
+        const hip = -Math.atan2(dz, vertical) - Math.acos(Math.max(-1, Math.min(1, (thigh * thigh + reach * reach - shin * shin) / (2 * thigh * reach))));
+        const lateral = Math.atan2(dx, dy);
+        limbs[`leg${side}`].rotation.set(hip, 0, lateral);
+        limbs[`knee${side}`].rotation.x = knee;
+        limbs[`foot${side}`].rotation.set(-hip - knee, 0, -lateral);
+    }
 
     /**
      * opts.windup 0..1 | opts.progress (swing) 0..1 | opts.recover 0..1
@@ -255,19 +309,30 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
         switch (state) {
             case 'run': {
                 const intensity = Math.min(1, speed / 4.6);
-                const f = t * (8.2 + speed * 0.55);
+                gaitPhase = (gaitPhase + Math.max(0, dt) * (6.5 + speed * 1.4)) % (Math.PI * 2);
+                const f = gaitPhase;
                 const s = Math.sin(f);
-                const c = Math.cos(f);
-
-                tgt.legLX = s * 0.95 * intensity;
-                tgt.legRX = -s * 0.95 * intensity;
-                tgt.armRX = -s * 0.72 * intensity;
-                tgt.armLX = s * 0.72 * intensity;
-                tgt.armRZ = -0.08 * intensity;
-                tgt.armLZ = 0.08 * intensity;
-
-                tgt.bodyY = legH + Math.abs(c) * 0.06 * intensity - 0.01 * intensity;
-                tgt.upperX = 0.12 * intensity + Math.sin(f * 2) * 0.02 * intensity;
+                let moveX = opts.moveX || 0;
+                let moveZ = opts.moveZ ?? (moveX ? 0 : 1);
+                const magnitude = Math.hypot(moveX, moveZ) || 1;
+                moveX /= magnitude;
+                moveZ /= magnitude;
+                const stride = (moveZ < 0 ? 0.19 : 0.26) * intensity;
+                for (const [side, offset] of [['L', 0], ['R', 0.5]]) {
+                    const phase = (f / (Math.PI * 2) + offset) % 1;
+                    const swing = Math.max(0, (phase - 0.6) / 0.4);
+                    const along = phase < 0.6 ? lerp(stride, -stride, phase / 0.6) : lerp(-stride, stride, easeInOut(swing));
+                    tgt[`step${side}X`] = along * moveX;
+                    tgt[`step${side}Z`] = along * moveZ;
+                    tgt[`step${side}Y`] = 0.09 + Math.sin(swing * Math.PI) * 0.18 * intensity;
+                }
+                tgt.armRX = -0.5 - s * 0.24 * intensity * (moveZ < 0 ? -1 : 1);
+                tgt.armLX = -0.38 + s * 0.13 * intensity * (moveZ < 0 ? -1 : 1);
+                tgt.armRZ = -0.13;
+                tgt.armLZ = 0.12;
+                tgt.swordX = -0.42;
+                tgt.bodyY = legH - 0.018 * intensity + Math.sin(f * 2) * 0.009 * intensity;
+                tgt.upperX = (moveZ < 0 ? -0.09 : 0.12) * intensity + Math.sin(f * 2) * 0.02 * intensity;
                 tgt.upperY = s * 0.08 * intensity;
                 tgt.upperZ = Math.sin(f) * 0.03 * intensity;
                 tgt.headX = -0.05 * intensity;
@@ -427,6 +492,10 @@ export function createKnight({ color = 0x4ade80, darkColor = 0x1a1d1f, scale = 1
         head.rotation.set(tgt.headX, tgt.headY, tgt.headZ);
         legL.rotation.x = tgt.legLX;
         legR.rotation.x = tgt.legRX;
+        if (state === 'run' || state === 'idle') {
+            plantFoot('L');
+            plantFoot('R');
+        }
         armR.rotation.set(tgt.armRX, tgt.armRY, tgt.armRZ);
         armL.rotation.set(tgt.armLX, tgt.armLY, tgt.armLZ);
         sword.rotation.set(tgt.swordX, tgt.swordY, tgt.swordZ);

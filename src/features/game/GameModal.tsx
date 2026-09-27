@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../../i18n/LanguageContext'
 import { useOverlay } from '../../ui/OverlayContext'
 import { useSound } from '../sound/SoundProvider'
+import type { GameHandle } from './runtime'
+import './game.css'
 
 type ControlMode = 'desktop' | 'mobile'
 
 function detectMobile(): boolean {
   const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
   const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-  return (isTouch && window.innerWidth <= 768) || isMobileUA
+  return (isTouch && window.matchMedia('(pointer: coarse)').matches) || isMobileUA
 }
 
 export function GameModal() {
@@ -16,22 +18,39 @@ export function GameModal() {
   const { gameOpen, setGameOpen } = useOverlay()
   const { enabled: soundEnabled } = useSound()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const gameHandleRef = useRef<{ dispose: () => void; resize: () => void } | null>(null)
+  const gameHandleRef = useRef<GameHandle | null>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const [started, setStarted] = useState(false)
+  const [paused, setPaused] = useState(false)
   const [mode, setMode] = useState<ControlMode>(() => (detectMobile() ? 'mobile' : 'desktop'))
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (ready) gameHandleRef.current?.resize()
+    if (ready) {
+      gameHandleRef.current?.clearInput()
+      gameHandleRef.current?.resize()
+    }
   }, [mode, ready])
 
   useEffect(() => {
     if (!gameOpen) return
+    const previousFocus = document.activeElement as HTMLElement | null
+    dialogRef.current?.querySelector<HTMLButtonElement>('.game-close')?.focus()
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setGameOpen(false)
+      if (e.key !== 'Tab') return
+      const items = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), canvas') ?? [])
+        .filter((el) => el.getClientRects().length > 0)
+      const current = items.indexOf(document.activeElement as HTMLElement)
+      const next = (current + (e.shiftKey ? -1 : 1) + items.length) % items.length
+      if (items[next]) { e.preventDefault(); items[next].focus() }
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      previousFocus?.focus()
+    }
   }, [gameOpen, setGameOpen])
 
   useEffect(() => {
@@ -42,6 +61,8 @@ export function GameModal() {
 
     setReady(false)
     setError(null)
+    setStarted(false)
+    setPaused(false)
 
     import('./runtime')
       .then(({ startGame }) => {
@@ -50,6 +71,7 @@ export function GameModal() {
           lang,
           soundEnabled,
           onExit: () => setGameOpen(false),
+          onPauseChange: setPaused,
         })
         dispose = handle.dispose
         gameHandleRef.current = handle
@@ -73,12 +95,15 @@ export function GameModal() {
   if (!gameOpen) return null
 
   return (
-    <div className="game-modal active" role="dialog" aria-modal="true" aria-label={t('game_title')}>
-      <div className="game-overlay" onClick={() => setGameOpen(false)} />
+    <div ref={dialogRef} className={`game-modal active souls-game ${mode === 'mobile' ? 'touch-mode' : ''}`} role="dialog" aria-modal="true" aria-label={t('game_title')}>
+      <div className="game-overlay" />
       <div className="game-container">
         <div className="game-header">
-          <span>{t('game_title')}</span>
+          <div className="game-wordmark"><span>{t('game_title')}</span><small>{t('game_difficulty')}</small></div>
           <div className="game-header-controls">
+            <button type="button" className="control-toggle pause-toggle" disabled={!started || !ready} onClick={() => gameHandleRef.current?.togglePause()} aria-pressed={paused}>
+              {t(paused ? 'game_resume' : 'game_pause')}
+            </button>
             <button
               type="button"
               className={`control-toggle ${mode === 'desktop' ? 'active' : ''}`}
@@ -105,7 +130,38 @@ export function GameModal() {
         </div>
 
         <div className="game-stage">
-          <canvas ref={canvasRef} id="gameCanvas" />
+          <canvas ref={canvasRef} id="gameCanvas" tabIndex={0} aria-label={t('game_canvas')} />
+          {ready && !started && (
+            <div className="game-intro game-screen">
+              <div className="game-screen-panel">
+                <p className="game-eyebrow">{t('game_location')}</p>
+                <h2>{t('game_title')}</h2>
+                <p className="game-intro-description">{t('game_intro')}</p>
+                <div className="game-challenge"><span>{t('game_difficulty')}</span><span>{t('game_phases')}</span></div>
+                <ul className="game-lessons">
+                  <li>{t('game_tip_dodge')}</li>
+                  <li>{t('game_tip_parry')}</li>
+                  <li>{t('game_tip_stamina')}</li>
+                </ul>
+                <button type="button" className="game-primary" onClick={() => {
+                  gameHandleRef.current?.begin()
+                  setStarted(true)
+                  canvasRef.current?.focus()
+                }}>{t('game_begin')}</button>
+                <p className="game-orientation">{t(mode === 'mobile' ? 'game_touch_hint' : 'game_keyboard_hint')}</p>
+              </div>
+            </div>
+          )}
+          {paused && started && (
+            <div className="game-screen game-paused">
+              <div className="game-screen-panel">
+                <p className="game-eyebrow">{t('game_title')}</p>
+                <h2>{t('game_paused')}</h2>
+                <p>{t('game_pause_hint')}</p>
+                <button type="button" className="game-primary" onClick={() => { gameHandleRef.current?.togglePause(); canvasRef.current?.focus() }}>{t('game_resume')}</button>
+              </div>
+            </div>
+          )}
           {!ready && !error && (
             <div className="hud-center">
               <div className="hud-center-text count">{t('game_loading')}</div>
@@ -118,7 +174,7 @@ export function GameModal() {
             </div>
           )}
 
-          <div className={`mobile-controls ${mode === 'mobile' ? 'active' : ''}`} id="mobileControls">
+          <div className={`mobile-controls ${mode === 'mobile' && started && !paused ? 'active' : ''}`} id="mobileControls">
             <div className="game-btn-row game-system-row">
               <div className="game-system-btns">
                 <button type="button" className="system-btn exit-btn" id="mobileExit">
@@ -130,7 +186,7 @@ export function GameModal() {
               </div>
             </div>
             <div className="game-btn-row souls-controls-row">
-              <div className="joystick-zone" id="mobileJoystick">
+              <div className="joystick-zone" id="mobileJoystick" aria-label={t('game_move')}>
                 <div className="joystick-base" />
                 <div className="joystick-knob" id="joystickKnob" />
               </div>
@@ -163,6 +219,7 @@ export function GameModal() {
           <span>{t('game_heal')}</span>
           <span>{t('game_lock')}</span>
           <span>{t('game_esc')}</span>
+          <span>{t('game_pause_key')}</span>
         </div>
       </div>
     </div>
