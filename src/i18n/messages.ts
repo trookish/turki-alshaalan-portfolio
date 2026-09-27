@@ -16,6 +16,7 @@ export const messages = {
   nav_theme: { en: 'Theme', ar: 'المظهر' } satisfies L,
   nav_lang: { en: 'العربية', ar: 'English' } satisfies L,
   nav_play: { en: 'Play?', ar: 'العب؟' } satisfies L,
+  nav_play_label: { en: 'Play', ar: 'العب' } satisfies L,
   nav_cv_tip: { en: 'Download CV', ar: 'تحميل السيرة الذاتية' } satisfies L,
   nav_pdf_tip: { en: 'Export PDF', ar: 'تصدير PDF' } satisfies L,
   nav_theme_tip: { en: 'Toggle Theme', ar: 'تغيير المظهر' } satisfies L,

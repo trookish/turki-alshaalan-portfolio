@@ -377,11 +377,7 @@
   border-color: var(--c-line-2);
 }
 
-.play-btn img {
-  width: 20px;
-  height: 20px;
-  image-rendering: pixelated;
-}
+.icon-btn svg { display: block; }
 
 .hamburger {
   display: none;
@@ -1872,7 +1868,11 @@ html[dir='rtl'] .hud-bar-fill {
 }
 
 @media (max-width: 860px) {
-  /* Compact bar: only the essentials stay visible, the rest move into the menu */
+  /* Compact bar: the burger is the only control left, pinned to the end */
+  .nav-controls {
+    margin-inline-start: auto;
+  }
+
   .nav-controls .nav-secondary { display: none; }
 
   .nav-tabs {

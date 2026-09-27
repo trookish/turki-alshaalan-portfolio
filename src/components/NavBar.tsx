@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useI18n } from '../i18n/LanguageContext'
-import { LinkedInIcon } from './icons'
+import { CommandIcon, DownloadIcon, GlobeIcon, LinkedInIcon, PlayIcon, PrintIcon, ThemeIcon } from './icons'
 import { useTheme } from '../theme/ThemeProvider'
 import { useActiveSection, useScrolled } from '../hooks/usePage'
 import { sections } from '../data/site'
@@ -95,7 +95,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
               className="nav-extra"
               onClick={() => setMenuOpen(false)}
             >
-              <span aria-hidden="true">⤓</span> {t('nav_cv_tip')}
+              <DownloadIcon /> {t('nav_cv_tip')}
             </a>
             <button
               type="button"
@@ -105,7 +105,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
                 window.print()
               }}
             >
-              <span aria-hidden="true">⎙</span> {t('nav_pdf_tip')}
+              <PrintIcon /> {t('nav_pdf_tip')}
             </button>
             <button
               type="button"
@@ -115,7 +115,37 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
                 onOpenPalette()
               }}
             >
-              <span aria-hidden="true">⌘</span> {t('nav_palette_tip')}
+              <CommandIcon /> {t('nav_palette_tip')}
+            </button>
+            <button
+              type="button"
+              className="nav-extra"
+              onClick={() => {
+                setMenuOpen(false)
+                toggleTheme()
+              }}
+            >
+              <ThemeIcon /> {t('nav_theme_tip')}
+            </button>
+            <button
+              type="button"
+              className="nav-extra"
+              onClick={() => {
+                setMenuOpen(false)
+                toggle()
+              }}
+            >
+              <GlobeIcon /> {t('nav_lang_tip')}
+            </button>
+            <button
+              type="button"
+              className="nav-extra"
+              onClick={() => {
+                setMenuOpen(false)
+                onPlayGame()
+              }}
+            >
+              <PlayIcon /> {t('nav_play_label')}
             </button>
             <a
               href={profile.linkedin}
@@ -124,7 +154,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
               className="nav-extra"
               onClick={() => setMenuOpen(false)}
             >
-              <LinkedInIcon size={14} /> LinkedIn
+              <LinkedInIcon size={17} /> LinkedIn
             </a>
           </div>
         </div>
@@ -136,7 +166,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
             className="icon-btn nav-secondary"
             title={t('nav_cv_tip')}
           >
-            <span aria-hidden="true">⤓</span>
+            <DownloadIcon />
             <span className="btn-label">{t('nav_cv')}</span>
           </a>
           <button
@@ -145,34 +175,35 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
             title={t('nav_pdf_tip')}
             onClick={() => window.print()}
           >
-            <span aria-hidden="true">⎙</span>
+            <PrintIcon />
             <span className="btn-label">{t('nav_pdf')}</span>
           </button>
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn nav-secondary"
             title={t('nav_theme_tip')}
             onClick={toggleTheme}
           >
-            <span aria-hidden="true">◐</span>
+            <ThemeIcon />
             <span className="btn-label">{t('nav_theme')}</span>
           </button>
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn nav-secondary"
             title={t('nav_lang_tip')}
             onClick={toggle}
           >
-            <span aria-hidden="true">文</span>
+            <GlobeIcon />
             <span className="btn-label">{t('nav_lang')}</span>
           </button>
           <button
             type="button"
-            className="icon-btn play-btn"
+            className="icon-btn play-btn nav-secondary"
             title={t('nav_play')}
             onClick={onPlayGame}
           >
-            <img src="images/Game/Play.webp" alt="" width={18} height={18} />
+            <PlayIcon size={18} />
+            <span className="btn-label">{t('nav_play_label')}</span>
           </button>
           <button
             type="button"
@@ -183,7 +214,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
               onOpenPalette()
             }}
           >
-            <span aria-hidden="true">⌘</span>
+            <CommandIcon />
             <span className="btn-label">K</span>
           </button>
           <button
