@@ -345,8 +345,6 @@ export const projects: Project[] = [
     cover: 'images/Projects/MasarFlow.webp',
     coverContain: true,
     disciplines: ['swe', 'ai'],
-    featured: true,
-    badge: { en: 'NEW', ar: 'جديد' },
     tags: [
       { en: 'Next.js', ar: 'Next.js' },
       { en: 'React', ar: 'React' },
