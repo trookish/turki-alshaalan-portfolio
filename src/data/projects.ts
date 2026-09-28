@@ -456,9 +456,10 @@ export const projects: Project[] = [
   {
     id: 'syntax-strike',
     title: { en: 'Syntax Strike', ar: 'سنتاكس سترايك' },
+    badge: { en: 'Graduation Project', ar: 'مشروع التخرج' },
     description: {
-      en: 'A 3D educational action-RPG built in Unity where players master coding by solving Java puzzles. Features compiler-integrated combat mechanics, dynamic quest lines, and a custom evaluation companion. Turki engineered the C# game systems, player state controllers, parser integration, and enemy AI combat patterns.',
-      ar: 'لعبة أكشن-RPG تعليمية ثلاثية الأبعاد مبنية في Unity، يتقن فيها اللاعب البرمجة عن طريق حل ألغاز Java. فيها ميكانيكيات قتال مدمجة مع المترجم (Compiler)، ومهام ديناميكية، ورفيق تقييم خاص. تركي بنى أنظمة اللعبة بـ C# ومتحكمات حالة اللاعب وتكامل المحلل (Parser) وأنماط قتال الأعداء بالذكاء الاصطناعي.',
+      en: 'The IT492 graduation project: a 3D educational action-RPG built in Unity where players master coding by solving Java puzzles inside compiler-integrated combat, dynamic quest lines, and a custom evaluation companion. The study measured how interactive Parsons-problem puzzles reduce learning barriers for CS students through structured player feedback and learning-gain metrics. Turki engineered the C# game systems, player state controllers, parser integration, and enemy AI combat patterns.',
+      ar: 'مشروع التخرج (IT492): لعبة أكشن-RPG تعليمية ثلاثية الأبعاد مبنية في Unity، يتقن فيها اللاعب البرمجة بحل ألغاز Java داخل قتال مدمج مع المترجم (Compiler)، ومهام ديناميكية، ورفيق تقييم خاص. قاس المشروع أثر الألغاز البرمجية التفاعلية (Parsons Problems) على تقليل صعوبات التعلم عند طلاب علوم الحاسب عبر آراء اللاعبين ومقاييس اكتساب المعرفة. تركي بنى أنظمة اللعبة بـ C# ومتحكمات حالة اللاعب وتكامل المحلل (Parser) وأنماط قتال الأعداء بالذكاء الاصطناعي.',
     },
     cover: 'images/Projects/SyntaxStrike.webp',
     coverContain: true,
@@ -466,9 +467,11 @@ export const projects: Project[] = [
     tags: [
       { en: 'Unity 3D', ar: 'Unity 3D' },
       { en: 'C# Scripting', ar: 'C# Scripting' },
-      { en: 'Core Mechanics', ar: 'ميكانيكيات أساسية' },
-      { en: 'AI Combat', ar: 'قتال بالذكاء الاصطناعي' },
       { en: 'AST Parsing', ar: 'AST Parsing' },
+      { en: 'AI Combat', ar: 'قتال بالذكاء الاصطناعي' },
+      { en: 'Educational Research', ar: 'بحث تعليمي' },
+      { en: 'User Studies', ar: 'دراسات المستخدمين' },
+      { en: 'Pedagogy Theory', ar: 'نظرية التدريس' },
     ],
     teams: [
       {
@@ -689,33 +692,5 @@ export const projects: Project[] = [
         ],
       },
     ],
-  },
-  {
-    id: 'graduation-project',
-    title: { en: 'Graduation Project', ar: 'مشروع التخرج' },
-    description: {
-      en: 'A senior graduation project (IT492) investigating game-based learning effectiveness. Designed to assess the pedagogical impact of interactive coding puzzles (Parsons Problems) in reducing learning barriers for CS students. Evaluated using structured player feedback and learning-gain metrics. Abdulaziz led agile coordination and stakeholder reporting, Turki directed implementation logic, and Saud managed levels and user testing.',
-      ar: 'مشروع تخرج (IT492) يبحث في فعالية التعلم القائم على الألعاب. صممناه عشان نقيس أثر الألغاز البرمجية التفاعلية (Parsons Problems) على تقليل صعوبات التعلم عند طلاب علوم الحاسب. تم تقييمه بآراء اللاعبين المنظمة ومقاييس اكتساب المعرفة. عبدالعزيز قاد التنسيق وإعداد التقارير، تركي وجّه منطق التنفيذ، وسعود أدار المراحل واختبار المستخدمين.',
-    },
-    cover: 'images/Projects/SyntaxStrike.webp',
-    coverContain: true,
-    disciplines: ['game', 'swe'],
-    tags: [
-      { en: 'Educational Research', ar: 'بحث تعليمي' },
-      { en: 'Pedagogy Theory', ar: 'نظرية التدريس' },
-      { en: 'Agile Sprints', ar: 'سبرنتات أجايل' },
-      { en: 'User Studies', ar: 'دراسات المستخدمين' },
-      { en: 'QA Validation', ar: 'تحقق الجودة' },
-    ],
-    teams: [
-      {
-        members: [
-          { name: { en: 'Turki Alshaalan', ar: 'تركي الشعلان' }, role: roleTurkiProg },
-          { name: { en: 'Abdulaziz Almusayli', ar: 'عبد العزيز المسيلي' }, role: roleCoordinator },
-          { ...teamSaud, role: roleLevel },
-        ],
-      },
-    ],
-    gallery: syntaxGallery,
   },
 ]
