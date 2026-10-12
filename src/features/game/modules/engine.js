@@ -282,7 +282,8 @@ export function buildArena(scene, { isMobile = false, reducedMotion = false } = 
         flamePlacements.map((p) => ({ ...p, sx: 0.62, sy: 0.7, sz: 0.62 })));
     flames.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     cores.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-    const torches = [1, 4].map((index) => {
+    // Per-pixel lights are the dearest thing on a phone GPU; the brazier fire is emissive anyway.
+    const torches = (isMobile ? [] : [1, 4]).map((index) => {
         const torch = new THREE.PointLight(0xffac5b, 17, 14, 1.5);
         torch.position.set(braziers[index].x, 2.2, braziers[index].z);
         group.add(torch);
@@ -691,10 +692,16 @@ export function createEngine(canvas, isMobile) {
         powerPreference: 'high-performance',
         stencil: false,
     });
-    const dprCap = isMobile ? 1.25 : 1.75;
+    // Quality tiers, highest first. The governor below steps down when frames run long.
+    //   3 bloom + MSAA target, 2048 shadows | 2 bloom, 1024 shadows | 1 direct render, small shadows
+    //   0 no shadow pass, reduced resolution
+    const MAX_TIER = isMobile ? 1 : 3;
+    let tier = MAX_TIER;
+    const dprCaps = [1, isMobile ? 1.25 : 1.5, 1.5, 1.75];
+    const shadowSizes = [0, isMobile ? 512 : 1024, 1024, 2048];
     let dprScale = 1;
     const applyPixelRatio = () => {
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, dprCap) * dprScale);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, dprCaps[tier]) * dprScale);
     };
     applyPixelRatio();
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -717,7 +724,7 @@ export function createEngine(canvas, isMobile) {
     // Moonlight casts the fighters' shadows across the paving (the stone itself never casts).
     const moon = arena.moonlight;
     moon.castShadow = true;
-    moon.shadow.mapSize.set(isMobile ? 1024 : 2048, isMobile ? 1024 : 2048);
+    moon.shadow.mapSize.set(shadowSizes[tier], shadowSizes[tier]);
     const sc = moon.shadow.camera;
     sc.left = -16; sc.right = 16; sc.top = 16; sc.bottom = -16; sc.near = 4; sc.far = 70;
     sc.updateProjectionMatrix();
@@ -740,6 +747,7 @@ export function createEngine(canvas, isMobile) {
     // ---------- Post: bloom on desktop only (mobile keeps the direct path) ----------
     let composer = null;
     let bloom = null;
+    let useComposer = false;
     if (!isMobile) {
         try {
             const target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
@@ -748,6 +756,7 @@ export function createEngine(canvas, isMobile) {
             bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.55, 0.82);
             composer.addPass(bloom);
             composer.addPass(new OutputPass());
+            useComposer = true;
         } catch {
             composer = null;
         }
@@ -816,26 +825,45 @@ export function createEngine(canvas, isMobile) {
     if (reducedQuery && reducedQuery.addEventListener) reducedQuery.addEventListener('change', onMotionChange);
     resize();
 
-    // ---------- Adaptive resolution (hysteresis on sustained slow frames) ----------
-    let slowFrames = 0;
-    let fastFrames = 0;
+    // ---------- Quality governor ----------
+    // Steps DOWN only (never back up), so a struggling device settles once instead of flapping and
+    // recompiling shaders mid-fight. Each step removes the costliest remaining feature.
+    function applyTier(next) {
+        tier = next;
+        useComposer = Boolean(composer) && tier >= 2;
+        if (composer) {
+            for (const target of [composer.renderTarget1, composer.renderTarget2]) {
+                target.samples = tier >= 3 ? 4 : 0;
+                target.dispose();
+            }
+        }
+        const shadowOn = tier >= 1;
+        if (moon.castShadow !== shadowOn) moon.castShadow = shadowOn;
+        if (shadowOn && moon.shadow.mapSize.x !== shadowSizes[tier]) {
+            moon.shadow.mapSize.set(shadowSizes[tier], shadowSizes[tier]);
+            moon.shadow.map?.dispose();
+            moon.shadow.map = null;
+        }
+        if (tier === 0) dprScale = Math.min(dprScale, 0.8);
+        applyPixelRatio();
+        resize();
+    }
+    // Leaky bucket: each frame slower than ~36 fps adds to it (more for bigger stalls), every smooth
+    // frame drains it. A lone hitch decays away; a sustained run of slow frames fills it quickly.
+    const SLOW_MS = 28;
+    const BUCKET_LIMIT = 12;
+    let warmup = 2500;            // ms; shader compilation and first uploads are not representative
+    let bucket = 0;
     function updatePerformance(frameSeconds) {
         if (!Number.isFinite(frameSeconds) || frameSeconds <= 0) return;
-        const ms = frameSeconds * 1000;
-        if (ms > 22) { slowFrames += 1; fastFrames = 0; }
-        else if (ms < 12) { fastFrames += 1; slowFrames = 0; }
-        else { slowFrames = 0; fastFrames = 0; }
-        if (slowFrames >= 45 && dprScale > 0.7) {
-            dprScale = Math.max(0.7, dprScale - 0.15);
-            slowFrames = 0;
-            applyPixelRatio();
-            resize();
-        } else if (fastFrames >= 240 && dprScale < 1) {
-            dprScale = Math.min(1, dprScale + 0.1);
-            fastFrames = 0;
-            applyPixelRatio();
-            resize();
-        }
+        if (warmup > 0) { warmup -= Math.min(frameSeconds * 1000, 400); return; }
+        const ms = Math.min(frameSeconds * 1000, 250);   // one tab-switch stall must not look like a trend
+        bucket = Math.max(0, bucket + (ms > SLOW_MS ? 1 + ms / 50 : -0.1));
+        if (bucket < BUCKET_LIMIT) return;
+        bucket = 0;
+        if (tier > 0) applyTier(tier - 1);
+        else if (dprScale > 0.55) { dprScale = Math.max(0.55, dprScale - 0.15); applyPixelRatio(); resize(); }
+        warmup = 800;
     }
 
     // ---------- Per-frame environment animation ----------
@@ -845,13 +873,13 @@ export function createEngine(canvas, isMobile) {
     }
 
     function render() {
-        if (composer) composer.render();
+        if (useComposer) composer.render();
         else renderer.render(scene, camera);
     }
 
     /** Scale bloom for dramatic beats (phase change, killing blow). */
     function setBloomBoost(amount) {
-        if (bloom) bloom.strength = 0.62 + Math.max(0, amount);
+        if (bloom && useComposer) bloom.strength = 0.62 + Math.max(0, amount);
     }
 
     function getStats() {
@@ -860,6 +888,7 @@ export function createEngine(canvas, isMobile) {
             drawCalls: info.render.calls,
             triangles: info.render.triangles,
             pixelRatio: renderer.getPixelRatio(),
+            tier,
         };
     }
 

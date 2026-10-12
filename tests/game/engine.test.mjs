@@ -82,7 +82,8 @@ test('moonlit atmosphere batches ash and embers and freezes motion on request', 
         assert.ok(scene.background.b > 0.015, 'the fog horizon must not be pitch black');
         assert.ok(scene.fog.far > 60);
         const lights = objectsIn(scene, (o) => o.isPointLight);
-        assert.ok(lights.length >= 1 && lights.length <= 2);
+        // Per-pixel lights are the costliest thing on a phone GPU: none there, two torches on desktop.
+        assert.equal(lights.length, isMobile ? 0 : 2);
         assert.ok(lights.every((light) => !light.castShadow));
         assert.ok(objectsIn(scene, (o) => o.isHemisphereLight).length > 0, 'steel silhouettes need readable ambient fill');
         assert.ok(scene.getObjectByName('moon'));
