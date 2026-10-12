@@ -2,10 +2,23 @@ import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../../i18n/LanguageContext'
 import { useOverlay } from '../../ui/OverlayContext'
 import { useSound } from '../sound/SoundProvider'
-import type { GameHandle } from './runtime'
+import type { Difficulty, GameHandle } from './runtime'
 import './game.css'
 
 type ControlMode = 'desktop' | 'mobile'
+
+const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard']
+const DIFFICULTY_KEY = 'ashen-oath-difficulty'
+
+function loadDifficulty(): Difficulty {
+  try {
+    const saved = window.localStorage.getItem(DIFFICULTY_KEY)
+    if (saved === 'easy' || saved === 'medium' || saved === 'hard') return saved
+  } catch {
+    // Storage can be unavailable (private mode); the default is fine.
+  }
+  return 'medium'
+}
 
 function detectMobile(): boolean {
   const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
@@ -25,6 +38,24 @@ export function GameModal() {
   const [mode, setMode] = useState<ControlMode>(() => (detectMobile() ? 'mobile' : 'desktop'))
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [difficulty, setDifficultyState] = useState<Difficulty>(loadDifficulty)
+  const difficultyRef = useRef(difficulty)
+  const [flaskTable, setFlaskTable] = useState<Partial<Record<Difficulty, number>>>({})
+
+  const chooseDifficulty = (next: Difficulty) => {
+    if (next === difficultyRef.current) return
+    difficultyRef.current = next
+    setDifficultyState(next)
+    try {
+      window.localStorage.setItem(DIFFICULTY_KEY, next)
+    } catch {
+      // Not persisted; the choice still applies to this session.
+    }
+    gameHandleRef.current?.setDifficulty(next)
+  }
+
+  const flasks = flaskTable[difficulty]
+  const difficultyLabel = (d: Difficulty) => t(`game_diff_${d}` as const)
 
   useEffect(() => {
     if (ready) {
@@ -70,11 +101,15 @@ export function GameModal() {
         const handle = startGame(canvas, {
           lang,
           soundEnabled,
+          difficulty: difficultyRef.current,
           onExit: () => setGameOpen(false),
           onPauseChange: setPaused,
         })
         dispose = handle.dispose
         gameHandleRef.current = handle
+        const table: Partial<Record<Difficulty, number>> = {}
+        for (const d of DIFFICULTIES) table[d] = handle.difficultyInfo(d)?.flasks
+        setFlaskTable(table)
         setReady(true)
       })
       .catch((err: unknown) => {
@@ -99,8 +134,24 @@ export function GameModal() {
       <div className="game-overlay" />
       <div className="game-container">
         <div className="game-header">
-          <div className="game-wordmark"><span>{t('game_title')}</span><small>{t('game_difficulty')}</small></div>
+          <div className="game-wordmark"><span>{t('game_title')}</span><small>{difficultyLabel(difficulty)}</small></div>
           <div className="game-header-controls">
+            {started && ready && (
+              <div className="difficulty-switch" role="radiogroup" aria-label={t('game_difficulty')} title={t('game_diff_restart')}>
+                {DIFFICULTIES.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    role="radio"
+                    aria-checked={difficulty === d}
+                    className={`difficulty-chip diff-${d} ${difficulty === d ? 'active' : ''}`}
+                    onClick={() => { chooseDifficulty(d); canvasRef.current?.focus() }}
+                  >
+                    {difficultyLabel(d)}
+                  </button>
+                ))}
+              </div>
+            )}
             <button type="button" className="control-toggle pause-toggle" disabled={!started || !ready} onClick={() => gameHandleRef.current?.togglePause()} aria-pressed={paused}>
               {t(paused ? 'game_resume' : 'game_pause')}
             </button>
@@ -137,7 +188,28 @@ export function GameModal() {
                 <p className="game-eyebrow">{t('game_location')}</p>
                 <h2>{t('game_title')}</h2>
                 <p className="game-intro-description">{t('game_intro')}</p>
-                <div className="game-challenge"><span>{t('game_difficulty')}</span><span>{t('game_phases')}</span></div>
+                <div className="difficulty-picker" role="radiogroup" aria-label={t('game_difficulty')}>
+                  <p className="difficulty-picker-label">{t('game_difficulty')}</p>
+                  <div className="difficulty-options">
+                    {DIFFICULTIES.map((d) => (
+                      <button
+                        key={d}
+                        type="button"
+                        role="radio"
+                        aria-checked={difficulty === d}
+                        className={`difficulty-option diff-${d} ${difficulty === d ? 'active' : ''}`}
+                        onClick={() => chooseDifficulty(d)}
+                      >
+                        <span className="difficulty-name">{difficultyLabel(d)}</span>
+                        <span className="difficulty-desc">{t(`game_diff_${d}_desc` as const)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="game-challenge">
+                  <span>{t('game_phases')}</span>
+                  {flasks !== undefined && <span>{flasks.toLocaleString(lang === 'ar' ? 'ar-SA' : 'en-US')} {t('game_flasks')}</span>}
+                </div>
                 <ul className="game-lessons">
                   <li>{t('game_tip_dodge')}</li>
                   <li>{t('game_tip_parry')}</li>
@@ -158,6 +230,24 @@ export function GameModal() {
                 <p className="game-eyebrow">{t('game_title')}</p>
                 <h2>{t('game_paused')}</h2>
                 <p>{t('game_pause_hint')}</p>
+                <div className="difficulty-picker compact" role="radiogroup" aria-label={t('game_difficulty')}>
+                  <p className="difficulty-picker-label">{t('game_difficulty')}</p>
+                  <div className="difficulty-options">
+                    {DIFFICULTIES.map((d) => (
+                      <button
+                        key={d}
+                        type="button"
+                        role="radio"
+                        aria-checked={difficulty === d}
+                        className={`difficulty-option diff-${d} ${difficulty === d ? 'active' : ''}`}
+                        onClick={() => { chooseDifficulty(d); canvasRef.current?.focus() }}
+                      >
+                        <span className="difficulty-name">{difficultyLabel(d)}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="difficulty-note">{t('game_diff_restart')}</p>
+                </div>
                 <button type="button" className="game-primary" onClick={() => { gameHandleRef.current?.togglePause(); canvasRef.current?.focus() }}>{t('game_resume')}</button>
               </div>
             </div>
@@ -197,6 +287,9 @@ export function GameModal() {
                 <button type="button" className="souls-btn atk-btn" id="btnAttack">
                   {t('game_btn_attack')}
                 </button>
+                <button type="button" className="souls-btn heavy-btn" id="btnHeavy">
+                  {t('game_btn_heavy')}
+                </button>
                 <button type="button" className="souls-btn heal-btn" id="btnHeal">
                   {t('game_btn_heal')}
                 </button>
@@ -215,6 +308,7 @@ export function GameModal() {
           <span>{t('game_move')}</span>
           <span>{t('game_dodge')}</span>
           <span>{t('game_attack')}</span>
+          <span>{t('game_heavy')}</span>
           <span>{t('game_block')}</span>
           <span>{t('game_heal')}</span>
           <span>{t('game_lock')}</span>

@@ -87,52 +87,105 @@
 .souls-game .game-hud { position: absolute; inset: 0; z-index: 4; pointer-events: none; font-family: var(--font-mono); }
 .souls-game .game-hud::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 48%, #0004); pointer-events: none; }
 .souls-game .game-hud.low-health::before { box-shadow: inset 0 0 70px #8c201b66; }
-.souls-game .hud-player { position: absolute; top: 22px; inset-inline-start: 22px; width: min(245px, 36%); display: grid; gap: 6px; }
+/* Resources stay hidden until the encounter actually begins. */
+.souls-game:has(.game-intro) .hud-player, .souls-game:has(.game-intro) .hud-item { visibility: hidden; }
+.souls-game .hud-player { position: absolute; top: 22px; inset-inline-start: 22px; width: min(300px, 38%); display: grid; gap: 5px; }
 .hud-resource-label { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; letter-spacing: .08em; color: #c6c9c6; text-shadow: 0 2px 4px #000; }
-.souls-game .hud-bar { height: 11px; padding: 2px; border: 1px solid #8d79547a; background: #090d10d9; overflow: hidden; }
-.souls-game .hud-bar-fill { height: 100%; transform-origin: left center; transform: scaleX(1); transition: transform 80ms linear; }
-.souls-game .hud-hp .hud-bar-fill { background: linear-gradient(90deg, #6e282a, #c66552); }
-.souls-game .hud-stamina { height: 8px; }
-.souls-game .hud-stamina .hud-bar-fill { background: linear-gradient(90deg, #466455, #a5b78a); }
-.souls-game .hud-estus { display: flex; align-items: center; gap: 7px; margin-top: 5px; color: #c9b387; font-size: 10px; }
-.souls-game .estus-pip { display: block; width: 10px; height: 15px; border: 1px solid #b2966666; border-radius: 3px 3px 5px 5px; background: #1b1c1bc9; }
-.souls-game .estus-pip.full { background: #c99a4a; box-shadow: 0 0 9px #c68e4233; }
+.souls-game .hud-bar { position: relative; height: 11px; padding: 2px; border: 1px solid #8d79547a; background: #07090bd9; overflow: hidden; box-shadow: 0 1px 6px #0008; }
+.souls-game .hud-bar-fill, .souls-game .hud-bar-lag { position: absolute; inset: 2px; transform-origin: left center; transform: scaleX(1); }
+.souls-game .hud-bar-fill { transition: transform 80ms linear; }
+/* The pale chunk of lost health lingers, then drains: the read every souls player knows. */
+.souls-game .hud-bar-lag { background: #e8d9b0; opacity: .82; transition: transform 650ms cubic-bezier(.5, 0, .7, 1) 520ms; }
+.souls-game .hud-hp .hud-bar-fill { background: linear-gradient(180deg, #c03a35, #8b1f1e 60%, #6d1717); }
+.souls-game .hud-stamina { height: 8px; width: 82%; }
+.souls-game .hud-stamina .hud-bar-fill { background: linear-gradient(180deg, #7fa65c, #4f7a3a); }
+.souls-game .game-hud.stamina-low .hud-stamina { border-color: #c96a4a99; }
+/* Quick-item slot, bottom-left, as in the source games. */
+.souls-game .hud-item { position: absolute; bottom: 26px; inset-inline-start: 26px; width: 62px; height: 62px; display: grid; place-items: center; border: 1px solid #a58e5f88; background: radial-gradient(circle at 50% 40%, #222a31e6, #0b0f13ee); box-shadow: inset 0 0 0 3px #00000055, 0 4px 14px #0009; }
+.souls-game .hud-flask-icon { position: relative; width: 20px; height: 30px; border: 1px solid #e3c88f; border-radius: 4px 4px 9px 9px; overflow: hidden; background: #0d0f10; }
+.souls-game .hud-flask-icon::before { content: ''; position: absolute; top: -1px; left: 5px; width: 8px; height: 5px; background: #e3c88f; border-radius: 1px; z-index: 2; }
+.souls-game .hud-flask-liquid { position: absolute; inset: 6px 0 0; transform-origin: bottom center; background: linear-gradient(180deg, #ffd37a, #d7882a); box-shadow: 0 0 12px #ffb64a; transition: transform 300ms ease-out; }
+.souls-game .hud-flask-count { position: absolute; bottom: 2px; inset-inline-end: 5px; font: 15px Georgia, serif; color: #f2e4c4; text-shadow: 0 1px 3px #000; }
+.souls-game .hud-item-label { position: absolute; top: calc(100% + 4px); left: 0; right: 0; text-align: center; font-size: 8px; letter-spacing: .16em; color: #b9a982; }
+.souls-game .hud-item.empty .hud-flask-liquid { transform: scaleY(0) !important; }
+.souls-game .hud-item.empty { opacity: .55; }
+.souls-game.touch-mode .hud-item { bottom: auto; top: 70px; width: 48px; height: 48px; }
+.souls-game.touch-mode .hud-item-label { display: none; }
 .hud-meta { position: absolute; top: 24px; inset-inline-end: 24px; text-align: end; font-size: 10px; line-height: 1.8; color: #b8b19e; text-shadow: 0 2px 5px #000; }
 .hud-meta strong { display: block; color: #c78d75; font-weight: 500; letter-spacing: .15em; }
 .souls-game .hud-boss {
-  position: absolute; top: auto; bottom: 24px; left: 50%; right: auto;
-  transform: translateX(-50%); width: min(560px, 60%); text-align: center;
-  opacity: 0; transition: opacity 200ms linear;
+  position: absolute; top: auto; bottom: 30px; left: 50%; right: auto;
+  transform: translateX(-50%); width: min(720px, 64%); text-align: start;
+  opacity: 0; transition: opacity 400ms linear;
 }
 .souls-game .hud-boss.visible { opacity: 1; }
-.souls-game .hud-boss-name { margin-bottom: 7px; font: 17px Georgia, 'Times New Roman', serif; color: #e0d5be; letter-spacing: .12em; text-shadow: 0 2px 4px #000; }
-.souls-game .hud-boss-hp { height: 12px; }
-.souls-game .hud-boss-hp .hud-bar-fill { background: linear-gradient(90deg, #592b2c, #b75a49); }
-.hud-poise { height: 6px !important; border: 1px solid #8d79547a !important; padding: 1px !important; width: 65%; margin: 6px auto 0; }
-.hud-poise .hud-bar-fill { background: #d4b873; }
+.souls-game .hud-boss-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+.souls-game .hud-boss-name { font: 17px Georgia, 'Times New Roman', serif; color: #ece2cc; letter-spacing: .06em; text-shadow: 0 2px 4px #000, 0 0 14px #000; }
+.souls-game .hud-boss-dmg { font: 15px Georgia, serif; color: #f1e6cf; text-shadow: 0 2px 4px #000; min-width: 3ch; text-align: end; }
+.souls-game .hud-boss-dmg.pop { animation: game-dmg-pop 260ms ease-out; }
+.souls-game .hud-boss-hp { height: 13px; }
+.souls-game .hud-boss-hp .hud-bar-fill { background: linear-gradient(180deg, #b0322c, #7a1716 60%, #5c1110); }
+.souls-game .hud-boss[data-phase='3'] .hud-boss-hp { border-color: #d6573a99; box-shadow: 0 0 14px #ff4a1a33; }
+.hud-poise { height: 5px !important; border: 1px solid #8d79547a !important; padding: 1px !important; width: 45%; margin: 5px 0 0; }
+.hud-poise .hud-bar-fill { background: #d4b873; inset: 1px !important; }
 .estus-label { font-size: 9px; letter-spacing: .12em; color: #c9b387; }
 .hud-phase { color: #beaa85; font-size: 9px; letter-spacing: .13em; margin-top: 7px; text-shadow: 0 1px 4px #000; }
 .hud-tell { position: absolute; top: 19%; left: 50%; transform: translateX(-50%); max-width: 80%; color: #eddab4; font-size: 11px; letter-spacing: .12em; text-align: center; text-shadow: 0 2px 6px #000; padding: 6px 12px; background: #111921bb; border-inline: 1px solid #b7995566; }
 .hud-tell:empty { display: none; }
-.hud-tell.danger { color: #ffae92; border-color: #e88067; }
+.hud-tell.danger { color: #ffae92; border-color: #e88067; animation: game-tell 900ms ease-in-out infinite alternate; }
 .hud-lock { position: absolute; display: none; width: 18px; height: 18px; border: 1px solid #ead8a9bb; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px #ebdaaa44; }
 .hud-lock::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #ecdfbf; }
-.hud-lock.riposte { border-color: #ffe6a1; box-shadow: 0 0 18px #ffdd8a77; }
+.hud-lock.riposte { border-color: #ffe6a1; box-shadow: 0 0 18px #ffdd8a77; animation: game-lock 600ms ease-in-out infinite alternate; }
 .hud-lock.riposte::after { background: #ffe9b5; }
-.souls-game .hud-center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+.souls-game .hud-center { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; text-align: center; }
 .souls-game .hud-center-text { max-width: 90%; padding: 18px 22px; font: clamp(26px, 4.5vw, 60px) Georgia, 'Times New Roman', serif; letter-spacing: .14em; color: #e6d4ac; text-shadow: 0 3px 20px #000; background: linear-gradient(90deg, transparent, #070c1280, transparent); animation: game-reveal 500ms ease-out; }
 .souls-game .hud-center-text.bad { color: #c86b59; }
 .souls-game .hud-center-text.good { color: #e7c98b; }
 .souls-game .hud-center-text.count { color: #ddc697; }
+.souls-game .hud-center-text.phase { color: #f0b48a; font-size: clamp(22px, 3.6vw, 46px); letter-spacing: .22em; }
+/* Full-width banded death and victory cards, slow fade with a letter-spaced swell. */
+.souls-game .hud-center-text.died, .souls-game .hud-center-text.felled {
+  width: 100vw; max-width: none; padding: clamp(18px, 4vh, 36px) 0;
+  background: linear-gradient(180deg, transparent, #000000c4 22%, #000000c4 78%, transparent);
+  animation: game-fade 1.6s ease-out both;
+}
+.souls-game .hud-center-text.died .hud-center-word { display: inline-block; color: #a8161a; font-size: clamp(42px, 7.5vw, 104px); letter-spacing: .08em; text-shadow: 0 0 30px #5a0508cc; animation: game-swell 3.2s ease-out both; }
+.souls-game .hud-center-text.felled .hud-center-word { display: inline-block; color: #f3d48a; font-size: clamp(36px, 6.5vw, 90px); letter-spacing: .1em; text-shadow: 0 0 34px #c88a2a99, 0 2px 4px #000; animation: game-swell 3.2s ease-out both; }
+.souls-game .hud-center-text.died .hud-sub, .souls-game .hud-center-text.felled .hud-sub { opacity: .8; }
 .souls-game .hud-sub { font: 11px/1.8 var(--font-mono); letter-spacing: .03em; margin: 14px auto 0; max-width: 330px; color: #d1cdc0; }
-.hud-retry { pointer-events: auto; display: block; margin: 18px auto 0; width: auto; min-width: 150px; }
+.hud-retry { pointer-events: auto; display: block; margin: 18px auto 0; width: auto; min-width: 150px; animation: game-fade 1s ease-out 1.2s both; }
 .souls-game .hud-flash { position: absolute; inset: 0; opacity: 0; transition: opacity 160ms linear; pointer-events: none; }
 .souls-game .hud-flash.on { opacity: 1; }
 .souls-game .hud-numbers { position: absolute; inset: 0; overflow: hidden; }
 .souls-game .dmg-num { position: absolute; color: #e6d4ad; font: 18px Georgia, serif; text-shadow: 0 2px 5px #000; opacity: 0; }
 .souls-game .dmg-num.on { animation: game-damage 720ms ease-out forwards; }
-.souls-game .dmg-num.crit { color: #ffdb85; font-size: 28px; }
+.souls-game .dmg-num.heavy { color: #ffe0a6; font-size: 22px; }
+.souls-game .dmg-num.crit { color: #ffdb85; font-size: 30px; text-shadow: 0 0 12px #ffb84a99, 0 2px 5px #000; }
 .souls-game .dmg-num.bad { color: #f8907d; }
+/* Difficulty: full picker on the intro and pause screens, compact chips in the header. */
+.difficulty-picker { margin: 20px 0 4px; text-align: start; }
+.difficulty-picker-label { margin: 0 0 8px; font-size: 10px; letter-spacing: .2em; color: var(--game-gold); text-align: center; }
+.difficulty-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.souls-game .difficulty-option {
+  display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-height: 44px;
+  padding: 10px 11px; color: #c9c5b6; background: #0d1216d9; border: 1px solid var(--game-line);
+  font: 10px/1.5 var(--font-mono); text-align: start; cursor: pointer; touch-action: manipulation;
+  transition: border-color 150ms, background 150ms, box-shadow 150ms;
+}
+.souls-game .difficulty-option .difficulty-name { font: 15px Georgia, 'Times New Roman', serif; letter-spacing: .1em; color: #e6dcc4; }
+.souls-game .difficulty-option .difficulty-desc { color: #9fa29c; font-size: 10px; }
+.souls-game .difficulty-option.active { background: linear-gradient(180deg, #3a2f1c88, #18140ecc); border-color: #c9a463; box-shadow: inset 0 0 0 1px #c9a46333, 0 0 18px #c9a46322; }
+.souls-game .difficulty-option.diff-easy.active { border-color: #8fb07a; box-shadow: inset 0 0 0 1px #8fb07a33, 0 0 18px #8fb07a22; background: linear-gradient(180deg, #24321d88, #10150dcc); }
+.souls-game .difficulty-option.diff-hard.active { border-color: #d0583f; box-shadow: inset 0 0 0 1px #d0583f33, 0 0 18px #d0583f2a; background: linear-gradient(180deg, #3d1a1488, #1a0c0acc); }
+.souls-game .difficulty-option.active .difficulty-name { color: #fff2d6; }
+.difficulty-picker.compact .difficulty-option { align-items: center; padding: 8px; }
+.difficulty-note { margin: 8px 0 0; font-size: 10px; color: #8e928d; text-align: center; }
+.souls-game .difficulty-switch { display: flex; border: 1px solid var(--game-line); }
+.souls-game .difficulty-chip { min-height: 44px; padding: 4px 10px; color: var(--game-muted); background: #101419d9; border: 0; border-inline-end: 1px solid var(--game-line); font: 10px var(--font-mono); letter-spacing: .08em; cursor: pointer; }
+.souls-game .difficulty-chip:last-child { border-inline-end: 0; }
+.souls-game .difficulty-chip.active { color: #fff0d0; background: #3a2f1c99; }
+.souls-game .difficulty-chip.diff-easy.active { background: #24321d99; }
+.souls-game .difficulty-chip.diff-hard.active { background: #4a1d1599; }
 /* Physical thumb locations stay consistent in RTL; labels retain page direction. */
 .souls-game .mobile-controls { display: none; position: absolute; inset: 0; z-index: 6; pointer-events: none; }
 .souls-game .mobile-controls.active { display: block; }
@@ -145,19 +198,25 @@
 .souls-game .joystick-base { position: absolute; inset: 0; border-radius: 50%; border: 1px solid #b2b6b047; background: radial-gradient(circle, #1d272fb3, #090f16a6); box-shadow: inset 0 0 0 12px #b4bdad08; }
 .souls-game .joystick-base::after { content: ''; position: absolute; inset: 22px; border: 1px dashed #b1b8ad28; border-radius: 50%; }
 .souls-game .joystick-knob { position: absolute; top: 50%; left: 50%; right: auto; width: 46px; height: 46px; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #6c6b56cc, #303529e6); border: 1px solid #c3af77aa; transform: translate(-50%, -50%); }
-.souls-game .souls-action-btns { display: grid; grid-template-columns: repeat(3, 58px); grid-template-rows: repeat(2, 58px); gap: 7px; pointer-events: auto; }
+.souls-game .souls-action-btns { display: grid; grid-template-columns: repeat(3, 58px); grid-template-rows: repeat(3, 58px); gap: 7px; pointer-events: auto; }
 .souls-game .souls-btn { width: 58px; height: 58px; border-radius: 50%; border: 1px solid #a89b765e; background: radial-gradient(circle at 50% 20%, #29313ac9, #111820e6); color: #e0d5bc; font: 10px var(--font-mono); font-weight: 600; padding: 0; touch-action: none; cursor: pointer; box-shadow: 0 3px 8px #0005; }
 .souls-game .souls-btn.active { transform: scale(.94); background: #8a7448aa; border-color: #e9d3a5; }
 .souls-game .souls-btn.unavailable { opacity: .4; }
-.souls-game .atk-btn { grid-column: 3; grid-row: 1; border-color: #c294705e; }
-.souls-game .roll-btn { grid-column: 2; grid-row: 2; border-color: #c4b7889c; }
-.souls-game .block-btn { grid-column: 3; grid-row: 2; }
-.souls-game .heal-btn { grid-column: 1; grid-row: 2; color: #d0af72; }
-.souls-game .lock-btn { grid-column: 2; grid-row: 1; }
+.souls-game .atk-btn { grid-column: 3; grid-row: 2; border-color: #c294705e; }
+.souls-game .heavy-btn { grid-column: 3; grid-row: 1; border-color: #d9a85a8c; color: #f1d39a; }
+.souls-game .roll-btn { grid-column: 2; grid-row: 3; border-color: #c4b7889c; }
+.souls-game .block-btn { grid-column: 3; grid-row: 3; }
+.souls-game .heal-btn { grid-column: 1; grid-row: 3; color: #d0af72; }
+.souls-game .lock-btn { grid-column: 2; grid-row: 2; }
 .souls-game .lock-btn[aria-pressed='true'] { border-color: #d6bd85; }
-.souls-game.touch-mode .hud-boss { bottom: 157px; width: min(560px, 72%); }
+.souls-game.touch-mode .hud-boss { bottom: 218px; width: min(560px, 72%); }
 .souls-game.touch-mode .hud-meta { top: 22px; }
 @keyframes game-reveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes game-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes game-swell { from { transform: scale(.94); letter-spacing: .02em; } to { transform: scale(1); } }
+@keyframes game-dmg-pop { from { transform: scale(1.25); color: #fff; } to { transform: scale(1); } }
+@keyframes game-tell { from { box-shadow: 0 0 0 #e8806700; } to { box-shadow: 0 0 16px #e8806755; } }
+@keyframes game-lock { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.35); } }
 @keyframes game-damage { 0% { opacity: 1; transform: translate(-50%, -50%); } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - 45px)); } }
 @media (max-width: 860px), (max-height: 600px) {
   .souls-game .game-container { inset: 0; border: 0; padding-top: env(safe-area-inset-top); height: 100dvh; }
@@ -175,11 +234,16 @@
   .game-screen { padding: 14px; }
   .game-screen-panel { padding: 25px 22px; }
   .game-screen h2 { font-size: 35px; }
+  .difficulty-options { grid-template-columns: 1fr; }
+  .souls-game .difficulty-option { flex-direction: row; align-items: baseline; gap: 10px; padding: 8px 10px; }
+  .souls-game .difficulty-option .difficulty-name { flex: 0 0 5.5em; font-size: 13px; }
+  .souls-game .difficulty-switch { display: none; }
+  .souls-game .hud-item { bottom: 18px; inset-inline-start: 14px; width: 50px; height: 50px; }
 }
 @media (max-width: 360px) {
   .souls-game .game-wordmark > span { font-size: 12px; letter-spacing: .05em; }
   .souls-game .control-toggle { padding: 3px 4px; font-size: 9px; }
-  .souls-game .souls-action-btns { grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(2, 50px); gap: 5px; }
+  .souls-game .souls-action-btns { grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px); gap: 5px; }
   .souls-game .souls-btn { width: 50px; height: 50px; font-size: 9px; }
   .souls-game .joystick-zone { width: 100px; height: 100px; }
   .souls-game .game-btn-row { left: 10px; right: 10px; }
@@ -194,8 +258,8 @@
   .souls-game .hud-phase { font-size: 8px; }
   .souls-game .hud-tell { top: 9%; max-width: 45%; font-size: 9px; }
   .souls-game .joystick-zone { width: 100px; height: 100px; }
-  .souls-game .souls-action-btns { grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(2, 52px); gap: 6px; }
-  .souls-game .souls-btn { width: 52px; height: 52px; }
+  .souls-game .souls-action-btns { grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(3, 46px); gap: 5px; }
+  .souls-game .souls-btn { width: 46px; height: 46px; }
   .game-screen { padding: 10px; align-items: start; }
   .game-screen-panel { width: min(100%, 640px); padding: 14px 24px; }
   .game-screen h2 { font-size: 27px; margin-bottom: 8px; }

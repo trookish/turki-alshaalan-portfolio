@@ -1,12 +1,53 @@
 /**
  * Souls-like Battle Game - Engine Module
  * Renderer, scene, camera rig, arena environment, lighting.
- * Kept deliberately cheap for mobile: Lambert materials, blob shadows,
- * no shadow maps, capped pixel ratio, fog to shorten draw distance.
+ * Desktop: filmic tone mapping, moon shadows, environment reflections, bloom.
+ * Mobile: same scene with smaller shadow maps and no post-processing.
  */
 import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 export const ARENA_RADIUS = 14;
+
+/** Direction the moonlight travels from (unit vector toward the moon). */
+const MOON_DIR = new THREE.Vector3(-12, 22, -9).normalize();
+
+/**
+ * Procedural RGBA texture without a canvas, so node tests can build the scene.
+ * `fn(u, v)` returns [r, g, b, a] in 0..1 with u, v in 0..1.
+ */
+export function makeDataTexture(size, fn) {
+    const data = new Uint8Array(size * size * 4);
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            const [r, g, b, a] = fn((x + 0.5) / size, (y + 0.5) / size);
+            const i = (y * size + x) * 4;
+            data[i] = Math.round(Math.min(1, Math.max(0, r)) * 255);
+            data[i + 1] = Math.round(Math.min(1, Math.max(0, g)) * 255);
+            data[i + 2] = Math.round(Math.min(1, Math.max(0, b)) * 255);
+            data[i + 3] = Math.round(Math.min(1, Math.max(0, a)) * 255);
+        }
+    }
+    const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+    texture.magFilter = THREE.LinearFilter;
+    texture.minFilter = THREE.LinearFilter;
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.needsUpdate = true;
+    return texture;
+}
+
+/** Soft radial falloff (white, alpha fades to the rim). */
+export function makeGlowTexture(size = 64, power = 2.2) {
+    return makeDataTexture(size, (u, v) => {
+        const d = Math.min(1, Math.hypot(u - 0.5, v - 0.5) * 2);
+        const a = Math.pow(1 - d, power);
+        return [1, 1, 1, a];
+    });
+}
 
 /** Construct the environment without a canvas, DOM, or WebGL context. */
 export function buildArena(scene, { isMobile = false, reducedMotion = false } = {}) {
@@ -19,12 +60,13 @@ export function buildArena(scene, { isMobile = false, reducedMotion = false } = 
     );
     floor.name = 'arena-foundation';
     floor.position.y = -0.32;
+    floor.receiveShadow = true;
     floor.updateMatrix();
     group.add(floor);
 
     // All repeated masonry shares buffers and materials. No image textures or shadows.
     const stone = new THREE.MeshLambertMaterial({ color: 0xffffff });
-    const paleStone = new THREE.MeshLambertMaterial({ color: 0x78818a });
+    const paleStone = new THREE.MeshLambertMaterial({ color: 0x6a6862 });
     const darkStone = new THREE.MeshLambertMaterial({ color: 0x414b56 });
     const bronze = new THREE.MeshLambertMaterial({ color: 0x9b8153, emissive: 0x37220d, emissiveIntensity: 0.18 });
     const mortar = new THREE.LineBasicMaterial({ color: 0x252c33, transparent: true, opacity: 0.66 });
@@ -72,14 +114,14 @@ export function buildArena(scene, { isMobile = false, reducedMotion = false } = 
             3, 1, 0.003, angle - 0.006).rotateX(-Math.PI / 2);
         batch(`radial-paving-${course}`, geometry, stone,
             Array.from({ length: count }, (_, i) => ({ ry: i * angle + (course % 2) * angle / 2, y: 0.002 })),
-            course % 2 ? 0x737b80 : 0x666f77);
+            course % 2 ? 0x5f5d5a : 0x55524f).receiveShadow = true;
     }
-    mesh('sigil-stone', new THREE.CircleGeometry(2.48, 64).rotateX(-Math.PI / 2), darkStone, 0, 0.003);
+    mesh('sigil-stone', new THREE.CircleGeometry(2.48, 64).rotateX(-Math.PI / 2), darkStone, 0, 0.003).receiveShadow = true;
     ring('sigil-outer-inlay', 2.35, 2.39, bronze);
     ring('sigil-inner-inlay', 1.62, 1.65, bronze);
     ring('processional-inlay', 8.95, 9.015, bronze);
     ring('perimeter-inlay', 13.68, 13.78, bronze);
-    ring('raised-border', 13.8, 14.35, paleStone, -0.01);
+    ring('raised-border', 13.8, 14.35, paleStone, -0.01).receiveShadow = true;
     ring('outer-step', 14.36, 15.15, darkStone, -0.17);
     ring('ash-apron', 15.16, 17.5, darkStone, -0.36);
 
@@ -198,14 +240,19 @@ export function buildArena(scene, { isMobile = false, reducedMotion = false } = 
     batch('mountain-silhouettes', new THREE.ConeGeometry(1, 1, 5),
         new THREE.MeshBasicMaterial({ color: 0x263341 }), mountains);
 
-    scene.background = new THREE.Color(0x202e3e);
-    scene.fog = new THREE.Fog(0x202e3e, 25, 92);
-    group.add(new THREE.HemisphereLight(0xbacde4, 0x776553, 1.65));
-    const moonlight = new THREE.DirectionalLight(0xd2e2ff, 2.05);
-    moonlight.position.set(-12, 22, -9);
+    // Cold blue night with a warm golden counter-light, the classic Lands Between split.
+    scene.background = new THREE.Color(0x1a2534);
+    scene.fog = new THREE.Fog(0x1a2534, 22, 88);
+    const hemi = new THREE.HemisphereLight(0x8fa6c4, 0x4a3c30, 0.9);
+    group.add(hemi);
+    const moonlight = new THREE.DirectionalLight(0xc9dcff, 2.2);
+    moonlight.name = 'moonlight';
+    moonlight.position.copy(MOON_DIR).multiplyScalar(30);
     group.add(moonlight);
-    const warmRim = new THREE.DirectionalLight(0xe4ad78, 0.65);
-    warmRim.position.set(8, 8, 12);
+    group.add(moonlight.target);
+    const warmRim = new THREE.DirectionalLight(0xf0b46e, 1.1);
+    warmRim.name = 'erdtree-rim';
+    warmRim.position.set(14, 9, 18);
     group.add(warmRim);
     const moon = mesh('moon', new THREE.SphereGeometry(3.4, 20, 12),
         new THREE.MeshBasicMaterial({ color: 0xd5e0e5, fog: false }), -31, 33, -55);
@@ -229,9 +276,9 @@ export function buildArena(scene, { isMobile = false, reducedMotion = false } = 
     fireGeometry.translate(0, 0.475, 0);
     const flamePlacements = braziers.map((p) => ({ ...p, y: 1.51 }));
     const flames = batch('brazier-flames', fireGeometry,
-        new THREE.MeshBasicMaterial({ color: 0xffa346 }), flamePlacements);
+        new THREE.MeshBasicMaterial({ color: new THREE.Color(0xff9a3c).multiplyScalar(1.7) }), flamePlacements);
     const cores = batch('brazier-fire-cores', fireGeometry,
-        new THREE.MeshBasicMaterial({ color: 0xffdfa1 }),
+        new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffdfa1).multiplyScalar(2.4) }),
         flamePlacements.map((p) => ({ ...p, sx: 0.62, sy: 0.7, sz: 0.62 })));
     flames.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     cores.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -274,8 +321,10 @@ export function buildArena(scene, { isMobile = false, reducedMotion = false } = 
     ashGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     // Include the small animated drift in the culling bound once, not every frame.
     ashGeometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 2, 0), 20);
+    // Round, soft motes: an unmapped PointsMaterial draws hard squares near the lens.
     const ash = new THREE.Points(ashGeometry, new THREE.PointsMaterial({
-        vertexColors: true, size: 0.055, transparent: true, opacity: 0.63, depthWrite: false,
+        vertexColors: true, size: 0.07, map: makeGlowTexture(32, 1.6), alphaTest: 0.01,
+        transparent: true, opacity: 0.7, depthWrite: false,
     }));
     ash.name = 'pooled-ash-and-embers';
     group.add(ash);
@@ -311,7 +360,197 @@ export function buildArena(scene, { isMobile = false, reducedMotion = false } = 
         ashAttribute.needsUpdate = true;
     }
     group.updateMatrixWorld(true);
+    return { group, update, moonlight, hemi, setReducedMotion(value) { reducedMotion = Boolean(value); } };
+}
+
+/**
+ * Light shafts, ground mist, and the distant golden tree. Kept separate from
+ * the arena so the arena's obstacle test stays about real stone.
+ */
+export function buildAtmosphere(scene, { isMobile = false, reducedMotion = false } = {}) {
+    const group = new THREE.Group();
+    group.name = 'atmosphere';
+    scene.add(group);
+    const dummy = new THREE.Object3D();
+    const up = new THREE.Vector3(0, 1, 0);
+
+    // --- Moon shafts: vertex-coloured open cones, bright at the top, dark at the floor. ---
+    const shaftHeight = 26;
+    const shaftGeometry = new THREE.CylinderGeometry(0.9, 2.6, shaftHeight, 18, 6, true);
+    const shaftColors = [];
+    const sp = shaftGeometry.attributes.position;
+    for (let i = 0; i < sp.count; i++) {
+        const k = (sp.getY(i) + shaftHeight / 2) / shaftHeight;    // 0 floor .. 1 sky
+        const fade = Math.pow(k, 0.9) * (1 - Math.pow(1 - k, 6) * 0.85);
+        shaftColors.push(0.34 * fade, 0.42 * fade, 0.55 * fade);
+    }
+    shaftGeometry.setAttribute('color', new THREE.Float32BufferAttribute(shaftColors, 3));
+    const shaftMaterial = new THREE.MeshBasicMaterial({
+        vertexColors: true, transparent: true, opacity: isMobile ? 0.2 : 0.26,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false,
+    });
+    const shaftFeet = [[0.6, -0.4, 1.15], [-4.2, 3.4, 0.75], [5.1, -4.6, 0.7], [-6.8, -5.8, 0.55]];
+    const shafts = new THREE.InstancedMesh(shaftGeometry, shaftMaterial, shaftFeet.length);
+    shafts.name = 'moon-shafts';
+    const q = new THREE.Quaternion().setFromUnitVectors(up, MOON_DIR);
+    shaftFeet.forEach(([x, z, s], i) => {
+        dummy.position.set(x, 0, z).addScaledVector(MOON_DIR, shaftHeight / 2 * 0.98);
+        dummy.quaternion.copy(q);
+        dummy.scale.set(s, 1, s);
+        dummy.updateMatrix();
+        shafts.setMatrixAt(i, dummy.matrix);
+    });
+    shafts.computeBoundingSphere();
+    shafts.renderOrder = 3;
+    group.add(shafts);
+
+    // Pools of moonlight where the shafts meet the floor.
+    const glowTexture = makeGlowTexture(64, 1.6);
+    const pools = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2),
+        new THREE.MeshBasicMaterial({ map: glowTexture, color: 0x6f86a8, transparent: true, opacity: 0.55,
+            blending: THREE.AdditiveBlending, depthWrite: false }), shaftFeet.length);
+    pools.name = 'moon-pools';
+    shaftFeet.forEach(([x, z, s], i) => {
+        dummy.position.set(x, 0.03, z);
+        dummy.quaternion.identity();
+        dummy.scale.set(s * 6.5, 1, s * 5.2);
+        dummy.updateMatrix();
+        pools.setMatrixAt(i, dummy.matrix);
+    });
+    group.add(pools);
+
+    // --- Ground mist: soft noisy sheets drifting just above the paving. ---
+    let seed = 911;
+    const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+    const blobs = Array.from({ length: 14 }, () => [random(), random(), 0.08 + random() * 0.16]);
+    const mistTexture = makeDataTexture(isMobile ? 64 : 128, (u, v) => {
+        let density = 0;
+        for (const [bx, by, r] of blobs) {
+            const d = Math.hypot(u - bx, v - by) / r;
+            density += Math.exp(-d * d);
+        }
+        const edge = Math.max(0, 1 - Math.hypot(u - 0.5, v - 0.5) * 2);
+        return [0.72, 0.78, 0.86, Math.min(1, density * 0.55) * Math.pow(edge, 1.3)];
+    });
+    const mistCount = isMobile ? 6 : 10;
+    const mistMaterial = new THREE.MeshBasicMaterial({
+        map: mistTexture, color: 0x7d8ea6, transparent: true, opacity: isMobile ? 0.16 : 0.2, depthWrite: false,
+    });
+    const mist = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), mistMaterial, mistCount);
+    mist.name = 'ground-mist';
+    mist.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    mist.renderOrder = 2;
+    const mistSeeds = Array.from({ length: mistCount }, (_, i) => ({
+        a: (i / mistCount) * Math.PI * 2 + random(),
+        r: 3 + random() * 9,
+        y: 0.12 + random() * 0.45,
+        s: 9 + random() * 8,
+        spin: (random() - 0.5) * 0.05,
+    }));
+    group.add(mist);
+
+    // --- The golden tree: a distant beacon framed by the broken arches. ---
+    const treeGold = new THREE.MeshBasicMaterial({ color: new THREE.Color(0xe7b456).multiplyScalar(1.5), fog: false });
+    const trunkStrands = [];
+    for (let i = 0; i < 9; i++) {
+        const a = (i / 9) * Math.PI * 2;
+        for (let s = 0; s < 3; s++) {
+            const twist = a + s * 0.7;
+            trunkStrands.push({ x: Math.cos(twist) * (2.2 - s * 0.4), y: 6 + s * 12, z: Math.sin(twist) * (2.2 - s * 0.4),
+                rx: Math.sin(twist) * 0.22, rz: -Math.cos(twist) * 0.22, s: 1 - s * 0.22 });
+        }
+    }
+    const trunk = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.55, 0.9, 13, 6), treeGold, trunkStrands.length);
+    trunk.name = 'golden-tree-trunk';
+    const canopyPieces = [];
+    for (let i = 0; i < (isMobile ? 26 : 42); i++) {
+        const a = random() * Math.PI * 2;
+        const r = Math.sqrt(random()) * 17;
+        canopyPieces.push({ x: Math.cos(a) * r, y: 40 + (random() - 0.4) * 10 - r * 0.35, z: Math.sin(a) * r * 0.6, s: 3 + random() * 4 });
+    }
+    const canopy = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), treeGold, canopyPieces.length);
+    canopy.name = 'golden-tree-canopy';
+    const treeRoot = new THREE.Group();
+    treeRoot.position.set(30, -6, -96);
+    treeRoot.lookAt(0, -6, 0);
+    const placeAll = (mesh, list) => list.forEach((p, i) => {
+        dummy.position.set(p.x, p.y, p.z);
+        dummy.rotation.set(p.rx || 0, p.ry || random() * 3, p.rz || 0);
+        dummy.scale.setScalar(p.s);
+        dummy.updateMatrix();
+        mesh.setMatrixAt(i, dummy.matrix);
+        if (mesh === canopy) mesh.setColorAt(i, new THREE.Color(1, 1, 1).multiplyScalar(0.7 + random() * 0.55));
+    });
+    placeAll(trunk, trunkStrands);
+    placeAll(canopy, canopyPieces);
+    canopy.computeBoundingSphere();
+    trunk.computeBoundingSphere();
+    treeRoot.add(trunk, canopy);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: glowTexture, color: 0xffb54a, transparent: true, opacity: 0.55,
+        blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
+    }));
+    halo.name = 'golden-tree-halo';
+    halo.position.set(0, 36, 0);
+    halo.scale.set(95, 80, 1);
+    treeRoot.add(halo);
+    group.add(treeRoot);
+
+    let time = 0;
+    function update(dt) {
+        if (reducedMotion || !Number.isFinite(dt) || dt <= 0) return;
+        time += Math.min(dt, 0.1);
+        for (let i = 0; i < mistCount; i++) {
+            const m = mistSeeds[i];
+            const a = m.a + time * 0.018;
+            dummy.position.set(Math.cos(a) * m.r, m.y + Math.sin(time * 0.3 + i) * 0.05, Math.sin(a) * m.r);
+            dummy.rotation.set(0, m.a + time * m.spin, 0);
+            dummy.scale.set(m.s, 1, m.s * 0.8);
+            dummy.updateMatrix();
+            mist.setMatrixAt(i, dummy.matrix);
+        }
+        mist.instanceMatrix.needsUpdate = true;
+        shaftMaterial.opacity = (isMobile ? 0.2 : 0.26) * (0.85 + Math.sin(time * 0.6) * 0.15);
+        halo.material.opacity = 0.5 + Math.sin(time * 0.4) * 0.06;
+    }
+    update(1 / 60);
+    group.updateMatrixWorld(true);
     return { group, update, setReducedMotion(value) { reducedMotion = Boolean(value); } };
+}
+
+/** Night-sky reflection probe so steel armour reads as steel, not grey plastic. */
+function buildEnvironment(renderer) {
+    const envScene = new THREE.Scene();
+    const sky = new THREE.SphereGeometry(10, 32, 16);
+    const colors = [];
+    const p = sky.attributes.position;
+    const top = new THREE.Color(0x0d1626);
+    const horizon = new THREE.Color(0x4a5d78);
+    const ground = new THREE.Color(0x231c16);
+    const c = new THREE.Color();
+    for (let i = 0; i < p.count; i++) {
+        const y = p.getY(i) / 10;
+        if (y >= 0) c.copy(horizon).lerp(top, Math.pow(y, 0.6));
+        else c.copy(horizon).lerp(ground, Math.min(1, -y * 3));
+        colors.push(c.r, c.g, c.b);
+    }
+    sky.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    envScene.add(new THREE.Mesh(sky, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
+    const blob = (color, intensity, pos, size) => {
+        const m = new THREE.Mesh(new THREE.SphereGeometry(size, 12, 8),
+            new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(intensity) }));
+        m.position.copy(pos);
+        envScene.add(m);
+    };
+    blob(0xdde8ff, 4, MOON_DIR.clone().multiplyScalar(8.5), 1.1);       // moon
+    blob(0xffb85a, 2.6, new THREE.Vector3(3.5, 1.2, -8.5), 2.2);          // golden tree
+    blob(0xff8a3a, 1.8, new THREE.Vector3(8, 0.4, 3), 0.9);               // brazier glow
+    blob(0xff8a3a, 1.8, new THREE.Vector3(-7, 0.4, 5), 0.9);
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const target = pmrem.fromScene(envScene, 0.035);
+    pmrem.dispose();
+    envScene.traverse((o) => { o.geometry?.dispose(); o.material?.dispose(); });
+    return target;
 }
 
 // ---------- Camera solver (pure math; shared by the live rig and tests) ----------
@@ -386,6 +625,7 @@ export function solveCameraTargets({ playerPos, bossPos, aspect, locked = true, 
     const heights = [4.2, 5, 5.8, 6.8, 8, 9.6, 11.6, 14, 17, 21, 27, 34, 41];
     const spans = [3, 4, 5, 6.2, 7.5, 9, 10.5, 12, 13.5];
     const candidates = [];
+    const costOf = (h, s, lookOff) => Math.abs(h - 4.6) * 1.2 + Math.abs(s - 5) + Math.abs(lookOff - wantedLook);
     for (const h of heights) {
         for (const s of spans) {
             for (const lookOff of lookOffsets) {
@@ -393,13 +633,19 @@ export function solveCameraTargets({ playerPos, bossPos, aspect, locked = true, 
                 if (sEff <= lookOff + 0.8) continue;
                 candidates.push({
                     h, s: sEff, lookOff,
-                    cost: Math.abs(h - 5.8) + Math.abs(sEff - 6.2) + Math.abs(lookOff - wantedLook),
+                    // Prefer a low over-the-shoulder eye (souls framing); the violation
+                    // check below still rejects anything that clips a fighter.
+                    cost: costOf(h, sEff, lookOff),
                 });
             }
         }
     }
     if (hint && Number.isFinite(hint.h) && Number.isFinite(hint.s)) {
-        candidates.push({ h: hint.h, s: Math.min(hint.s, sMax), lookOff: hint.lookOff || 0, cost: -1 });
+        // Hysteresis, not stickiness: the last framing wins ties so the eye does not
+        // hunt, but a clearly tighter shot takes over once the fighters close in.
+        const s = Math.min(hint.s, sMax);
+        const lookOff = hint.lookOff || 0;
+        candidates.push({ h: hint.h, s, lookOff, cost: costOf(hint.h, s, lookOff) - 0.75 });
     }
     candidates.sort((a, b) => a.cost - b.cost);
     let best = null;
@@ -452,6 +698,12 @@ export function createEngine(canvas, isMobile) {
     };
     applyPixelRatio();
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // Filmic response: highlights roll off instead of clipping, so fire and steel glints bloom.
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.12;
+    renderer.shadowMap.enabled = true;
+    // r18x folded soft PCF into PCFShadowMap; softness comes from shadow.radius.
+    renderer.shadowMap.type = THREE.PCFShadowMap;
 
     // ---------- Scene & atmosphere ----------
     const scene = new THREE.Scene();
@@ -460,9 +712,46 @@ export function createEngine(canvas, isMobile) {
         : null;
     let reducedMotion = reducedQuery ? reducedQuery.matches : false;
     const arena = buildArena(scene, { isMobile, reducedMotion });
+    const atmosphere = buildAtmosphere(scene, { isMobile, reducedMotion });
+
+    // Moonlight casts the fighters' shadows across the paving (the stone itself never casts).
+    const moon = arena.moonlight;
+    moon.castShadow = true;
+    moon.shadow.mapSize.set(isMobile ? 1024 : 2048, isMobile ? 1024 : 2048);
+    const sc = moon.shadow.camera;
+    sc.left = -16; sc.right = 16; sc.top = 16; sc.bottom = -16; sc.near = 4; sc.far = 70;
+    sc.updateProjectionMatrix();
+    moon.shadow.bias = -0.0006;
+    moon.shadow.normalBias = 0.03;
+    moon.shadow.radius = 3;
+
+    let envTarget = null;
+    try {
+        envTarget = buildEnvironment(renderer);
+        scene.environment = envTarget.texture;
+        scene.environmentIntensity = 0.85;
+    } catch {
+        envTarget = null;
+    }
 
     const camera = new THREE.PerspectiveCamera(SOLVER_FOV, 16 / 10, 0.12, 170);
     camera.position.set(0, 5.8, 8);
+
+    // ---------- Post: bloom on desktop only (mobile keeps the direct path) ----------
+    let composer = null;
+    let bloom = null;
+    if (!isMobile) {
+        try {
+            const target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
+            composer = new EffectComposer(renderer, target);
+            composer.addPass(new RenderPass(scene, camera));
+            bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.55, 0.82);
+            composer.addPass(bloom);
+            composer.addPass(new OutputPass());
+        } catch {
+            composer = null;
+        }
+    }
 
     // ---------- Camera rig ----------
     const camRig = {
@@ -510,6 +799,10 @@ export function createEngine(canvas, isMobile) {
         canvas.style.width = '100%';
         canvas.style.height = '100%';
         renderer.setSize(w, h, false);
+        if (composer) {
+            composer.setPixelRatio(renderer.getPixelRatio());
+            composer.setSize(w, h);
+        }
         camera.aspect = w / Math.max(h, 1);
         camera.updateProjectionMatrix();
     }
@@ -517,6 +810,7 @@ export function createEngine(canvas, isMobile) {
     const onMotionChange = (event) => {
         reducedMotion = Boolean(event.matches);
         arena.setReducedMotion(reducedMotion);
+        atmosphere.setReducedMotion(reducedMotion);
     };
     window.addEventListener('resize', onWindowResize);
     if (reducedQuery && reducedQuery.addEventListener) reducedQuery.addEventListener('change', onMotionChange);
@@ -547,10 +841,17 @@ export function createEngine(canvas, isMobile) {
     // ---------- Per-frame environment animation ----------
     function updateEnvironment(dt) {
         arena.update(dt);
+        atmosphere.update(dt);
     }
 
     function render() {
-        renderer.render(scene, camera);
+        if (composer) composer.render();
+        else renderer.render(scene, camera);
+    }
+
+    /** Scale bloom for dramatic beats (phase change, killing blow). */
+    function setBloomBoost(amount) {
+        if (bloom) bloom.strength = 0.62 + Math.max(0, amount);
     }
 
     function getStats() {
@@ -565,10 +866,12 @@ export function createEngine(canvas, isMobile) {
     return {
         renderer, scene, camera,
         updateCamera, updateEnvironment, render, resize, camRig,
-        getStats, updatePerformance, arena,
+        getStats, updatePerformance, arena, atmosphere, setBloomBoost,
         dispose() {
             window.removeEventListener('resize', onWindowResize);
             if (reducedQuery && reducedQuery.removeEventListener) reducedQuery.removeEventListener('change', onMotionChange);
+            composer?.dispose();
+            envTarget?.dispose();
             const disposed = new Set();
             scene.traverse((object) => {
                 if (object.geometry && !disposed.has(object.geometry)) {
