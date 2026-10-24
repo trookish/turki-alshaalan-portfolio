@@ -14,6 +14,7 @@ const linkLabelKey = {
   repo: 'view_project',
   play: 'play_game',
   release: 'latest_release',
+  store: 'get_on_store',
 } as const satisfies Record<string, MessageKey>
 
 const groupTitleKey = {

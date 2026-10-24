@@ -68,6 +68,7 @@ export const messages = {
   view_gallery: { en: 'View Gallery →', ar: 'عرض المعرض ←' } satisfies L,
   view_gallery_specs: { en: 'View Gallery & Specs →', ar: 'عرض المعرض والمواصفات ←' } satisfies L,
   latest_release: { en: 'Latest Release →', ar: 'أحدث إصدار ←' } satisfies L,
+  get_on_store: { en: 'Get it on Microsoft Store →', ar: 'احصل عليه من متجر Microsoft ←' } satisfies L,
   badge_new: { en: 'NEW', ar: 'جديد' } satisfies L,
   badge_soon: { en: 'Coming Soon', ar: 'قريباً' } satisfies L,
   team_members: { en: 'Team:', ar: 'الفريق:' } satisfies L,

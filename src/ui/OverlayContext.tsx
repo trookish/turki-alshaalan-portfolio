@@ -47,7 +47,7 @@ const OverlayContext = createContext<OverlayValue | null>(null)
 interface ProviderProps {
   children: ReactNode
   pick: (s: { en: string; ar: string }) => string
-  linkLabels: { repo: string; play: string; release: string }
+  linkLabels: { repo: string; play: string; release: string; store: string }
   teamDefault: string
 }
 

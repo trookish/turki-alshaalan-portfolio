@@ -334,6 +334,72 @@ const iwjatsGallery: Slide[] = [
   },
 ]
 
+const dragdoneGallery: Slide[] = [
+  {
+    type: 'image',
+    src: 'images/Projects/DragDone/screenshot1.webp',
+    title: { en: 'Convert Menu in Orbit Layout', ar: 'قائمة التحويل بتخطيط المدار' },
+    desc: {
+      en: 'The English Convert menu in the orbit layout. Target formats sit around the centre, which shows the file type and size.',
+      ar: 'قائمة التحويل بالإنجليزية بتخطيط المدار. تتوزع صيغ التحويل حول المركز، وهو يعرض نوع الملف وحجمه.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/DragDone/screenshot2.webp',
+    title: { en: 'Arabic Convert Menu in Donut Layout', ar: 'قائمة التحويل بالعربية بتخطيط الحلقة' },
+    desc: {
+      en: 'The Convert menu in Arabic, with right-to-left labels and the donut layout.',
+      ar: 'قائمة التحويل باللغة العربية بعناوين من اليمين إلى اليسار وتخطيط الحلقة.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/DragDone/screenshot3.webp',
+    title: { en: 'Tools Menu for an Image', ar: 'قائمة الأدوات لملف صورة' },
+    desc: {
+      en: 'The English Tools menu, with Compress highlighted and its tooltip shown: "Shrinks the image file while keeping its look."',
+      ar: 'قائمة الأدوات بالإنجليزية، ويظهر فيها أمر Compress مميزًا مع تلميح يشرح أنه يقلّص حجم الملف مع الحفاظ على مظهره.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/DragDone/screenshot4.webp',
+    title: { en: 'Actions Menu', ar: 'قائمة الإجراءات' },
+    desc: {
+      en: 'The English Actions menu, with Copy path highlighted. Other actions include Share, Rename, Move to, Terminal here, Shelf and Zip.',
+      ar: 'قائمة الإجراءات بالإنجليزية، ويظهر فيها Copy path مميزًا. تشمل الإجراءات الأخرى Share وRename وMove to وTerminal here وShelf وZip.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/DragDone/screenshot5.webp',
+    title: { en: 'Welcome Screen', ar: 'شاشة الترحيب' },
+    desc: {
+      en: 'The welcome screen in English, with its three numbered steps and the Shift, Ctrl and Alt key mapping.',
+      ar: 'شاشة الترحيب بالإنجليزية، وتعرض ثلاث خطوات مرقمة وربط المفاتيح Shift وCtrl وAlt.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/DragDone/screenshot6.webp',
+    title: { en: 'Settings in English', ar: 'الإعدادات بالإنجليزية' },
+    desc: {
+      en: 'The settings window in English, with a live preview of the ring that updates as options change.',
+      ar: 'نافذة الإعدادات بالإنجليزية مع معاينة مباشرة للحلقة تتحدّث مع كل تغيير.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/DragDone/screenshot7.webp',
+    title: { en: 'Appearance Settings in Arabic (RTL)', ar: 'إعدادات المظهر بالعربية (من اليمين إلى اليسار)' },
+    desc: {
+      en: 'Appearance settings in Arabic, laid out right-to-left, with a live preview and character presets such as Windows, Fluent and Terminal.',
+      ar: 'إعدادات المظهر باللغة العربية بتخطيط من اليمين إلى اليسار، مع معاينة فورية وأنماط جاهزة مثل ويندوز وفلوينت وطرفية.',
+    },
+  },
+]
+
 export const projects: Project[] = [
   {
     id: 'masarflow',
@@ -692,5 +758,29 @@ export const projects: Project[] = [
         ],
       },
     ],
+  },
+  {
+    id: 'dragdone',
+    title: { en: 'DragDone', ar: 'DragDone' },
+    description: {
+      en: 'A radial menu for Windows 10 and 11 that opens while you drag files from the Desktop or File Explorer. While dragging, press Shift for Convert, Ctrl for Tools or Alt for Actions (the default keys, which can be rebound). The menu opens under the pointer; drop the files on an action to convert, compress, rename or move them. Results are saved next to the originals. Built with WPF on .NET 10, it works offline, is Arabic-first, and supports both Arabic (right-to-left) and English.',
+      ar: 'قائمة دائرية لنظامي Windows 10 وWindows 11 تظهر أثناء سحب الملفات من سطح المكتب أو مستكشف الملفات. أثناء السحب، اضغط Shift للتحويل أو Ctrl للأدوات أو Alt للإجراءات، وهي المفاتيح الافتراضية ويمكن تغييرها. تظهر القائمة حول المؤشر، ثم أفلِت الملفات على الإجراء المطلوب للتحويل أو الضغط أو إعادة التسمية أو النقل. تُحفظ النتيجة بجانب الملف الأصلي. مبنية بتقنية WPF على .NET 10، وتعمل دون اتصال بالإنترنت، وتعطي الأولوية للعربية، وتدعم العربية (من اليمين إلى اليسار) والإنجليزية.',
+    },
+    cover: 'images/Projects/DragDone.webp',
+    coverContain: true,
+    disciplines: ['swe'],
+    tags: [
+      { en: 'C#', ar: 'C#' },
+      { en: 'WPF', ar: 'WPF' },
+      { en: '.NET 10', ar: '.NET 10' },
+      { en: 'Drag & Drop', ar: 'السحب والإفلات' },
+      { en: 'Radial Menu', ar: 'قائمة دائرية' },
+      { en: 'RTL', ar: 'RTL' },
+    ],
+    links: [
+      { kind: 'repo', href: 'https://github.com/trookish/DragDone' },
+      { kind: 'store', href: 'https://apps.microsoft.com/detail/9N6GRBFPGXMC?hl=en-us&gl=SA&ocid=pdpshare' },
+    ],
+    gallery: dragdoneGallery,
   },
 ]

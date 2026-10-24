@@ -72,6 +72,7 @@ function LocalizedShell() {
       repo: t('view_project'),
       play: t('play_game'),
       release: t('latest_release'),
+      store: t('get_on_store'),
     }),
     [t],
   )

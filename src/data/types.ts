@@ -12,7 +12,7 @@ export interface TeamGroup {
   members: TeamMember[]
 }
 
-export type ProjectLinkKind = 'repo' | 'play' | 'release'
+export type ProjectLinkKind = 'repo' | 'play' | 'release' | 'store'
 
 export interface ProjectLink {
   kind: ProjectLinkKind
