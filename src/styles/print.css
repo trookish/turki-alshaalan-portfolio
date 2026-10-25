@@ -1,13 +1,1628 @@
 /* ============================================================
-   Print / Export-to-PV CV stylesheet
+   PDF export — layout picker, A4 document, print rules
+   Two visual modes share one document: `theme` (site palette)
+   and `paper` (ink-friendly white A4).
+   ============================================================ */
+
+/* ---------- Export dialog ---------- */
+.print-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  animation: overlay-in 160ms steps(3);
+}
+
+.print-dialog {
+  width: min(640px, 100%);
+  background: var(--c-panel);
+  border: 1px solid var(--c-line-2);
+  box-shadow: var(--shadow-window);
+  animation: modal-in 200ms steps(4);
+}
+
+.print-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--c-inset);
+  border-bottom: 1px solid var(--c-line);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.07em;
+  color: var(--c-ink-3);
+}
+
+.print-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.print-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c-line-2);
+}
+
+.print-dots i:nth-child(1) { background: #ef4444; }
+.print-dots i:nth-child(2) { background: #fbbf24; }
+.print-dots i:nth-child(3) { background: var(--c-green); }
+
+.print-bar-title { color: var(--c-green); }
+
+.print-close {
+  margin-inline-start: auto;
+  min-width: 32px;
+  min-height: 32px;
+  background: none;
+  border: 1px solid var(--c-line-2);
+  color: var(--c-ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.print-close:hover:not(:disabled) { color: var(--c-danger); border-color: var(--c-danger); }
+.print-close:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.print-dialog-body {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.3rem;
+}
+
+.print-dialog-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+.print-dialog-desc {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--c-ink-3);
+}
+
+.print-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-block-start: 0.2rem;
+}
+
+.print-option {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem;
+  text-align: start;
+  background: var(--c-inset);
+  border: 1px solid var(--c-line-2);
+  color: var(--c-ink-2);
+  cursor: pointer;
+  transition: border-color 120ms steps(2), transform 120ms steps(2);
+}
+
+.print-option:hover:not(:disabled),
+.print-option:focus-visible {
+  border-color: var(--c-green);
+  transform: translateY(-2px);
+}
+
+.print-option:disabled { cursor: progress; opacity: 0.55; }
+.print-option.busy { opacity: 1; border-color: var(--c-green); }
+
+.print-option.active {
+  border-color: var(--c-green);
+  background: color-mix(in srgb, var(--c-green) 8%, var(--c-inset));
+  box-shadow: inset 0 0 0 1px var(--c-green);
+}
+
+.print-option.active::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.6rem;
+  inset-inline-end: 0.6rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--c-green);
+  border-radius: 50%;
+}
+
+.print-option-glyph { color: var(--c-green); line-height: 0; }
+.print-option.paper .print-option-glyph { color: var(--c-ink); }
+
+.print-option-name {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+.print-option-name em {
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  padding: 0.08rem 0.32rem;
+  border: 1px solid var(--c-line-2);
+  color: var(--c-ink-3);
+}
+
+.print-option-desc {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: var(--c-ink-2);
+}
+
+.print-option-swatch {
+  display: flex;
+  gap: 3px;
+  margin-block-start: 0.35rem;
+}
+
+.print-option-swatch i {
+  flex: 1;
+  height: 5px;
+  border: 1px solid var(--c-line);
+}
+
+.print-option.theme .print-option-swatch i:nth-child(1) { background: #000000; }
+.print-option.theme .print-option-swatch i:nth-child(2) { background: var(--c-green); }
+.print-option.theme .print-option-swatch i:nth-child(3) { background: var(--c-ai); }
+.print-option.paper .print-option-swatch i:nth-child(1) { background: #ffffff; }
+.print-option.paper .print-option-swatch i:nth-child(2) { background: #15803d; }
+.print-option.paper .print-option-swatch i:nth-child(3) { background: #6d28d9; }
+
+.print-option-busy {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0.5rem;
+  text-align: center;
+  background: color-mix(in srgb, var(--c-inset) 90%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--c-green);
+}
+
+.print-dialog-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block-start: 0.8rem;
+  border-block-start: 1px solid var(--c-line);
+}
+
+.print-hint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--c-ink-3);
+}
+
+.print-cancel {
+  flex: none;
+  padding: 0.5rem 0.9rem;
+  background: none;
+  border: 1px solid var(--c-line-2);
+  color: var(--c-ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.print-cancel:hover:not(:disabled) { color: var(--c-ink); border-color: var(--c-ink-3); }
+.print-cancel:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.print-foot-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
+}
+
+.print-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--c-green);
+  border: 1px solid var(--c-green);
+  color: #04150a;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.print-go:hover:not(:disabled) { filter: brightness(1.08); }
+.print-go:disabled { opacity: 0.6; cursor: progress; }
+
+@media (max-width: 560px) {
+  .print-options { grid-template-columns: 1fr; }
+  .print-dialog-foot { flex-direction: column; align-items: stretch; }
+  .print-foot-actions { flex-direction: column-reverse; }
+  .print-cancel, .print-go { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
+   The A4 document
+   ============================================================ */
+.pdf-shell {
+  display: none;
+}
+
+.pdf-shell[data-mode='theme'] {
+  --pdf-bg: #000000;
+  --pdf-panel: #0a0e0b;
+  --pdf-inset: #060906;
+  --pdf-line: #1b2a1f;
+  --pdf-line2: #2b4031;
+  --pdf-ink: #eef5f0;
+  --pdf-ink2: #c3d1c7;
+  --pdf-ink3: #98a89c;
+  --pdf-green: #4ade80;
+  --pdf-ai: #a78bfa;
+  --pdf-game: #fbbf24;
+}
+
+.pdf-shell[data-mode='paper'] {
+  --pdf-bg: #ffffff;
+  --pdf-panel: #ffffff;
+  --pdf-inset: #f4f6f4;
+  --pdf-line: #d8ded9;
+  --pdf-line2: #b4beb6;
+  --pdf-ink: #0f1613;
+  --pdf-ink2: #3b4842;
+  --pdf-ink3: #6b7a71;
+  --pdf-green: #15803d;
+  --pdf-ai: #6d28d9;
+  --pdf-game: #b45309;
+}
+
+.pdf-page {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 13mm 15mm 11mm;
+  overflow: hidden;
+  background: var(--pdf-bg);
+  color: var(--pdf-ink);
+  font-family: var(--font-body);
+  font-size: 9pt;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.pdf-page *,
+.pdf-page *::before,
+.pdf-page *::after {
+  box-sizing: border-box;
+}
+
+/* Screen preview (`?print=theme` / `?print=paper`). Screen-only: these must
+   never reach the print pass, where the sheet layout is the real thing. */
+@media screen {
+  html[data-printview] {
+    background: #0b0d0c;
+    overflow: auto;
+  }
+
+  html[data-printview] body {
+    margin: 0;
+    background: #0b0d0c;
+  }
+
+  html[data-printview] #root { display: none; }
+
+  html[data-printview] .pdf-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 0;
+  }
+
+  html[data-printview] .pdf-page {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ---------- Shared page furniture ---------- */
+.pdf-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 4mm;
+  margin-block-end: 6mm;
+  padding-block-end: 3.5mm;
+  border-block-end: 1px solid var(--pdf-line2);
+}
+
+.pdf-head-num {
+  padding-block-start: 1.6mm;
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  letter-spacing: 0.16em;
+  color: var(--pdf-green);
+}
+
+.pdf-head-text { flex: 1; min-width: 0; }
+
+.pdf-head-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 18pt;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--pdf-ink);
+}
+
+.pdf-head-sub {
+  margin: 1.5mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  color: var(--pdf-ink3);
+}
+
+.pdf-head-part {
+  flex: none;
+  padding: 0.9mm 2mm;
+  border: 1px solid var(--pdf-line2);
+  font-family: var(--font-mono);
+  font-size: 6.4pt;
+  letter-spacing: 0.12em;
+  color: var(--pdf-ink3);
+}
+
+.pdf-content {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Sheets whose blocks should share the full height instead of hugging the top. */
+.pdf-page--fill .pdf-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 7mm;
+}
+
+.pdf-foot {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 4mm;
+  margin-block-start: auto;
+  padding-block-start: 2.5mm;
+  border-block-start: 1px solid var(--pdf-line);
+  font-family: var(--font-mono);
+  font-size: 6.4pt;
+  letter-spacing: 0.05em;
+  color: var(--pdf-ink3);
+}
+
+.pdf-foot-name { color: var(--pdf-ink2); }
+.pdf-foot-url { justify-self: center; }
+.pdf-foot-page { justify-self: end; }
+
+.pdf-label {
+  margin: 0 0 2mm;
+  font-family: var(--font-mono);
+  font-size: 6.4pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pdf-ink3);
+}
+
+.pdf-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9mm 2.4mm;
+  border: 1px solid var(--pdf-line2);
+  background: var(--pdf-inset);
+  font-family: var(--font-mono);
+  font-size: 6.8pt;
+  letter-spacing: 0.04em;
+  color: var(--pdf-ink2);
+}
+
+.pdf-tag-swe { color: var(--pdf-green); border-color: color-mix(in srgb, var(--pdf-green) 50%, transparent); }
+.pdf-tag-ai { color: var(--pdf-ai); border-color: color-mix(in srgb, var(--pdf-ai) 50%, transparent); }
+.pdf-tag-game { color: var(--pdf-game); border-color: color-mix(in srgb, var(--pdf-game) 50%, transparent); }
+
+.pdf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4mm;
+}
+
+.pdf-chip {
+  padding: 0.6mm 1.7mm;
+  border: 1px solid var(--pdf-line);
+  font-family: var(--font-mono);
+  font-size: 6.2pt;
+  letter-spacing: 0.02em;
+  color: var(--pdf-ink3);
+}
+
+.pdf-inline-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3mm;
+  margin: 8mm 0 0;
+  padding-block-start: 2.5mm;
+  border-block-start: 1px solid var(--pdf-line);
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--pdf-ink2);
+}
+
+.pdf-inline-link .pdf-label { margin: 0; }
+
+/* ---------- Cover ---------- */
+.pdf-window {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  padding: 2mm 3mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+  font-family: var(--font-mono);
+  font-size: 6.8pt;
+  letter-spacing: 0.08em;
+  color: var(--pdf-ink3);
+}
+
+.pdf-window-title { color: var(--pdf-green); }
+
+.pdf-dots {
+  display: inline-flex;
+  gap: 1.4mm;
+}
+
+.pdf-dots i {
+  width: 2.2mm;
+  height: 2.2mm;
+  border-radius: 50%;
+  background: var(--pdf-line2);
+}
+
+.pdf-dots i:nth-child(1) { background: #ef4444; }
+.pdf-dots i:nth-child(2) { background: #fbbf24; }
+.pdf-dots i:nth-child(3) { background: var(--pdf-green); }
+
+.pdf-cover-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58mm;
+  gap: 9mm;
+  flex: 1;
+  min-height: 0;
+  margin-block-start: 11mm;
+}
+
+.pdf-cover-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pdf-cover-kicker {
+  margin: 0 0 4mm;
+  font-family: var(--font-mono);
+  font-size: 7.4pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pdf-ink3);
+}
+
+.pdf-cover-prompt { color: var(--pdf-green); }
+
+.pdf-cover-name {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 30pt;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--pdf-ink);
+}
+
+.pdf-cover-name span { color: var(--pdf-green); }
+
+.pdf-cover-headline {
+  margin: 4.5mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 9.6pt;
+  line-height: 1.4;
+  color: var(--pdf-ink2);
+}
+
+.pdf-cover-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+  margin: 6mm 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-cover-lede {
+  margin: auto 0;
+  padding-block-start: 7mm;
+  max-width: 118mm;
+  border-block-start: 1px solid var(--pdf-line);
+  font-size: 9.4pt;
+  line-height: 1.75;
+  color: var(--pdf-ink2);
+}
+
+.pdf-cover-lede strong { color: var(--pdf-ink); font-weight: 700; }
+
+.pdf-cover-block {
+  margin-block-start: auto;
+  padding-block-start: 12mm;
+}
+
+.pdf-contact {
+  display: grid;
+  gap: 1.6mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-contact li {
+  display: grid;
+  grid-template-columns: 24mm 1fr;
+  gap: 3mm;
+  align-items: baseline;
+}
+
+.pdf-contact-key {
+  font-family: var(--font-mono);
+  font-size: 6.4pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pdf-ink3);
+}
+
+.pdf-contact-val {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  color: var(--pdf-ink);
+  overflow-wrap: anywhere;
+}
+
+.pdf-cover-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6mm;
+  min-width: 0;
+}
+
+.pdf-photo {
+  padding: 1.6mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.pdf-contents {
+  margin-block-start: auto;
+  padding: 4mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+}
+
+.pdf-contents ol {
+  display: grid;
+  gap: 2mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-contents li {
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+  font-family: var(--font-mono);
+  font-size: 7.4pt;
+  color: var(--pdf-ink2);
+}
+
+.pdf-contents li i {
+  flex: 1;
+  min-width: 3mm;
+  border-block-end: 1px dotted var(--pdf-line2);
+}
+
+.pdf-contents li b {
+  font-weight: 700;
+  color: var(--pdf-green);
+}
+
+/* ---------- About ---------- */
+.pdf-about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
+  gap: 9mm;
+  flex: 1;
+  min-height: 0;
+}
+
+.pdf-about {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  min-width: 0;
+}
+
+.pdf-about > .pdf-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  padding-block: 5mm;
+  border-block-start: 1px solid var(--pdf-line);
+}
+
+.pdf-about > .pdf-block:first-child { border-block-start: 0; }
+
+.pdf-about-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  min-width: 0;
+}
+
+.pdf-about-side > * { min-height: 0; }
+
+.pdf-callout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  padding: 5mm;
+  border: 1px solid var(--pdf-line2);
+  border-inline-start: 2.4px solid var(--pdf-green);
+  background: var(--pdf-panel);
+}
+
+.pdf-callout-dot {
+  display: block;
+  width: 2.2mm;
+  height: 2.2mm;
+  margin-block-end: 2.4mm;
+  border-radius: 50%;
+  background: var(--pdf-green);
+}
+
+.pdf-callout p {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  line-height: 1.55;
+  color: var(--pdf-ink);
+}
+
+.pdf-callout-meta {
+  display: block;
+  margin-block-start: 2.4mm;
+  font-family: var(--font-mono);
+  font-size: 6.8pt;
+  line-height: 1.5;
+  color: var(--pdf-ink3);
+  overflow-wrap: anywhere;
+}
+
+.pdf-block .pdf-prose {
+  margin: 0;
+  font-size: 8.8pt;
+  line-height: 1.62;
+  color: var(--pdf-ink2);
+}
+
+.pdf-prose strong { color: var(--pdf-ink); font-weight: 700; }
+
+.pdf-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3mm;
+  flex: 1.7;
+  align-content: center;
+}
+
+.pdf-disciplines {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 0.9;
+  padding-block: 3mm;
+}
+
+.pdf-stat {
+  padding: 3.4mm 4mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+}
+
+.pdf-stat-value {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 16pt;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--pdf-green);
+}
+
+.pdf-stat-label {
+  display: block;
+  margin-block-start: 2mm;
+  font-family: var(--font-mono);
+  font-size: 6.2pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pdf-ink3);
+}
+
+.pdf-disciplines { margin-block-start: 8mm; }
+
+/* ---------- Projects ---------- */
+.pdf-group + .pdf-group { margin-block-start: 7mm; }
+
+/* Single-discipline sheets stretch their rows over the whole page. */
+.pdf-group--fill {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.pdf-group--fill .pdf-projects {
+  flex: 1;
+  min-height: 0;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.pdf-group-head {
+  display: flex;
+  align-items: center;
+  gap: 2.5mm;
+  margin-block-end: 3.5mm;
+  padding-block-end: 2mm;
+  border-block-end: 1px solid var(--pdf-line);
+}
+
+.pdf-group-head h3 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 8.6pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pdf-ink);
+}
+
+.pdf-group-count {
+  padding: 0.3mm 1.6mm;
+  border: 1px solid var(--pdf-line2);
+  font-family: var(--font-mono);
+  font-size: 6.2pt;
+  color: var(--pdf-ink3);
+}
+
+.pdf-group-dot {
+  width: 2.2mm;
+  height: 2.2mm;
+  border-radius: 50%;
+  background: var(--pdf-green);
+}
+
+.pdf-group-dot-ai { background: var(--pdf-ai); }
+.pdf-group-dot-game { background: var(--pdf-game); }
+
+.pdf-projects {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5mm;
+}
+
+.pdf-project {
+  display: flex;
+  flex-direction: column;
+  gap: 2.6mm;
+  padding: 2.6mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+  break-inside: avoid;
+}
+
+.pdf-project-media {
+  position: relative;
+  flex: 1 1 24mm;
+  min-height: 24mm;
+  overflow: hidden;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-project-media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdf-project-media.contain img {
+  object-fit: contain;
+  inset: 1.5mm;
+  width: auto;
+  height: auto;
+}
+
+.pdf-project-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2mm;
+}
+
+.pdf-project-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 8.4pt;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--pdf-ink);
+}
+
+.pdf-project-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+  font-size: 7.2pt;
+  line-height: 1.45;
+  color: var(--pdf-ink2);
+}
+
+.pdf-project .pdf-chips { gap: 1.2mm; }
+
+/* Single-column sheet for disciplines with only a couple of projects. */
+.pdf-projects--wide {
+  grid-template-columns: 1fr;
+  gap: 6mm;
+}
+
+.pdf-projects--wide .pdf-project {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 5mm;
+  padding: 4mm;
+}
+
+.pdf-projects--wide .pdf-project-media {
+  flex: 1 1 auto;
+  min-height: 52mm;
+}
+
+.pdf-projects--wide .pdf-project-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3mm;
+  padding: 1mm 0;
+}
+
+.pdf-projects--wide .pdf-project-title { font-size: 12pt; }
+
+.pdf-projects--wide .pdf-project-desc {
+  -webkit-line-clamp: 6;
+  font-size: 8pt;
+  line-height: 1.5;
+}
+
+/* ---------- Experience ---------- */
+.pdf-exp-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6mm;
+}
+
+.pdf-exp-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6mm;
+}
+
+.pdf-panel-block {
+  display: flex;
+  flex-direction: column;
+  padding: 4mm 4.5mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+}
+
+.pdf-exp-panels .pdf-panel-block { flex: 1; min-height: 0; }
+
+.pdf-recent-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 7.8pt;
+  color: var(--pdf-ink2);
+}
+
+.pdf-recent-list li::before {
+  content: '›';
+  margin-inline-end: 1.6mm;
+  color: var(--pdf-green);
+}
+
+.pdf-stack-row + .pdf-stack-row { margin-block-start: 2.8mm; }
+
+.pdf-recent-list li {
+  padding-block: 2.4mm;
+  border-block-start: 1px dashed var(--pdf-line);
+}
+
+.pdf-recent-list li:first-child { border-block-start: 0; padding-block-start: 0; }
+
+.pdf-panel-block .pdf-label { margin-block-end: 2.6mm; }
+
+.pdf-stack-name {
+  display: block;
+  margin-block-end: 1.2mm;
+  font-family: var(--font-mono);
+  font-size: 6.6pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pdf-ink3);
+}
+
+.pdf-job {
+  display: block;
+}
+
+.pdf-job-body {
+  display: flex;
+  flex-direction: column;
+  padding: 6mm 7mm;
+  border: 1px solid var(--pdf-line);
+  border-inline-start: 2.4px solid var(--pdf-green);
+  background: var(--pdf-panel);
+}
+
+.pdf-job-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6mm;
+}
+
+.pdf-job-logo {
+  display: grid;
+  place-items: center;
+  width: 24mm;
+  height: 24mm;
+  padding: 2mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-job-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.pdf-job-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 17pt;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--pdf-ink);
+}
+
+.pdf-job-org {
+  margin: 1.6mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 11pt;
+  color: var(--pdf-green);
+}
+
+.pdf-job-date {
+  margin-inline-start: auto;
+  padding: 1mm 2.4mm;
+  border: 1px solid var(--pdf-line2);
+  font-family: var(--font-mono);
+  font-size: 7.4pt;
+  color: var(--pdf-ink2);
+}
+
+.pdf-job-facts {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex: 1;
+  min-height: 0;
+  margin-block-start: 6mm;
+}
+
+.pdf-job-fact {
+  display: grid;
+  grid-template-columns: 30mm minmax(0, 1fr);
+  gap: 4mm;
+  align-items: baseline;
+  padding-block: 2.4mm;
+  border-block-start: 1px dashed var(--pdf-line);
+}
+
+.pdf-job-fact:first-child { border-block-start: 0; }
+
+.pdf-fact-val {
+  font-family: var(--font-mono);
+  font-size: 8.6pt;
+  line-height: 1.4;
+  color: var(--pdf-ink);
+  overflow-wrap: anywhere;
+}
+
+/* Wide hero card: studio-quality fact row instead of a tall stretched box. */
+.pdf-job--wide .pdf-job-body { padding: 6mm 7mm; }
+
+.pdf-job--wide .pdf-job-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6mm;
+  justify-content: flex-start;
+  flex: none;
+  margin-block-start: 5mm;
+}
+
+.pdf-job--wide .pdf-job-fact {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.4mm;
+  align-items: start;
+  padding-block: 3mm 0;
+  border-block-start: 1px dashed var(--pdf-line);
+}
+
+.pdf-job--wide .pdf-job-fact:first-child { border-block-start: 1px dashed var(--pdf-line); }
+
+.pdf-exp-panels .pdf-panel-block { justify-content: flex-start; }
+
+.pdf-exp-panels .pdf-label { margin-block-end: 3mm; }
+.pdf-job-note {
+  margin: 6mm 0 0;
+  padding-block-start: 4mm;
+  border-block-start: 1px dashed var(--pdf-line2);
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  line-height: 1.5;
+  color: var(--pdf-green);
+}
+
+/* ---------- Skills ---------- */
+.pdf-skills {
+  display: grid;
+  gap: 3.4mm;
+  flex: 1;
+  min-height: 0;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.pdf-skill-row {
+  display: grid;
+  grid-template-columns: 45mm minmax(0, 1fr);
+  gap: 5mm;
+  align-items: center;
+  padding: 3.8mm 4.5mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+}
+
+.pdf-skill-title {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8.4pt;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--pdf-ink);
+}
+
+.pdf-skill-title.pdf-ink-swe { color: var(--pdf-green); }
+.pdf-skill-title.pdf-ink-ai { color: var(--pdf-ai); }
+.pdf-skill-title.pdf-ink-game { color: var(--pdf-game); }
+
+.pdf-skill-kind {
+  display: block;
+  margin-block-start: 1mm;
+  font-family: var(--font-mono);
+  font-size: 6pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pdf-ink3);
+}
+
+/* ---------- Education ---------- */
+.pdf-degree {
+  display: grid;
+  grid-template-columns: 30mm minmax(0, 1fr) auto;
+  gap: 7mm;
+  align-items: start;
+  padding: 7mm;
+  border: 1px solid var(--pdf-line2);
+  background: var(--pdf-panel);
+}
+
+.pdf-degree-logo {
+  display: grid;
+  place-items: center;
+  width: 30mm;
+  height: 30mm;
+  padding: 2mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-degree-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.pdf-degree-title {
+  margin: 1.6mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 14pt;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--pdf-ink);
+}
+
+.pdf-degree-school {
+  margin: 1.6mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 9pt;
+  color: var(--pdf-green);
+}
+
+.pdf-degree-date {
+  margin: 1mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 7.2pt;
+  color: var(--pdf-ink3);
+}
+
+.pdf-degree-activities { margin-block-start: 4mm; }
+.pdf-degree-activities .pdf-label { margin-block-end: 1.4mm; }
+
+.pdf-degree-grade {
+  min-width: 26mm;
+  padding: 3mm 3.5mm;
+  text-align: center;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-grade-value {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 20pt;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--pdf-green);
+}
+
+.pdf-grade-label {
+  display: block;
+  margin-block-start: 1.6mm;
+  font-family: var(--font-mono);
+  font-size: 6pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pdf-ink3);
+}
+
+.pdf-course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5mm;
+  flex: 1;
+  min-height: 0;
+}
+
+.pdf-course {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+  break-inside: avoid;
+}
+
+.pdf-course-top {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  margin-block-end: 3mm;
+}
+
+.pdf-course .pdf-label { margin: 0; }
+
+.pdf-course-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9pt;
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--pdf-ink);
+}
+
+.pdf-course-school {
+  margin: 1.4mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 7.6pt;
+  color: var(--pdf-green);
+}
+
+.pdf-course-date {
+  margin: 0.8mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 6.6pt;
+  color: var(--pdf-ink3);
+}
+
+.pdf-course-detail {
+  margin: 2mm 0 0;
+  font-size: 7.6pt;
+  line-height: 1.45;
+  color: var(--pdf-ink2);
+}
+
+.pdf-edu-logo {
+  display: grid;
+  place-items: center;
+  width: 13mm;
+  height: 13mm;
+  padding: 1mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-edu-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.pdf-edu-activity {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  margin: 1mm 0 0;
+  font-size: 7.6pt;
+  color: var(--pdf-ink2);
+}
+
+.pdf-edu-activity img {
+  width: 4mm;
+  height: 4mm;
+  object-fit: contain;
+}
+
+/* ---------- Certifications ---------- */
+.pdf-certs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 4.5mm;
+  flex: 1;
+  min-height: 0;
+}
+
+.pdf-cert {
+  display: flex;
+  flex-direction: column;
+  padding: 2.4mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+  break-inside: avoid;
+}
+
+.pdf-cert-media {
+  flex: 1;
+  min-height: 30mm;
+  overflow: hidden;
+  margin-block-end: 2.6mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-cert-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.pdf-cert h3 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 7.4pt;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--pdf-ink);
+}
+
+.pdf-cert-issuer {
+  margin: 1mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 6.6pt;
+  line-height: 1.35;
+  color: var(--pdf-green);
+}
+
+.pdf-cert-date {
+  margin: 0.7mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 6.2pt;
+  color: var(--pdf-ink3);
+}
+
+/* ---------- Achievements ---------- */
+.pdf-achievements {
+  display: grid;
+  gap: 5mm;
+  grid-auto-rows: minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+}
+
+.pdf-achievement {
+  display: grid;
+  grid-template-columns: 55mm minmax(0, 1fr);
+  gap: 5mm;
+  padding: 3mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+  break-inside: avoid;
+}
+
+.pdf-achievement-media {
+  height: auto;
+  min-height: 32mm;
+  overflow: hidden;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-inset);
+}
+
+.pdf-achievement-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdf-achievement-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3mm;
+  margin-block-end: 2mm;
+}
+
+.pdf-achievement-date {
+  font-family: var(--font-mono);
+  font-size: 6.4pt;
+  color: var(--pdf-ink3);
+}
+
+.pdf-achievement h3 {
+  margin: 0 0 1.4mm;
+  font-family: var(--font-mono);
+  font-size: 9.4pt;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--pdf-ink);
+}
+
+.pdf-achievement-project {
+  margin: 0 0 1.6mm;
+  font-family: var(--font-mono);
+  font-size: 7.2pt;
+  color: var(--pdf-ink2);
+}
+
+.pdf-achievement-project span { color: var(--pdf-ink3); }
+
+.pdf-achievement-desc {
+  margin: 0 0 2mm;
+  font-size: 7.4pt;
+  line-height: 1.45;
+  color: var(--pdf-ink2);
+}
+
+/* ---------- Contact ---------- */
+.pdf-contact-hero {
+  padding: 10mm 11mm 9mm;
+  border: 1px solid var(--pdf-line);
+  background: var(--pdf-panel);
+}
+
+.pdf-mail {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 22pt;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--pdf-green);
+  text-decoration: none;
+}
+
+.pdf-contact-line {
+  margin: 5mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 9.2pt;
+  color: var(--pdf-ink2);
+}
+
+.pdf-contact-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8mm;
+  flex: 1;
+  min-height: 0;
+  margin-block-start: 8mm;
+}
+
+.pdf-contact-columns > .pdf-panel-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.pdf-contact--big {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdf-closing {
+  margin: 3mm 0 0;
+  font-family: var(--font-mono);
+  font-size: 7.6pt;
+  line-height: 1.6;
+  color: var(--pdf-ink2);
+}
+
+.pdf-closing p { margin: 0; }
+
+.pdf-closing-url {
+  display: block;
+  margin-block-start: 1.5mm;
+  color: var(--pdf-green);
+}
+
+.pdf-contact-note {
+  margin: 4mm 0 0;
+  padding-block-start: 4mm;
+  border-block-start: 1px dashed var(--pdf-line2);
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  color: var(--pdf-green);
+}
+
+.pdf-contact--big li {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.2mm;
+  padding-block: 2.6mm;
+  border-block-end: 1px solid var(--pdf-line);
+}
+
+.pdf-contact--big li:last-child { border-block-end: 0; }
+
+.pdf-contact--big .pdf-contact-val { font-size: 9pt; }
+
+.pdf-signature {
+  margin-block-start: auto;
+  padding-block-start: 6mm;
+  border-block-start: 1px solid var(--pdf-line2);
+}
+
+.pdf-signature-name {
+  margin: 0 0 2.5mm;
+  font-family: var(--font-mono);
+  font-size: 16pt;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--pdf-ink);
+}
+
+/* ============================================================
+   Print
    ============================================================ */
 @media print {
   @page {
-    margin: 14mm;
+    size: A4;
+    margin: 0;
   }
 
-  :root,
-  [data-theme='light'] {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+  }
+
+  html:has(.pdf-shell) #root { display: none !important; }
+  html:has(.pdf-shell) .pdf-shell { display: block !important; }
+
+  /* A hair under a full sheet: a 297mm box can round past the page box and
+     spawn blank pages in Chrome's paginator. */
+  .pdf-page {
+    height: 296.8mm;
+    min-height: 0;
+    break-after: page;
+    break-inside: auto;
+  }
+
+  .pdf-page:last-child { break-after: auto; }
+}
+
+/* ============================================================
+   Fallback: browser-menu print without the export dialog.
+   The site itself stays readable on white paper.
+   ============================================================ */
+@media print {
+  html:not(:has(.pdf-shell)) {
     --c-bg: #ffffff;
     --c-panel: #ffffff;
     --c-inset: #ffffff;
@@ -22,150 +1637,130 @@
     --c-game: #92400e;
   }
 
-  html,
-  body {
+  html:not(:has(.pdf-shell)) body {
     background: #ffffff !important;
     color: #111111 !important;
     font-size: 11px;
     line-height: 1.45;
   }
 
-  .navbar,
-  .statusbar,
-  .sound-fab,
-  .scroll-hint,
-  .hero-bg,
-  .hero-bg-veil,
-  .hero-grid,
-  .filter-chip,
-  .linkedin-btn,
-  .command-hint,
-  .showcase-cta,
-  .cert-actions,
-  .modal-overlay,
-  .game-modal,
-  .palette-overlay,
-  .hamburger,
-  .nav-controls,
-  .cv-download-btn,
-  .contact-form-window,
-  .btn {
+  html:not(:has(.pdf-shell)) .navbar,
+  html:not(:has(.pdf-shell)) .statusbar,
+  html:not(:has(.pdf-shell)) .sound-fab,
+  html:not(:has(.pdf-shell)) .scroll-hint,
+  html:not(:has(.pdf-shell)) .hero-bg,
+  html:not(:has(.pdf-shell)) .hero-bg-veil,
+  html:not(:has(.pdf-shell)) .hero-grid,
+  html:not(:has(.pdf-shell)) .filter-chip,
+  html:not(:has(.pdf-shell)) .linkedin-btn,
+  html:not(:has(.pdf-shell)) .command-hint,
+  html:not(:has(.pdf-shell)) .showcase-cta,
+  html:not(:has(.pdf-shell)) .cert-actions,
+  html:not(:has(.pdf-shell)) .game-modal,
+  html:not(:has(.pdf-shell)) .modal-overlay,
+  html:not(:has(.pdf-shell)) .palette-overlay,
+  html:not(:has(.pdf-shell)) .print-overlay,
+  html:not(:has(.pdf-shell)) .hamburger,
+  html:not(:has(.pdf-shell)) .nav-controls,
+  html:not(:has(.pdf-shell)) .cv-download-btn,
+  html:not(:has(.pdf-shell)) .contact-form-window,
+  html:not(:has(.pdf-shell)) .btn {
     display: none !important;
   }
 
-  main {
+  html:not(:has(.pdf-shell)) main {
     padding-block-start: 0 !important;
     margin-block-end: 0 !important;
   }
 
-  .reveal {
+  html:not(:has(.pdf-shell)) .reveal {
     opacity: 1 !important;
     transform: none !important;
   }
 
-  section {
+  html:not(:has(.pdf-shell)) section {
     padding-block: 10px !important;
     break-inside: auto;
   }
 
-  .window,
-  .project-card,
-  .term,
-  .window-bar {
+  html:not(:has(.pdf-shell)) .window,
+  html:not(:has(.pdf-shell)) .project-card,
+  html:not(:has(.pdf-shell)) .term,
+  html:not(:has(.pdf-shell)) .window-bar {
     box-shadow: none !important;
     break-inside: avoid;
   }
 
-  .section-head {
-    margin-block-end: 6px;
-    border-bottom: 1px solid #999;
-    padding-block-end: 4px;
-  }
-
-  .section-title {
-    font-size: 15px;
-  }
-
-  .section-subtitle {
-    margin-block-end: 8px;
-    font-size: 10px;
-  }
-
-  .hero {
+  html:not(:has(.pdf-shell)) .hero {
     min-height: auto !important;
     padding-block: 6px 12px !important;
     border-bottom: 2px solid #14532d;
   }
 
-  .hero-name {
+  html:not(:has(.pdf-shell)) .hero-name {
     font-size: 24px;
   }
 
-  .project-groups {
+  html:not(:has(.pdf-shell)) .project-groups {
     display: block !important;
   }
 
-  .project-group-title {
+  html:not(:has(.pdf-shell)) .project-group-title {
     display: none;
   }
 
-  .projects-grid,
-  .cards-grid,
-  .education-columns,
-  .certs-grid,
-  .achievements-grid,
-  .about-grid {
+  html:not(:has(.pdf-shell)) .projects-grid,
+  html:not(:has(.pdf-shell)) .cards-grid,
+  html:not(:has(.pdf-shell)) .education-columns,
+  html:not(:has(.pdf-shell)) .certs-grid,
+  html:not(:has(.pdf-shell)) .achievements-grid,
+  html:not(:has(.pdf-shell)) .about-grid {
     display: block !important;
   }
 
-  .project-card,
-  .edu-card,
-  .cert-card,
-  .ach-card,
-  .exp-card,
-  .highlight-item,
-  .skill-row {
+  html:not(:has(.pdf-shell)) .project-card,
+  html:not(:has(.pdf-shell)) .edu-card,
+  html:not(:has(.pdf-shell)) .cert-card,
+  html:not(:has(.pdf-shell)) .ach-card,
+  html:not(:has(.pdf-shell)) .exp-card,
+  html:not(:has(.pdf-shell)) .highlight-item,
+  html:not(:has(.pdf-shell)) .skill-row {
     margin-block-end: 8px;
     border: 1px solid #bbb !important;
   }
 
-  .project-media,
-  .ach-media,
-  .cert-media {
+  html:not(:has(.pdf-shell)) .project-media,
+  html:not(:has(.pdf-shell)) .ach-media,
+  html:not(:has(.pdf-shell)) .cert-media {
     max-height: 120px;
   }
 
-  .cert-media img {
+  html:not(:has(.pdf-shell)) .cert-media img {
     object-fit: contain;
   }
 
-  .ach-media img {
-    object-fit: contain;
-    padding: 0.4rem;
-  }
-
-  .marquee {
+  html:not(:has(.pdf-shell)) .marquee {
     overflow: visible !important;
     mask-image: none !important;
   }
 
-  .marquee-track {
+  html:not(:has(.pdf-shell)) .marquee-track {
     animation: none !important;
     flex-wrap: wrap;
     width: auto !important;
     transform: none !important;
   }
 
-  .marquee-track .tag[aria-hidden='true'] {
+  html:not(:has(.pdf-shell)) .marquee-track .tag[aria-hidden='true'] {
     display: none;
   }
 
-  a {
+  html:not(:has(.pdf-shell)) a {
     text-decoration: none;
     color: inherit !important;
   }
 
-  footer {
+  html:not(:has(.pdf-shell)) footer {
     border-top: 1px solid #999;
     margin-block-start: 8px;
     padding-block: 8px;

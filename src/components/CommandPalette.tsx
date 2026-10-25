@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useI18n } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeProvider'
 import { useOverlay } from '../ui/OverlayContext'
+import { usePrint } from '../features/print/PrintProvider'
 import { sections } from '../data/site'
 import { projects } from '../data/projects'
 
@@ -17,6 +18,7 @@ export function CommandPalette() {
   const { t, b, toggle } = useI18n()
   const { toggle: toggleTheme } = useTheme()
   const overlay = useOverlay()
+  const print = usePrint()
   const [query, setQuery] = useState('')
   const [sel, setSel] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -80,7 +82,7 @@ export function CommandPalette() {
         kind: 'action',
         run: () => {
           close()
-          window.setTimeout(() => window.print(), 100)
+          window.setTimeout(() => print.open(), 120)
         },
       },
       {
@@ -94,7 +96,7 @@ export function CommandPalette() {
       },
     )
     return list
-  }, [t, b, toggle, toggleTheme, overlay, close])
+  }, [t, b, toggle, toggleTheme, overlay, close, print])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()

@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/LanguageContext'
 import { CommandIcon, DownloadIcon, GlobeIcon, LinkedInIcon, PlayIcon, PrintIcon, ThemeIcon } from './icons'
 import { useTheme } from '../theme/ThemeProvider'
 import { useActiveSection, useScrolled } from '../hooks/usePage'
+import { usePrint } from '../features/print/PrintProvider'
 import { sections } from '../data/site'
 import { profile } from '../data/profile'
 
@@ -14,6 +15,7 @@ interface NavBarProps {
 export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
   const { t, b, toggle } = useI18n()
   const { toggle: toggleTheme } = useTheme()
+  const print = usePrint()
   const scrolled = useScrolled(10)
   const ids = useMemo(() => sections.map((s) => s.id), [])
   const active = useActiveSection(ids)
@@ -102,7 +104,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
               className="nav-extra"
               onClick={() => {
                 setMenuOpen(false)
-                window.print()
+                print.open()
               }}
             >
               <PrintIcon /> {t('nav_pdf_tip')}
@@ -173,7 +175,7 @@ export function NavBar({ onOpenPalette, onPlayGame }: NavBarProps) {
             type="button"
             className="icon-btn nav-secondary"
             title={t('nav_pdf_tip')}
-            onClick={() => window.print()}
+            onClick={() => print.open()}
           >
             <PrintIcon />
             <span className="btn-label">{t('nav_pdf')}</span>

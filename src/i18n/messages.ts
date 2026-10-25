@@ -217,6 +217,45 @@ export const messages = {
   palette_toggle_lang: { en: 'Switch language', ar: 'تبديل اللغة' } satisfies L,
   palette_export_pdf: { en: 'Export as PDF', ar: 'تصدير PDF' } satisfies L,
   palette_play_game: { en: 'Play battle game', ar: 'العب لعبة المعركة' } satisfies L,
+
+  print_dialog_title: { en: 'Export this portfolio', ar: 'تصدير ملف الأعمال' } satisfies L,
+  print_dialog_desc: {
+    en: 'Choose a layout for the PDF. Every section starts on its own A4 page.',
+    ar: 'اختر تنسيق ملف PDF. كل قسم يبدأ في صفحة A4 مستقلة.',
+  } satisfies L,
+  print_mode_theme: { en: 'Website theme', ar: 'مظهر الموقع' } satisfies L,
+  print_mode_theme_tag: { en: 'SCREEN', ar: 'شاشة' } satisfies L,
+  print_mode_theme_desc: {
+    en: 'Dark terminal palette, exactly as the site looks on screen.',
+    ar: 'ألوان الموقع الداكنة كما تظهر على الشاشة تماماً.',
+  } satisfies L,
+  print_mode_paper: { en: 'Print-ready paper', ar: 'ورق للطباعة' } satisfies L,
+  print_mode_paper_tag: { en: 'PRINT', ar: 'طباعة' } satisfies L,
+  print_mode_paper_desc: {
+    en: 'White A4 pages with ink-friendly colors for printing or sharing.',
+    ar: 'صفحات A4 بيضاء بألوان موفرة للحبر للطباعة أو المشاركة.',
+  } satisfies L,
+  print_preparing: { en: 'Preparing document…', ar: 'جارٍ تجهيز المستند…' } satisfies L,
+  print_focus: { en: 'Current focus', ar: 'التركيز الحالي' } satisfies L,
+  print_availability_label: { en: 'Availability', ar: 'التوفر' } satisfies L,
+  print_recent: { en: 'Selected work', ar: 'أعمال مختارة' } satisfies L,
+  print_stack: { en: 'Working stack', ar: 'الأدوات المستخدمة' } satisfies L,
+  print_availability: {
+    en: 'Open to COOP training and junior software roles.',
+    ar: 'متاح للتدريب التعاوني والوظائف البرمجية المبتدئة.',
+  } satisfies L,
+  print_save_hint: {
+    en: 'In the print dialog, set the destination to “Save as PDF”.',
+    ar: 'في نافذة الطباعة، اختر «حفظ كـ PDF» كوجهة.',
+  } satisfies L,
+  print_cancel: { en: 'Cancel', ar: 'إلغاء' } satisfies L,
+  print_continue: { en: 'Continue', ar: 'متابعة' } satisfies L,
+  print_contents: { en: 'Contents', ar: 'المحتويات' } satisfies L,
+  print_document: { en: 'Portfolio', ar: 'ملف الأعمال' } satisfies L,
+  print_closing: {
+    en: 'This document is a summary of the live portfolio. Full project write-ups, screenshots and links are available online at the address below.',
+    ar: 'هذا المستند ملخّص لملف الأعمال المباشر. التفاصيل الكاملة للمشاريع والصور والروابط متاحة على العنوان أدناه.',
+  } satisfies L,
 } as const
 
 export type MessageKey = keyof typeof messages

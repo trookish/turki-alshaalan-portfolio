@@ -21,6 +21,7 @@ import { Achievements } from './sections/Achievements'
 import { Contact } from './sections/Contact'
 import { Footer } from './sections/Footer'
 import { GameModal } from './features/game/GameModal'
+import { PrintProvider } from './features/print/PrintProvider'
 import { useReveal } from './hooks/usePage'
 
 function Pages() {
@@ -79,7 +80,9 @@ function LocalizedShell() {
 
   return (
     <OverlayProvider pick={(s) => b(s)} linkLabels={linkLabels} teamDefault={t('team_members')}>
-      <Pages />
+      <PrintProvider>
+        <Pages />
+      </PrintProvider>
     </OverlayProvider>
   )
 }
