@@ -400,6 +400,45 @@ const dragdoneGallery: Slide[] = [
   },
 ]
 
+const plateGallery: Slide[] = [
+  {
+    type: 'image',
+    src: 'images/Projects/SaudiPlatePredictor/screenshot1.webp',
+    title: { en: 'Open Listings', ar: 'الإعلانات المفتوحة' },
+    desc: {
+      en: 'Every listing that has not closed in one table: the plate, the bid now, the typical price for similar plates, its likely range, the bids so far, the expected final price and the time left — under counters for listings priced below, within and above the usual range.',
+      ar: 'كل إعلان لم يُغلق بعد في جدول واحد: اللوحة، المزايدة الحالية، السعر المعتاد للوحات المشابهة، نطاقه المرجّح، عدد المزايدات، السعر المتوقع عند الإغلاق والوقت المتبقي — تحت عدّادات للإعلانات الأقل من المعتاد وداخله وفوقه.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/SaudiPlatePredictor/screenshot2.webp',
+    title: { en: 'Plate Calculator', ar: 'حاسبة اللوحة' },
+    desc: {
+      en: 'One plate priced on its own. Plate 3357 ANS returns an expected final price of 3,000 SAR, the typical closing price, a likely range of 3,000 to 4,000 SAR, a wide range, and a note on what the four recorded bids mean for the estimate.',
+      ar: 'لوحة واحدة تُقدَّر على حدة. اللوحة 3357 ANS تُرجع سعراً متوقعاً عند الإغلاق قدره 3,000 ريال، مع السعر المعتاد ونطاق مرجّح من 3,000 إلى 4,000 ريال ونطاق واسع، وتوضيح لمعنى المزايدات الأربع المسجلة في التقدير.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/SaudiPlatePredictor/screenshot3.webp',
+    title: { en: 'Arabic Console', ar: 'وحدة التحكم بالعربية' },
+    desc: {
+      en: 'The market view in Arabic: navigation, counters, filters, sort controls and the listings table read right to left, with the same figures and the same price check per row.',
+      ar: 'عرض السوق بالعربية: التنقل والعدّادات والمرشّحات وأدوات الترتيب وجدول الإعلانات من اليمين إلى اليسار، بالأرقام نفسها وفحص السعر نفسه لكل صف.',
+    },
+  },
+  {
+    type: 'image',
+    src: 'images/Projects/SaudiPlatePredictor/screenshot4.webp',
+    title: { en: 'Arabic Calculator', ar: 'الحاسبة بالعربية' },
+    desc: {
+      en: 'The calculator in Arabic for plate 1234 VKU: an expected final price of 2,560 SAR, the usual starting price, a possible range of 1,911 to 3,431 SAR, and the evidence behind the estimate — 38 comparable numbers and the fair-price-v3 model, trained through 19 September 2026.',
+      ar: 'الحاسبة بالعربية للوحة 1234 VKU: سعر متوقع عند الإغلاق قدره 2,560 ريال، وسعر البدء المعتاد، ونطاق محتمل من 1,911 إلى 3,431 ريال، والأساس الذي بُني عليه التقدير — 38 رقماً مشابهاً ونموذج fair-price-v3 المدرَّب حتى 19 سبتمبر 2026.',
+    },
+  },
+]
+
 export const projects: Project[] = [
   {
     id: 'masarflow',
@@ -619,22 +658,24 @@ export const projects: Project[] = [
   },
   {
     id: 'saudi-plate-predictor',
-    title: { en: 'Saudi Plate Predictor System', ar: 'Saudi Plate Predictor System' },
+    title: { en: 'Saudi Plate Predictor', ar: 'Saudi Plate Predictor' },
     description: {
-      en: 'A proof-of-concept prediction system for Saudi distinguished license plate auctions. Analyzes historical auction behavior, rarity, cultural significance, and plate patterns to forecast which plates are most likely to appear in upcoming auctions — with ethical data collection and a permanent local history archive.',
-      ar: 'نظام تجريبي للتنبؤ بمزادات اللوحات المميزة السعودية. يحلل سلوك المزادات السابقة والندرة والدلالات الثقافية وأنماط اللوحات عشان يتنبأ بأي لوحات أرجح إنها تطلع في المزادات القادمة — مع جمع بيانات أخلاقي وأرشيف تاريخي دائم.',
+      en: 'Prices Saudi distinguished license plates from Absher auction data. It polls both public auction feeds on a fixed schedule, keeps a permanent SQLite history, and estimates what a plate typically closes at and where a live listing will end, each with a likely and a wide range. Four surfaces read the same model — a Windows launcher, a web console with market, price-list and accuracy views, a single-plate calculator, and the terminal. English and Arabic throughout.',
+      ar: 'يقدّر أسعار اللوحات المميزة السعودية من بيانات مزاد أبشر: يجمع من خلاصتي المزاد العامتين وفق جدول ثابت، ويحفظ تاريخاً دائماً في SQLite، ويقدّر السعر الذي تُغلق عليه اللوحة عادةً وأين تنتهي المزايدة الجارية، ولكل تقدير نطاق مرجّح ونطاق واسع. أربع واجهات تقرأ النموذج نفسه — لانشر لويندوز، ووحدة تحكم ويب فيها عروض السوق وقوائم الأسعار والدقة، وحاسبة للوحة واحدة، والطرفية — بالعربية والإنجليزية.',
     },
-    cover: 'images/Projects/SaudiPlatePredictorSystem.webp',
+    cover: 'images/Projects/SaudiPlatePredictor.webp',
     disciplines: ['ai', 'swe'],
-    badge: { en: 'Coming Soon', ar: 'قريباً' },
+    badge: { en: 'In Development', ar: 'قيد التطوير' },
     tags: [
       { en: 'Python', ar: 'Python' },
       { en: 'Machine Learning', ar: 'تعلّم الآلة' },
+      { en: 'scikit-learn', ar: 'scikit-learn' },
       { en: 'SQLite', ar: 'SQLite' },
-      { en: 'Data Science', ar: 'علوم البيانات' },
-      { en: 'Forecasting', ar: 'التنبؤ' },
+      { en: 'Price Prediction', ar: 'توقّع الأسعار' },
+      { en: 'English · Arabic', ar: 'العربية · الإنجليزية' },
     ],
-    links: [{ kind: 'repo', href: 'https://github.com/trookish/SaudiLicensePlatePerdictor' }],
+    links: [{ kind: 'repo', href: 'https://github.com/trookish/Saudi-Plate-Predictor' }],
+    gallery: plateGallery,
   },
   {
     id: 'restaurant-ordering',
