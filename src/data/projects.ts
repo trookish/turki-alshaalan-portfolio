@@ -658,7 +658,7 @@ export const projects: Project[] = [
   },
   {
     id: 'saudi-plate-predictor',
-    title: { en: 'Saudi Plate Predictor', ar: 'متوقع السعر' },
+    title: { en: 'Saudi Plate Predictor', ar: 'متوقع السعر للوحات السعودية' },
     description: {
       en: 'Prices Saudi distinguished license plates from Absher auction data. It polls both public auction feeds on a fixed schedule, keeps a permanent SQLite history, and estimates what a plate typically closes at and where a live listing will end, each with a likely and a wide range. Four surfaces read the same model — a Windows launcher, a web console with market, price-list and accuracy views, a single-plate calculator, and the terminal. English and Arabic throughout.',
       ar: 'يقدّر أسعار اللوحات المميزة السعودية من بيانات مزاد أبشر: يجمع من خلاصتي المزاد العامتين وفق جدول ثابت، ويحفظ تاريخاً دائماً في SQLite، ويقدّر السعر الذي تُغلق عليه اللوحة عادةً وأين تنتهي المزايدة الجارية، ولكل تقدير نطاق مرجّح ونطاق واسع. أربع واجهات تقرأ النموذج نفسه — لانشر لويندوز، ووحدة تحكم ويب فيها عروض السوق وقوائم الأسعار والدقة، وحاسبة للوحة واحدة، والطرفية — بالعربية والإنجليزية.',
