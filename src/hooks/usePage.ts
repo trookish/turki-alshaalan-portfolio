@@ -3,20 +3,25 @@ import { useEffect, useState } from 'react'
 export function useReveal(deps: unknown[] = []) {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>('.reveal:not(.active)')
+    const reveal = (el: Element) => el.classList.add('active')
     if (!('IntersectionObserver' in window)) {
-      els.forEach((el) => el.classList.add('active'))
+      els.forEach(reveal)
       return
     }
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('active')
+            reveal(entry.target)
             io.unobserve(entry.target)
           }
         }
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
+      // Threshold 0, not a fraction: a ratio threshold is relative to the ELEMENT, and the
+      // projects section is ~8,800 px tall on a phone, so 8% of it (~700 px) can never fit
+      // the visible viewport and the whole section stayed at opacity 0. The margin is a share
+      // of the VIEWPORT, so the reveal point scales with the device rather than the section.
+      { threshold: 0, rootMargin: '0px 0px -8% 0px' },
     )
     els.forEach((el) => io.observe(el))
     return () => io.disconnect()
