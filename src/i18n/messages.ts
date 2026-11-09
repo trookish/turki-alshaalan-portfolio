@@ -84,8 +84,12 @@ export const messages = {
   calc_digits: { en: 'Digits', ar: 'الأرقام' } satisfies L,
   calc_letters: { en: 'Letters', ar: 'الحروف' } satisfies L,
   calc_printed_note: {
-    en: 'Enter the letters in the order they are printed on the plate.',
-    ar: 'أدخل الحروف بترتيب طباعتها على اللوحة.',
+    en: '1 to 3 letters from the Saudi plate set.',
+    ar: 'من ١ إلى ٣ حروف من حروف اللوحة السعودية.',
+  } satisfies L,
+  calc_accuracy: {
+    en: 'This browser build scores a typical error of ×1.49 across the plates it was tested on; the server-side model scores ×1.35.',
+    ar: 'يسجّل هذا البناء في المتصفح خطأً معتاداً ×١٫٤٩ على اللوحات التي اختُبر عليها، بينما يسجّل النموذج على الخادم ×١٫٣٥.',
   } satisfies L,
   calc_market: { en: 'Market', ar: 'السوق' } satisfies L,
   calc_market_mvp: { en: 'Marketplace', ar: 'سوق العروض' } satisfies L,
@@ -100,7 +104,6 @@ export const messages = {
   calc_group: { en: 'Comparable group', ar: 'مجموعة المقارنة' } satisfies L,
   calc_tested: { en: 'Plates in this group', ar: 'لوحات المجموعة' } satisfies L,
   calc_normalised: { en: 'Model key', ar: 'مفتاح النموذج' } satisfies L,
-  calc_key_hint: { en: 'letters in reading order', ar: 'الحروف بترتيب القراءة' } satisfies L,
   calc_error: { en: 'Typical error', ar: 'الخطأ المعتاد' } satisfies L,
   calc_digits_short: { en: 'digits', ar: 'أرقام' } satisfies L,
   calc_loading: { en: 'Loading the model…', ar: 'جارٍ تحميل النموذج…' } satisfies L,

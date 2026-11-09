@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useI18n } from '../i18n/LanguageContext'
 import { estimatePlate } from '../lib/plateModel'
-import type { PlateMarket, PlateModel } from '../lib/plateModel'
+import type { PlateMarket } from '../lib/plateModel'
+import type { PlateModelJson } from '../lib/predict'
 
 const LETTERS = ['A', 'B', 'D', 'E', 'G', 'H', 'J', 'K', 'L', 'N', 'R', 'S', 'T', 'U', 'V', 'X', 'Z']
 const TIERS = ['none', '0', '1', '2', '3', '4']
@@ -13,7 +14,7 @@ const TYPES = ['none', '21', '22', '23', '1', '10']
  */
 export function PlateCalculator() {
   const { t, lang } = useI18n()
-  const [model, setModel] = useState<PlateModel | null>(null)
+  const [model, setModel] = useState<PlateModelJson | null>(null)
   const [digits, setDigits] = useState('66')
   const [printed, setPrinted] = useState<[string, string, string]>(['X', 'R', 'Z'])
   const [market, setMarket] = useState<PlateMarket>('mvp')
@@ -24,24 +25,24 @@ export function PlateCalculator() {
   useEffect(() => {
     let alive = true
     import('../data/plate-model.json').then((mod) => {
-      if (alive) setModel(mod.default as unknown as PlateModel)
+      if (alive) setModel(mod.default as unknown as PlateModelJson)
     })
     return () => {
       alive = false
     }
   }, [])
 
-  // The plate prints its letters in the reverse of the order the model stores them.
-  const storedLetters = useMemo(
-    () => printed.filter(Boolean).join('').replace(/[^A-Z]/g, '').split('').reverse().join(''),
-    [printed],
-  )
-
   const result = useMemo(() => {
     if (!model) return null
     if (!digits.trim()) return { ok: false as const, error: 'empty' as const }
-    return estimatePlate(model, { number: digits, letters: storedLetters, market, tier, plateType })
-  }, [model, digits, storedLetters, market, tier, plateType])
+    return estimatePlate(model, {
+      number: digits,
+      letters: printed.filter(Boolean).join(''),
+      market,
+      tier,
+      plateType,
+    })
+  }, [model, digits, printed, market, tier, plateType])
 
   const num = (n: number) => new Intl.NumberFormat(lang === 'ar' ? 'ar-SA' : 'en-US').format(n)
   const currency = lang === 'ar' ? 'ريال' : 'SAR'
@@ -178,7 +179,6 @@ export function PlateCalculator() {
                 <p className="calc-key-value">
                   {result.value} · {Array.from(result.letters).join(' ')}
                 </p>
-                <span className="calc-key-hint">{t('calc_key_hint')}</span>
               </div>
             </div>
 
@@ -213,6 +213,7 @@ export function PlateCalculator() {
             </dl>
 
             <p className="calc-caveat">{result.caveat}</p>
+            <p className="calc-caveat">{t('calc_accuracy')}</p>
             <p className="calc-meta">
               {model.model_version} · {model.trained_through.slice(0, 10)}
             </p>

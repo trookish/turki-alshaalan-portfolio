@@ -1,0 +1,20 @@
+Price plates with the model the project actually ships
+
+The calculator was wired to a discarded experimental export: a base + T1/T2/T3 table
+schema that the project no longer produces. @platelab confirmed the pair, sent the
+current files, and named the authoritative figure. This replaces both.
+
+- src/lib/predict.js is the export's own browser build, shipped verbatim: 60-tree walk
+  over 38 features, no reimplementation to drift.
+- src/data/plate-model.json is the current export (schema plate-fair-price-web-v2,
+  434 kB raw / 135 kB gzipped, loaded only when the calculator tab opens).
+- The adapter only turns its string errors into codes the UI localises.
+
+Behaviour now matches the contract exactly: 66 XRZ prices at 20,000 SAR, likely
+16,500-24,500, wide 7,000-61,500.
+
+Copy corrected to the two figures the export distinguishes: the server-side model
+scores a typical error of x1.35 (production walk-forward, 2,001 held-out plates), while
+the browser build scores x1.49 in its own walk-forward - stated on the page rather than
+implied away. The letter fields no longer claim a reading order the export does not ask
+for.
