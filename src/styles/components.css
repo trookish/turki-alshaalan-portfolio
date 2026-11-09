@@ -2472,3 +2472,34 @@ html[dir='rtl'] .hud-bar-fill {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* --- case study film: the recorded console run --- */
+.case-video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--c-line-2);
+  border-radius: 10px;
+  background: #071116;
+}
+
+.case-video-caption {
+  margin: 0.8rem 0 0;
+  color: var(--c-ink);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.case-video-note {
+  margin: 0.45rem 0 0;
+  color: var(--c-ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+}
+
+@media (max-width: 520px) {
+  .case-video-caption {
+    font-size: 0.86rem;
+  }
+}

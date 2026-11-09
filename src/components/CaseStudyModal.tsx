@@ -36,6 +36,7 @@ export function CaseStudyModal() {
 
   const tabList = [
     ...study.sections.map((s) => ({ id: s.id, label: b(s.label) })),
+    ...(study.video ? [{ id: 'video', label: t('case_sec_video') }] : []),
     ...(study.calculator ? [{ id: 'calculator', label: t('case_sec_calculator') }] : []),
   ]
   const current = tabList[Math.min(active, tabList.length - 1)]
@@ -79,7 +80,24 @@ export function CaseStudyModal() {
             ))}
           </nav>
 
-          {current.id === 'calculator' ? (
+          {current.id === 'video' && study.video ? (
+            <section className="case-section" aria-label={t('case_sec_video')}>
+              <video
+                className="case-video"
+                poster={study.video.poster}
+                controls
+                playsInline
+                muted
+                loop
+                preload="metadata"
+              >
+                <source src={study.video.webm} type="video/webm" />
+                <source src={study.video.mp4} type="video/mp4" />
+              </video>
+              <p className="case-video-caption">{b(study.video.caption)}</p>
+              <p className="case-video-note">{t('case_video_note')}</p>
+            </section>
+          ) : current.id === 'calculator' ? (
             <PlateCalculator />
           ) : (
             section && (

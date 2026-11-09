@@ -75,6 +75,10 @@ export const messages = {
   case_sec_evidence: { en: 'What it measures', ar: 'ما يقيسه' } satisfies L,
   case_sec_limits: { en: 'Limits', ar: 'الحدود' } satisfies L,
   case_sec_calculator: { en: 'Calculator', ar: 'الحاسبة' } satisfies L,
+  case_video_note: {
+    en: 'Silent by design: 35 seconds, no sound, no account, nothing uploaded.',
+    ar: 'بلا صوت عمدًا: ٣٥ ثانية، دون صوت أو حساب، ولا يُرفع أي شيء.',
+  } satisfies L,
   case_sec_video: { en: 'How it runs', ar: 'كيف يعمل' } satisfies L,
   calc_title: { en: 'Plate calculator', ar: 'حاسبة اللوحة' } satisfies L,
   calc_note: {
