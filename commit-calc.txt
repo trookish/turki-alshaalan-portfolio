@@ -1,0 +1,15 @@
+Run the plate model in the case study as a working calculator
+
+The calculator tab was a disabled chip; it now prices a plate in the browser
+against the project's own exported weights. Three letter selects in printed
+order, digits, market, and plate type behind an advanced disclosure. The result
+carries the ranges, the comparable group's size, the typical error factor, the
+model version and the date it was trained through, so the answer arrives with
+its own evidence rather than as a bare number.
+
+Weights load lazily: 138 kB raw, 24.7 kB over the wire, only when the tab opens.
+
+The evidence block on the case study also moves from the README's example to
+the export's measured figures for fair-price-v4 trained through 2026-11-03:
+2,001 plates held out, typical error ×1.35, wide-band coverage 91-93 per cent,
+rank correlation 0.78 against a segment-median baseline of 0.63.

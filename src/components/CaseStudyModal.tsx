@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/LanguageContext'
 import { useOverlay } from '../ui/OverlayContext'
 import { getCaseStudy } from '../data/caseStudies'
 import { projects } from '../data/projects'
+import { PlateCalculator } from './PlateCalculator'
 
 /**
  * Case-study window. A project whose repository is private points here instead of at a
@@ -33,7 +34,12 @@ export function CaseStudyModal() {
 
   if (!study || !project) return null
 
-  const section = study.sections[Math.min(active, study.sections.length - 1)]
+  const tabList = [
+    ...study.sections.map((s) => ({ id: s.id, label: b(s.label) })),
+    ...(study.calculator ? [{ id: 'calculator', label: t('case_sec_calculator') }] : []),
+  ]
+  const current = tabList[Math.min(active, tabList.length - 1)]
+  const section = study.sections.find((s) => s.id === current.id)
 
   return (
     <div className="modal-overlay" onClick={closeCaseStudy} role="presentation">
@@ -60,45 +66,46 @@ export function CaseStudyModal() {
           </header>
 
           <nav className="case-nav" aria-label={t('case_eyebrow')}>
-            {study.sections.map((s, i) => (
+            {tabList.map((tab, i) => (
               <button
-                key={s.id}
+                key={tab.id}
                 type="button"
-                className={`case-tab ${i === active ? 'is-active' : ''}`}
+                className={`case-tab ${i === active ? 'is-active' : ''} ${tab.id === 'calculator' ? 'is-calc' : ''}`}
                 aria-current={i === active ? 'true' : undefined}
                 onClick={() => setActive(i)}
               >
-                {b(s.label)}
+                {tab.label}
               </button>
             ))}
-            {study.calculator && (
-              <button type="button" className="case-tab is-locked" disabled title={t('case_sec_calculator')}>
-                {t('case_sec_calculator')}
-              </button>
-            )}
           </nav>
 
-          <section className="case-section" aria-labelledby="case-sec-title">
-            <h3 id="case-sec-title" className="case-section-title">
-              {b(section.label)}
-            </h3>
-            {section.paragraphs.map((p, i) => (
-              <p key={i} className="case-para">
-                {b(p)}
-              </p>
-            ))}
-            {section.facts && section.facts.length > 0 && (
-              <dl className="case-facts">
-                {section.facts.map((f) => (
-                  <div key={f.label.en} className="case-fact">
-                    <dt>{b(f.label)}</dt>
-                    <dd>{b(f.value)}</dd>
-                    {f.note && <p className="case-fact-note">{b(f.note)}</p>}
-                  </div>
+          {current.id === 'calculator' ? (
+            <PlateCalculator />
+          ) : (
+            section && (
+              <section className="case-section" aria-labelledby="case-sec-title">
+                <h3 id="case-sec-title" className="case-section-title">
+                  {b(section.label)}
+                </h3>
+                {section.paragraphs.map((p, i) => (
+                  <p key={i} className="case-para">
+                    {b(p)}
+                  </p>
                 ))}
-              </dl>
-            )}
-          </section>
+                {section.facts && section.facts.length > 0 && (
+                  <dl className="case-facts">
+                    {section.facts.map((f) => (
+                      <div key={f.label.en} className="case-fact">
+                        <dt>{b(f.label)}</dt>
+                        <dd>{b(f.value)}</dd>
+                        {f.note && <p className="case-fact-note">{b(f.note)}</p>}
+                      </div>
+                    ))}
+                  </dl>
+                )}
+              </section>
+            )
+          )}
 
           <aside className="case-privacy">
             <h3 className="case-privacy-title">{t('case_privacy_label')}</h3>

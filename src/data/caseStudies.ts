@@ -114,27 +114,29 @@ const plateStudy: CaseStudy = {
       label: { en: 'What it measures', ar: 'ما يقيسه' },
       paragraphs: [
         {
-          en: 'The model reports its own evidence block with every answer: plates tested, typical error factor, the coverage each band achieved, the model version and the date it was trained through. The figures below are that block, as recorded for model fair-price-v4 trained through 2026-10-29.',
-          ar: 'يرفق النموذج مع كل إجابة كتلة أدلته: عدد اللوحات المختبَرة، ومعامل الخطأ المعتاد، والتغطية التي حققها كل نطاق، وإصدار النموذج وتاريخ التدريب. الأرقام أدناه هي تلك الكتلة كما سُجّلت للنموذج fair-price-v4 حتى ٢٠٢٦-١٠-٢٩.',
+          en: 'Every answer the model gives carries its own evidence block: plates tested, the typical error factor, the coverage each band achieved, the model version and the date it was trained through. The figures below are that block for model fair-price-v4, trained through 2026-11-03, measured on 2,001 plates held out of training.',
+          ar: 'ترافق كل إجابة كتلة أدلتها: عدد اللوحات المختبَرة، ومعامل الخطأ المعتاد، والتغطية التي حققها كل نطاق، وإصدار النموذج وتاريخ التدريب. الأرقام أدناه هي تلك الكتلة للنموذج fair-price-v4 حتى ٢٠٢٦-١١-٠٣، مقيسة على ٢٠٠١ لوحة مستبعدة من التدريب.',
         },
       ],
       facts: [
         {
-          label: { en: 'Plates tested', ar: 'لوحات مختبَرة' },
-          value: { en: '1,074', ar: '١٠٧٤' },
+          label: { en: 'Plates held out', ar: 'لوحات مستبعدة' },
+          value: { en: '2,001', ar: '٢٠٠١' },
         },
         {
           label: { en: 'Typical error', ar: 'الخطأ المعتاد' },
-          value: { en: '×1.3', ar: '×١٫٣' },
+          value: { en: '×1.35', ar: '×١٫٣٥' },
           note: { en: 'Estimated against actual closing price', ar: 'التقدير مقابل سعر الإغلاق الفعلي' },
         },
         {
-          label: { en: 'Wide band (90% target)', ar: 'النطاق الواسع (هدف ٩٠٪)' },
-          value: { en: '92.4% held', ar: 'تحقّق ٩٢٫٤٪' },
+          label: { en: 'Wide band coverage', ar: 'تغطية النطاق الواسع' },
+          value: { en: '91–93%', ar: '٩١–٩٣٪' },
+          note: { en: 'Held per digit count, target 90%', ar: 'محققة لكل عدد أرقام، الهدف ٩٠٪' },
         },
         {
-          label: { en: 'Likely band (50% target)', ar: 'النطاق المرجّح (هدف ٥٠٪)' },
-          value: { en: '59.5% held', ar: 'تحقّق ٥٩٫٥٪' },
+          label: { en: 'Rank correlation', ar: 'ارتباط الترتيب' },
+          value: { en: '0.78', ar: '٠٫٧٨' },
+          note: { en: 'Against the segment-median baseline at 0.63', ar: 'مقابل خط أساس وسيط القطاع ٠٫٦٣' },
         },
       ],
     },
@@ -157,6 +159,7 @@ const plateStudy: CaseStudy = {
       ],
     },
   ],
+  calculator: true,
   privacy: {
     en: 'The repository is private and stays private: it holds the collected auction history and the collection configuration. This page carries no raw listings — only the model and its measured behaviour.',
     ar: 'المستودع خاص ويبقى خاصاً: يحتوي تاريخ المزاد المجموع وإعدادات الجمع. هذه الصفحة لا تحمل أي عروض خام، بل النموذج وسلوكه المقيس فقط.',
