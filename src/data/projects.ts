@@ -674,7 +674,7 @@ export const projects: Project[] = [
       { en: 'Price Prediction', ar: 'توقّع الأسعار' },
       { en: 'English · Arabic', ar: 'العربية · الإنجليزية' },
     ],
-    links: [{ kind: 'repo', href: 'https://github.com/trookish/Saudi-Plate-Price-Predictor-Calculator' }],
+    links: [{ kind: 'case', href: '#case-study' }],
     gallery: plateGallery,
   },
   {

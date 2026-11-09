@@ -7,6 +7,7 @@ import { NavBar } from './components/NavBar'
 import { StatusBar } from './components/StatusBar'
 import { CommandPalette } from './components/CommandPalette'
 import { ShowcaseModal } from './components/ShowcaseModal'
+import { CaseStudyModal } from './components/CaseStudyModal'
 import { CertModal } from './components/CertModal'
 import { ImageViewer } from './components/ImageViewer'
 import { SoundFab } from './components/SoundFab'
@@ -58,6 +59,7 @@ function Pages() {
       <SoundFab />
       {overlay.paletteOpen && <CommandPalette />}
       <ShowcaseModal />
+      <CaseStudyModal />
       <CertModal />
       <ImageViewer />
       <GameModal />
@@ -74,6 +76,7 @@ function LocalizedShell() {
       play: t('play_game'),
       release: t('latest_release'),
       store: t('get_on_store'),
+      case: t('view_case_study'),
     }),
     [t],
   )

@@ -15,6 +15,7 @@ const linkLabelKey = {
   play: 'play_game',
   release: 'latest_release',
   store: 'get_on_store',
+  case: 'view_case_study',
 } as const satisfies Record<string, MessageKey>
 
 const groupTitleKey = {
@@ -25,7 +26,7 @@ const groupTitleKey = {
 
 function ProjectCard({ project }: { project: Project }) {
   const { t, b } = useI18n()
-  const { openProject } = useOverlay()
+  const { openProject, openCaseStudy } = useOverlay()
   const primary = project.disciplines[0]
   const soon = project.badge && (project.badge.en === 'Coming Soon' || project.badge.ar === 'قريباً')
 
@@ -75,18 +76,32 @@ function ProjectCard({ project }: { project: Project }) {
         </div>
         {project.links && project.links.length > 0 && (
           <div className="flex flex-wrap gap-3">
-            {project.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="project-link"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {t(linkLabelKey[link.kind])}
-              </a>
-            ))}
+            {project.links.map((link) =>
+              link.kind === 'case' ? (
+                <button
+                  key="case"
+                  type="button"
+                  className="project-link"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    openCaseStudy(project.id)
+                  }}
+                >
+                  {t(linkLabelKey[link.kind])}
+                </button>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-link"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {t(linkLabelKey[link.kind])}
+                </a>
+              ),
+            )}
           </div>
         )}
         {project.teams && project.teams.length > 0 && (

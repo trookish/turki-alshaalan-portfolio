@@ -40,6 +40,10 @@ interface OverlayValue {
   paletteOpen: boolean
   setPaletteOpen: (v: boolean) => void
   closePalette: () => void
+  /** Project id whose case study is open, or null. */
+  caseStudyId: string | null
+  openCaseStudy: (projectId: string) => void
+  closeCaseStudy: () => void
 }
 
 const OverlayContext = createContext<OverlayValue | null>(null)
@@ -47,7 +51,7 @@ const OverlayContext = createContext<OverlayValue | null>(null)
 interface ProviderProps {
   children: ReactNode
   pick: (s: { en: string; ar: string }) => string
-  linkLabels: { repo: string; play: string; release: string; store: string }
+  linkLabels: { repo: string; play: string; release: string; store: string; case: string }
   teamDefault: string
 }
 
@@ -57,6 +61,7 @@ export function OverlayProvider({ children, pick, linkLabels, teamDefault }: Pro
   const [imageView, setImageView] = useState<ImageViewState | null>(null)
   const [gameOpen, setGameOpen] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
+  const [caseStudyId, setCaseStudyId] = useState<string | null>(null)
 
   const openProject = useCallback(
     (p: Project) => {
@@ -74,10 +79,11 @@ export function OverlayProvider({ children, pick, linkLabels, teamDefault }: Pro
           label: g.label ? pick(g.label) : teamDefault,
           members: g.members.map((m) => ({ name: pick(m.name), role: pick(m.role) })),
         })),
-        links: (p.links ?? []).map((l) => ({
-          label: linkLabels[l.kind],
-          href: l.href,
-        })),
+        // A 'case' link is opened by the card itself, so it must not also render as an
+        // external anchor inside the showcase window.
+        links: (p.links ?? [])
+          .filter((l) => l.kind !== 'case')
+          .map((l) => ({ label: linkLabels[l.kind], href: l.href })),
         note: p.note ? pick(p.note) : undefined,
       })
     },
@@ -121,12 +127,13 @@ export function OverlayProvider({ children, pick, linkLabels, teamDefault }: Pro
   )
 
   useEffect(() => {
-    const open = showcase !== null || cert !== null || imageView !== null || gameOpen || paletteOpen
+    const open =
+      showcase !== null || cert !== null || imageView !== null || gameOpen || paletteOpen || caseStudyId !== null
     document.body.style.overflow = open ? 'hidden' : ''
     return () => {
       document.body.style.overflow = ''
     }
-  }, [showcase, cert, imageView, gameOpen, paletteOpen])
+  }, [showcase, cert, imageView, gameOpen, paletteOpen, caseStudyId])
 
   const value = useMemo<OverlayValue>(
     () => ({
@@ -145,8 +152,11 @@ export function OverlayProvider({ children, pick, linkLabels, teamDefault }: Pro
       paletteOpen,
       setPaletteOpen,
       closePalette: () => setPaletteOpen(false),
+      caseStudyId,
+      openCaseStudy: setCaseStudyId,
+      closeCaseStudy: () => setCaseStudyId(null),
     }),
-    [showcase, openProject, openAchievement, cert, imageView, gameOpen, paletteOpen],
+    [showcase, openProject, openAchievement, cert, imageView, gameOpen, paletteOpen, caseStudyId],
   )
 
   return <OverlayContext.Provider value={value}>{children}</OverlayContext.Provider>
