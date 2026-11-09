@@ -402,6 +402,17 @@ const dragdoneGallery: Slide[] = [
 
 const plateGallery: Slide[] = [
   {
+    type: 'clip',
+    mp4: 'video/plate-predictor.mp4',
+    webm: 'video/plate-predictor.webm',
+    poster: 'video/plate-predictor-poster.webp',
+    title: { en: 'The console, recorded', ar: 'الواجهة مسجّلة' },
+    desc: {
+      en: 'The running console and calculator, recorded rather than mocked: a plate is typed, priced against its comparison group, then checked on plates the model never saw. 35 seconds, silent, captioned.',
+      ar: 'الواجهة والحاسبة أثناء تشغيلهما، مسجّلتان لا مُحاكيتان: تُدخل اللوحة، وتُسعّر مقابل مجموعتها، ثم تُفحص على لوحات لم يرها النموذج. ٣٥ ثانية، بلا صوت، مع تعليقات مكتوبة.',
+    },
+  },
+  {
     type: 'image',
     src: 'images/Projects/SaudiPlatePredictor/screenshot1.webp',
     title: { en: 'Open Listings', ar: 'الإعلانات المفتوحة' },

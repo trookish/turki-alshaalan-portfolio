@@ -6,6 +6,9 @@ import type { Slide } from '../data/types'
 import { EyeIcon } from './icons'
 
 function Thumb({ slide, label }: { slide: Slide; label: string }) {
+  if (slide.type === 'clip') {
+    return <img src={slide.poster} alt="" loading="lazy" decoding="async" />
+  }
   if (slide.type === 'video') {
     return (
       <span className="grid h-full w-full place-items-center bg-black text-[0.6rem] text-green">
@@ -33,7 +36,7 @@ function Thumb({ slide, label }: { slide: Slide; label: string }) {
 
 function ShowcaseContent({ showcase, close }: { showcase: ShowcaseState; close: () => void }) {
   const { t, b } = useI18n()
-  const { openImageView, imageView } = useOverlay()
+  const { openImageView, imageView, openCaseStudy } = useOverlay()
   const [idx, setIdx] = useState(0)
 
   useEffect(() => {
@@ -74,6 +77,11 @@ function ShowcaseContent({ showcase, close }: { showcase: ShowcaseState; close: 
               <span className="crt-lines" aria-hidden="true" />
               {slide.type === 'image' ? (
                 <img src={slide.src} alt={b(slide.title)} />
+              ) : slide.type === 'clip' ? (
+                <video className="ss-clip" controls playsInline muted loop poster={slide.poster} preload="metadata">
+                  {slide.webm && <source src={slide.webm} type="video/webm" />}
+                  <source src={slide.mp4} type="video/mp4" />
+                </video>
               ) : (
                 <iframe
                   src={`https://www.youtube.com/embed/${slide.id}`}
@@ -123,7 +131,7 @@ function ShowcaseContent({ showcase, close }: { showcase: ShowcaseState; close: 
             </div>
             <div className="ss-caption">
               <span className="ss-title">{b(slide.title)}</span>
-              <span className="ss-count">
+              <span className="ss-count" dir="ltr">
                 {idx + 1} / {showcase.slides.length}
               </span>
             </div>
@@ -210,8 +218,21 @@ function ShowcaseContent({ showcase, close }: { showcase: ShowcaseState; close: 
               </>
             )}
 
-            {showcase.links.length > 0 && (
+            {(showcase.links.length > 0 || showcase.caseStudyId) && (
               <div className="ss-actions">
+                {showcase.caseStudyId && (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      const id = showcase.caseStudyId
+                      close()
+                      if (id) openCaseStudy(id)
+                    }}
+                  >
+                    {t('view_case_study')}
+                  </button>
+                )}
                 {showcase.links.map((link) => (
                   <a
                     key={link.href}

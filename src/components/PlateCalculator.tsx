@@ -5,6 +5,12 @@ import type { PlateMarket } from '../lib/plateModel'
 import type { PlateModelJson } from '../lib/predict'
 
 const LETTERS = ['A', 'B', 'D', 'E', 'G', 'H', 'J', 'K', 'L', 'N', 'R', 'S', 'T', 'U', 'V', 'X', 'Z']
+/** The letters as they are printed on the plate. Mirrors `arabic_to_latin` in the model export. */
+const LETTER_AR: Record<string, string> = {
+  A: 'أ', B: 'ب', D: 'د', E: 'ع', G: 'ق', H: 'هـ', J: 'ح', K: 'ك', L: 'ل', N: 'ن',
+  R: 'ر', S: 'س', T: 'ط', U: 'و', V: 'ي', X: 'ص', Z: 'م',
+}
+const inLetters = (code: string) => Array.from(code).map((ch) => LETTER_AR[ch] ?? ch).join(' ')
 const TIERS = ['none', '0', '1', '2', '3', '4']
 const TYPES = ['none', '21', '22', '23', '1', '10']
 
@@ -47,6 +53,7 @@ export function PlateCalculator() {
   const num = (n: number) => new Intl.NumberFormat(lang === 'ar' ? 'ar-SA' : 'en-US').format(n)
   const currency = lang === 'ar' ? 'ريال' : 'SAR'
   const shown = printed.join('')
+  const plateLetters = lang === 'ar' ? inLetters(shown) : shown
 
   return (
     <div className="calc">
@@ -58,7 +65,7 @@ export function PlateCalculator() {
           <span className="calc-plate-label">رقم</span>
         </div>
         <div className="calc-plate-half calc-plate-letters">
-          <span className="calc-plate-value">{shown || '—'}</span>
+          <span className="calc-plate-value">{plateLetters || '—'}</span>
           <span className="calc-plate-label">حروف</span>
         </div>
       </div>
@@ -95,7 +102,7 @@ export function PlateCalculator() {
                 {i > 0 && <option value="">—</option>}
                 {LETTERS.map((l) => (
                   <option key={l} value={l}>
-                    {l}
+                    {lang === 'ar' ? LETTER_AR[l] : l}
                   </option>
                 ))}
               </select>
@@ -177,7 +184,7 @@ export function PlateCalculator() {
               <div className="calc-key">
                 <span className="calc-label">{t('calc_normalised')}</span>
                 <p className="calc-key-value">
-                  {result.value} · {Array.from(result.letters).join(' ')}
+                  {result.value} · {lang === 'ar' ? inLetters(result.letters) : Array.from(result.letters).join(' ')}
                 </p>
               </div>
             </div>

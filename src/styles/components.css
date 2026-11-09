@@ -2503,3 +2503,20 @@ html[dir='rtl'] .hud-bar-fill {
     font-size: 0.86rem;
   }
 }
+
+/* --- project window: a film recorded from the product sits beside the screenshots --- */
+.ss-clip {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #071116;
+  border-radius: 8px;
+}
+
+/* Arabic plate letters stay joined: tracking is a Latin habit and splits the word */
+html[dir='rtl'] .calc-plate-value {
+  font-family: 'Segoe UI', 'Noto Naskh Arabic', 'Geeza Pro', system-ui, sans-serif;
+  letter-spacing: 0;
+  font-size: 1.9rem;
+}

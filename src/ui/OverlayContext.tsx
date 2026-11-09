@@ -8,6 +8,8 @@ export interface ShowcaseTeam {
 }
 
 export interface ShowcaseState {
+  /** Set when the project has a written case study, so the window can link to it. */
+  caseStudyId?: string
   title: string
   description: string
   slides: Slide[]
@@ -70,6 +72,7 @@ export function OverlayProvider({ children, pick, linkLabels, teamDefault }: Pro
           ? p.gallery
           : [{ type: 'image', src: p.cover, title: p.title, desc: p.description }]
       setShowcase({
+        caseStudyId: (p.links ?? []).some((l) => l.kind === 'case') ? p.id : undefined,
         title: pick(p.title),
         description: pick(p.description),
         slides,

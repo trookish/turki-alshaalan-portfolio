@@ -22,6 +22,8 @@ export interface ProjectLink {
 export type Slide =
   | { type: 'image'; src: string; title: L; desc: L }
   | { type: 'video'; id: string; title: L; desc: L }
+  /** A film recorded from the running product and served from this site. */
+  | { type: 'clip'; mp4: string; webm?: string; poster: string; title: L; desc: L }
 
 export interface Project {
   id: string
