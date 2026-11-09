@@ -160,9 +160,9 @@ const plateStudy: CaseStudy = {
     },
   ],
   video: {
-    mp4: '/video/plate-predictor.mp4',
-    webm: '/video/plate-predictor.webm',
-    poster: '/video/plate-predictor-poster.webp',
+    mp4: 'video/plate-predictor.mp4',
+    webm: 'video/plate-predictor.webm',
+    poster: 'video/plate-predictor-poster.webp',
     caption: {
       en: 'Recorded from the running console: a plate is typed, priced against its comparison group, then checked on plates the model never saw.',
       ar: 'مسجّل من الواجهة أثناء تشغيلها: تُدخل اللوحة، وتُسعّر مقابل مجموعتها، ثم تُفحص على لوحات لم يرها النموذج.',
