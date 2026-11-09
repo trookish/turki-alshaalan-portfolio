@@ -197,7 +197,10 @@ export function PlateCalculator() {
               </div>
               <div className="calc-range">
                 <dt>{t('calc_group')}</dt>
-                <dd>{result.band.group}</dd>
+                <dd>
+                  {t(market === 'mvp' ? 'calc_market_mvp' : 'calc_market_auction')} · {num(result.digits)}{' '}
+                  {t('calc_digits_short')}
+                </dd>
               </div>
               <div className="calc-range">
                 <dt>{t('calc_tested')}</dt>

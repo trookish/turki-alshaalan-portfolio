@@ -102,6 +102,7 @@ export const messages = {
   calc_normalised: { en: 'Model key', ar: 'مفتاح النموذج' } satisfies L,
   calc_key_hint: { en: 'letters in reading order', ar: 'الحروف بترتيب القراءة' } satisfies L,
   calc_error: { en: 'Typical error', ar: 'الخطأ المعتاد' } satisfies L,
+  calc_digits_short: { en: 'digits', ar: 'أرقام' } satisfies L,
   calc_loading: { en: 'Loading the model…', ar: 'جارٍ تحميل النموذج…' } satisfies L,
   calc_err_plate: {
     en: 'Enter 1–4 digits of a plate whose value is above zero.',

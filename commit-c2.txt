@@ -1,0 +1,5 @@
+Localise the calculator comparable-group line
+
+The group came from the model verbatim, so the Arabic calculator showed an English
+label beside Arabic ones. It is now composed from the market and digit count in the
+reader's language.
